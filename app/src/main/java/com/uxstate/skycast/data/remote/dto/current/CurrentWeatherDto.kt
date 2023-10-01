@@ -27,7 +27,7 @@ data class CurrentWeatherDto(
     @Json(name = "visibility")
     val visibility: Int,
     @Json(name = "weather")
-    val weather: List<Weather>,
+    val weather: List<WeatherDescriptionDto>,
     @Json(name = "wind")
-    val wind: Wind
+    val wind: WindDto
 )
