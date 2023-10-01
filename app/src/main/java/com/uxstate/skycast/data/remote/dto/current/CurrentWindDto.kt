@@ -1,13 +1,11 @@
-package com.uxstate.skycast.data.remote.dto.forecast
+package com.uxstate.skycast.data.remote.dto.current
 
 
 import com.squareup.moshi.Json
 
-data class Wind(
+data class CurrentWindDto(
     @Json(name = "deg")
     val deg: Int,
-    @Json(name = "gust")
-    val gust: Double,
     @Json(name = "speed")
     val speed: Double
 )

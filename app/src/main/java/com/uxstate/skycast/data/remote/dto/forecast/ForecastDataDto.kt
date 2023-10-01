@@ -23,5 +23,5 @@ data class ForecastDataDto (
     @Json(name = "weather")
     val forecastWeatherDescDto: List<ForecastWeatherDescDto>,
     @Json(name = "wind")
-    val wind: Wind
+    val forecastWindDto: ForecastWindDto
 )
