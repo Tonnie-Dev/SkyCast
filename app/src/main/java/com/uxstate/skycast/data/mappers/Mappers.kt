@@ -8,9 +8,10 @@ import com.uxstate.skycast.data.remote.dto.current.CurrentWindDto
 import com.uxstate.skycast.data.remote.dto.forecast.ForecastDataDto
 import com.uxstate.skycast.data.remote.dto.forecast.ForecastWeatherDescDto
 import com.uxstate.skycast.data.remote.dto.forecast.ForecastWindDto
+import com.uxstate.skycast.domain.model.CurrentWeather
 import com.uxstate.skycast.domain.model.WeatherParams
 import com.uxstate.skycast.domain.model.WeatherDescription
-import com.uxstate.skycast.domain.model.WeatherForecast
+import com.uxstate.skycast.domain.model.ForecastWeather
 import com.uxstate.skycast.domain.model.Wind
 
 fun CurrentWeatherDto.toEntity(lastFetchTime: Long): CurrentEntity {
@@ -30,6 +31,21 @@ fun CurrentWeatherDto.toEntity(lastFetchTime: Long): CurrentEntity {
             ))
 }
 
+fun CurrentEntity.toModel(): CurrentWeather{
+
+    return CurrentWeather(
+            cityId = this.cityId,
+            cityName = this.cityName,
+            wind = Wind(speed = this.wind.speed, deg = this.wind.deg),
+            lastFetchedTime = this.lastFetchTime,
+            networkWeatherDescription = this.weatherDesc,
+            networkWeatherCondition = WeatherParams(
+                    temp = this.weatherParams.temp,
+                    pressure = this.weatherParams.pressure,
+                    humidity = this.weatherParams.humidity
+            )
+    )
+}
 
 fun ForecastDataDto.toEntity(lastFetchTime: Long): ForecastEntity {
 
@@ -51,9 +67,9 @@ fun ForecastDataDto.toEntity(lastFetchTime: Long): ForecastEntity {
 
 
 
-fun ForecastEntity.toModel(): WeatherForecast {
+fun ForecastEntity.toModel(): ForecastWeather {
 
-return WeatherForecast(
+return ForecastWeather(
         date = this.date,
         wind = Wind(speed = this.wind.speed, deg = this.wind.deg),
         forecastWeatherDescription = this.forecastWeatherDescription,
@@ -65,6 +81,9 @@ return WeatherForecast(
 )
 
 }
+
+
+
 fun CurrentWeatherDescDto.toModel(): WeatherDescription = WeatherDescription(
         id = this.id,
         main = this.main,

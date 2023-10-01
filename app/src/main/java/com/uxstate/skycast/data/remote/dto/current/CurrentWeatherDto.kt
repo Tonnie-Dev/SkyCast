@@ -18,7 +18,7 @@ data class CurrentWeatherDto(
     val id: Int,
     @Json(name = "main")
     val main: Main,
-    @Json(name = "name")
+    @Json(name = "cityName")
     val name: String,
     @Json(name = "sys")
     val sys: Sys,

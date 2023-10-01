@@ -1,6 +1,6 @@
 package com.uxstate.skycast.domain.model
 
-data class WeatherForecast(
+data class ForecastWeather(
 
     var date: String,
     val wind: Wind,

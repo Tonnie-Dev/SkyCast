@@ -10,7 +10,7 @@ data class City(
     val country: String,
     @Json(name = "id")
     val id: Int,
-    @Json(name = "name")
+    @Json(name = "cityName")
     val name: String,
     @Json(name = "population")
     val population: Int,
