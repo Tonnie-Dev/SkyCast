@@ -69,18 +69,70 @@ android {
 dependencies {
 
     implementation(libs.core.ktx)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.compose.runtime)
     implementation(libs.lifecycle.runtime.ktx)
-    implementation(libs.activity.compose)
-    implementation(platform(libs.compose.bom))
-    implementation(libs.ui)
-    implementation(libs.ui.graphics)
-    implementation(libs.ui.tooling.preview)
-    implementation(libs.material3)
-    testImplementation(libs.junit.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
+    implementation(libs.compose.activity)
+    testImplementation(libs.junit.core)
+    androidTestImplementation(libs.junit.androidx)
     androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(platform(libs.compose.bom))
-    androidTestImplementation(libs.ui.test.junit4)
-    debugImplementation(libs.ui.tooling)
+    androidTestImplementation(libs.junit4.ui.test)
+    debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
+
+    //Material 3
+    implementation(libs.material3)
+
+    // Coil
+    implementation(libs.compose.coil)
+
+    // Dagger Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.moshi)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+    implementation(libs.converter.scalars)
+
+    //Moshi Library Dependencies - Core Moshi JSON Library and Moshi")s Kotlin support and converter factory
+    implementation(libs.moshi)
+    implementation(libs.moshi.kotlin)
+
+    // Room components
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
+    implementation(libs.room.ktx)
+
+    // Kotlin Extensions and Coroutines support for Room
+    implementation(libs.room.ktx)
+
+    //Timber
+    implementation(libs.timber)
+
+    //Flow Layout
+    implementation(libs.accompanist.flowlayout)
+
+    //Lottie Animation
+    implementation(libs.lottie.compose)
+
+    // Compose Nav Destinations
+    implementation(libs.compose.destinations.core)
+    ksp(libs.compose.destinations.core)
+/*
+    //Compose Animation
+    implementation libs.compose.animation
+
+            //Accompanist Animation
+            implementation libs.accompanist.nav.animation*/
+
+            //Maps Compose library
+implementation(libs.compose.maps)
+implementation(libs.play.services.maps)
+
+
 }
