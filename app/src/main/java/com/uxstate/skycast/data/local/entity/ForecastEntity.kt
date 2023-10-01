@@ -7,13 +7,12 @@ import com.uxstate.skycast.domain.model.WeatherCondition
 import com.uxstate.skycast.domain.model.WeatherDescription
 import com.uxstate.skycast.domain.model.Wind
 
-@Entity(tableName = "current_weather_table")
-data class CurrentEntity(
+@Entity(tableName = "forecast_weather_table")
+data class ForecastEntity(
     @PrimaryKey(autoGenerate = true) val id: Int? = null,
+    val date: String,
     val lastFetchTime: Long,
-    val cityName: String,
-    val cityId: Int,
-    val weatherDesc: List<WeatherDescription>,
+    val networkWeatherDesc: List<WeatherDescription>,
     @Embedded val wind: Wind,
-    @Embedded val weatherCondition: WeatherCondition
+    @Embedded val networkWeatherCondition: WeatherCondition
 )
