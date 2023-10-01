@@ -1,7 +1,7 @@
 package com.uxstate.skycast.data.remote.WeatherApi
 
 import com.uxstate.skycast.data.remote.dto.current.CurrentWeatherDto
-import com.uxstate.skycast.data.remote.dto.forecast.WeatherForecastDto
+import com.uxstate.skycast.data.remote.dto.forecast.ForecastWeatherDto
 import com.uxstate.skycast.utils.GET_CURRENT
 import com.uxstate.skycast.utils.GET_FORECAST
 import retrofit2.Response
@@ -17,5 +17,5 @@ interface WeatherApi {
     ): Response<CurrentWeatherDto>
 
     @GET(GET_FORECAST)
-    suspend fun getForecastWeather(@Query("id") cityId:Int):Response<WeatherForecastDto>
+    suspend fun getForecastWeather(@Query("id") cityId:Int):Response<ForecastWeatherDto>
 }

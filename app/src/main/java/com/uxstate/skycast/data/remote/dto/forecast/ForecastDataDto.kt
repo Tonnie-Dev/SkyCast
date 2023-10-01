@@ -3,7 +3,7 @@ package com.uxstate.skycast.data.remote.dto.forecast
 
 import com.squareup.moshi.Json
 
-data class WeatherData (
+data class ForecastDataDto (
     @Json(name = "clouds")
     val clouds: Clouds,
     @Json(name = "dt")
@@ -21,7 +21,7 @@ data class WeatherData (
     @Json(name = "visibility")
     val visibility: Int,
     @Json(name = "weather")
-    val weather: List<Weather>,
+    val forecastWeatherDescDto: List<ForecastWeatherDescDto>,
     @Json(name = "wind")
     val wind: Wind
 )

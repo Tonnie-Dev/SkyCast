@@ -3,7 +3,7 @@ package com.uxstate.skycast.data.remote.dto.forecast
 
 import com.squareup.moshi.Json
 
-data class Weather(
+data class ForecastWeatherDescDto(
     @Json(name = "description")
     val description: String,
     @Json(name = "icon")

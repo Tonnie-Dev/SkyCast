@@ -3,7 +3,7 @@ package com.uxstate.skycast.data.local.entity
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.uxstate.skycast.domain.model.WeatherCondition
+import com.uxstate.skycast.domain.model.WeatherParams
 import com.uxstate.skycast.domain.model.WeatherDescription
 import com.uxstate.skycast.domain.model.Wind
 
@@ -15,5 +15,5 @@ data class CurrentEntity(
     val cityId: Int,
     val weatherDesc: List<WeatherDescription>,
     @Embedded val wind: Wind,
-    @Embedded val weatherCondition: WeatherCondition
+    @Embedded val weatherParams: WeatherParams
 )
