@@ -10,6 +10,7 @@ import com.uxstate.skycast.data.remote.dto.forecast.ForecastWeatherDescDto
 import com.uxstate.skycast.data.remote.dto.forecast.ForecastWindDto
 import com.uxstate.skycast.domain.model.WeatherParams
 import com.uxstate.skycast.domain.model.WeatherDescription
+import com.uxstate.skycast.domain.model.WeatherForecast
 import com.uxstate.skycast.domain.model.Wind
 
 fun CurrentWeatherDto.toEntity(lastFetchTime: Long): CurrentEntity {
@@ -26,8 +27,7 @@ fun CurrentWeatherDto.toEntity(lastFetchTime: Long): CurrentEntity {
                    // TODO: check if these need to be doubles or int
                     pressure = this.main.pressure.toDouble(),
                     humidity = this.main.humidity.toDouble()
-            )
-    )
+            ))
 }
 
 
@@ -48,6 +48,24 @@ fun ForecastDataDto.toEntity(lastFetchTime: Long): ForecastEntity {
                     humidity = this.main.humidity.toDouble()
             )
     )
+}
+
+
+
+fun ForecastEntity.toModel(): WeatherForecast {
+
+
+return WeatherForecast(
+        date = this.date,
+        wind = Wind(speed = this.wind.speed, deg = this.wind.deg),
+        forecastWeatherDescription = this.forecastWeatherDescription,
+        forecastWeatherParams = WeatherParams(
+                temp = this.forecastWeatherParams.temp,
+                pressure = this.forecastWeatherParams.pressure,
+                humidity = this.forecastWeatherParams.humidity
+        )
+)
+
 }
 fun CurrentWeatherDescDto.toModel(): WeatherDescription = WeatherDescription(
         id = this.id,
