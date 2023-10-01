@@ -31,7 +31,6 @@ fun CurrentWeatherDto.toEntity(lastFetchTime: Long): CurrentEntity {
 }
 
 
-
 fun ForecastDataDto.toEntity(lastFetchTime: Long): ForecastEntity {
 
     return ForecastEntity(
@@ -53,7 +52,6 @@ fun ForecastDataDto.toEntity(lastFetchTime: Long): ForecastEntity {
 
 
 fun ForecastEntity.toModel(): WeatherForecast {
-
 
 return WeatherForecast(
         date = this.date,
