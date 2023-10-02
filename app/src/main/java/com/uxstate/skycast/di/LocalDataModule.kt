@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.uxstate.skycast.data.local.db.WeatherDatabase
+import com.uxstate.skycast.data.local.local_source.LocalDataSource
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,4 +27,6 @@ object LocalDataModule {
                 name = WeatherDatabase.DATABASE_NAME
         ).fallbackToDestructiveMigration().build()
     }
+
+
 }
