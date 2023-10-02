@@ -104,9 +104,9 @@ dependencies {
     implementation(libs.moshi.kotlin)
 
     // Room components
-    implementation(libs.room.runtime)
+    implementation(libs.room.ktx) 
     ksp(libs.room.compiler)
-    implementation(libs.room.ktx)
+
 
     // Kotlin Extensions and Coroutines support for Room
     implementation(libs.room.ktx)
