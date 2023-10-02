@@ -1,3 +1,6 @@
+
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -21,6 +24,27 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        val properties = Properties()
+        val openWeatherApiKey: String
+
+        val localPropertiesFile = project.rootProject.file("local.properties")
+        openWeatherApiKey = if (localPropertiesFile.exists()) {
+            properties.load(localPropertiesFile.inputStream())
+            properties.getProperty("OPEN_WEATHER_API_KEY") ?: ""
+        } else {
+            System.getenv("OPEN_WEATHER_API_KEY") ?: ""
+        }
+
+        buildConfigField(
+                "String",
+                "OPEN_WEATHER_API_KEY",
+                "\"$openWeatherApiKey\""
+        )
+        buildConfigField("String", "BASE_URL", "\"https://api.openweathermap.org/\"")
+
+        buildConfigField("String", "BASE_URL", "\"https://api.openweathermap.org/\"")
+
     }
 
     //Kotlin Block - makes sure that the KSP Plugin looks at
