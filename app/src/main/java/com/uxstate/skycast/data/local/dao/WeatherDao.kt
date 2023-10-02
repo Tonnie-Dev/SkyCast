@@ -26,6 +26,6 @@ interface WeatherDao {
     suspend fun getCurrentWeather():CurrentEntity?
 
     @Query("SELECT* FROM forecast_weather_table")
-    suspend fun getForecastWeather():ForecastEntity?
+    suspend fun getForecastWeather():List<ForecastEntity>?
 
 }
