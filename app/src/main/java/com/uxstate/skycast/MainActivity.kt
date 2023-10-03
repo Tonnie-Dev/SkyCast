@@ -12,8 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.uxstate.skycast.ui.theme.SkyCastTheme
 import dagger.hilt.EntryPoint
+import dagger.hilt.android.AndroidEntryPoint
 
-@EntryPoint
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

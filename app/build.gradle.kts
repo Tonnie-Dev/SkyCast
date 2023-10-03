@@ -13,6 +13,10 @@ android {
     namespace = "com.uxstate.skycast"
     compileSdk = 34
 
+
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         applicationId = "com.uxstate.skycast"
         minSdk = 24
@@ -28,22 +32,22 @@ android {
         val properties = Properties()
         val openWeatherApiKey: String
 
-        val localPropertiesFile = project.rootProject.file("local.properties")
+        val localPropertiesFile = project.rootProject.file("gradle.properties")
         openWeatherApiKey = if (localPropertiesFile.exists()) {
             properties.load(localPropertiesFile.inputStream())
-            properties.getProperty("OPEN_WEATHER_API_KEY") ?: ""
+            properties.getProperty("API_KEY") ?: ""
         } else {
-            System.getenv("OPEN_WEATHER_API_KEY") ?: ""
+            System.getenv("API_KEY") ?: ""
         }
 
         buildConfigField(
                 "String",
-                "OPEN_WEATHER_API_KEY",
+                "API_KEY",
                 "\"$openWeatherApiKey\""
         )
         buildConfigField("String", "BASE_URL", "\"https://api.openweathermap.org/\"")
 
-        buildConfigField("String", "BASE_URL", "\"https://api.openweathermap.org/\"")
+
 
     }
 
@@ -62,12 +66,20 @@ android {
     }
 
     buildTypes {
+
+
         release {
             isMinifyEnabled = false
             proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
                     "proguard-rules.pro"
             )
+        }
+
+        debug{
+
+
+
         }
     }
     compileOptions {

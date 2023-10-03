@@ -1,5 +1,6 @@
 package com.uxstate.skycast.di
 
+import com.airbnb.lottie.BuildConfig
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -59,7 +60,7 @@ object NetworkModule {
     @Singleton
     fun provideRetrofit(converter: Converter.Factory): Retrofit =
         Retrofit.Builder()
-                .baseUrl(LaunchApi.BASE_URL)
+                .baseUrl("")
                 .addConverterFactory(converter)
                 .build()
 }
