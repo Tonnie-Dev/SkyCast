@@ -8,7 +8,7 @@ import javax.inject.Inject
 class JsonParserImpl @Inject constructor(private val moshi: Moshi) : JsonParser {
 
 
-   
+
     //Write Object to Room String
     override fun <T> toJson(obj: T, type: Type): String? {
         //use jsonAdapter<T> for generic adapter

@@ -1,5 +1,6 @@
 package com.uxstate.skycast.di
 
+import com.uxstate.skycast.data.local.converter.JsonParser
 import com.uxstate.skycast.data.local.local_source.LocalDataSource
 import dagger.Binds
 import dagger.Module
@@ -14,4 +15,7 @@ abstract class DataSourcesModule {
 
     @Binds
     abstract fun provideLocalDataSource(localDataSourceImpl: LocalDataSource): LocalDataSource
+
+    @Binds
+    abstract fun provideJsonParser(jsonParserImp:JsonParser):JsonParser
 }
