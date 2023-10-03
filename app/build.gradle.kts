@@ -6,7 +6,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
     id("com.google.devtools.ksp")
-   // id("dagger.hilt.android.plugin")
+   id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -29,7 +29,7 @@ android {
             useSupportLibrary = true
         }
 
-        val properties = Properties()
+       /* val properties = Properties()
         val openWeatherApiKey: String
 
         val localPropertiesFile = project.rootProject.file("gradle.properties")
@@ -45,7 +45,7 @@ android {
                 "API_KEY",
                 "\"$openWeatherApiKey\""
         )
-        buildConfigField("String", "BASE_URL", "\"https://api.openweathermap.org/\"")
+        buildConfigField("String", "BASE_URL", "\"https://api.openweathermap.org/\"")*/
 
 
 
