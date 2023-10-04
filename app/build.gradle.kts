@@ -1,4 +1,3 @@
-
 import java.util.Properties
 
 plugins {
@@ -6,10 +5,14 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
     id("com.google.devtools.ksp")
-   id("dagger.hilt.android.plugin")
+    id("dagger.hilt.android.plugin")
 }
 
+
+
+
 android {
+
     namespace = "com.uxstate.skycast"
     compileSdk = 34
 
@@ -29,24 +32,19 @@ android {
             useSupportLibrary = true
         }
 
-       /* val properties = Properties()
-        val openWeatherApiKey: String
+        val keystoreFile = project.rootProject.file("apikeys.properties")
+        val properties = Properties()
 
-        val localPropertiesFile = project.rootProject.file("gradle.properties")
-        openWeatherApiKey = if (localPropertiesFile.exists()) {
-            properties.load(localPropertiesFile.inputStream())
-            properties.getProperty("API_KEY") ?: ""
-        } else {
-            System.getenv("API_KEY") ?: ""
-        }
+        properties.load(keystoreFile.inputStream())
+        val apiKey = properties.getProperty("API_KEY") ?: ""
 
         buildConfigField(
                 "String",
                 "API_KEY",
-                "\"$openWeatherApiKey\""
+                apiKey
         )
-        buildConfigField("String", "BASE_URL", "\"https://api.openweathermap.org/\"")*/
 
+        buildConfigField("String", "BASE_URL", "\"https://api.openweathermap.org/\"")
 
 
     }
@@ -76,15 +74,14 @@ android {
             )
         }
 
-        debug{
-
+        debug {
 
 
         }
     }
     compileOptions {
-        sourceCompatibility =JavaVersion.VERSION_18
-        targetCompatibility= JavaVersion.VERSION_18
+        sourceCompatibility = JavaVersion.VERSION_18
+        targetCompatibility = JavaVersion.VERSION_18
     }
     kotlinOptions {
         jvmTarget = "18"
@@ -93,7 +90,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion ="1.5.3"
+        kotlinCompilerExtensionVersion = "1.5.3"
     }
     packaging {
         resources {
@@ -140,7 +137,7 @@ dependencies {
     implementation(libs.moshi.kotlin)
 
     // Room components
-    implementation(libs.room.ktx) 
+    implementation(libs.room.ktx)
     ksp(libs.room.compiler)
 
 
@@ -159,16 +156,16 @@ dependencies {
     // Compose Nav Destinations
     implementation(libs.compose.destinations.core)
     ksp(libs.compose.destinations.core)
-/*
-    //Compose Animation
-    implementation libs.compose.animation
+    /*
+        //Compose Animation
+        implementation libs.compose.animation
 
-            //Accompanist Animation
-            implementation libs.accompanist.nav.animation*/
+                //Accompanist Animation
+                implementation libs.accompanist.nav.animation*/
 
-            //Maps Compose library
-implementation(libs.compose.maps)
-implementation(libs.play.services.maps)
+    //Maps Compose library
+    implementation(libs.compose.maps)
+    implementation(libs.play.services.maps)
 
 
 }

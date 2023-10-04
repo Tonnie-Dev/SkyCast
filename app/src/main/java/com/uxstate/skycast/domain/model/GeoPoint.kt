@@ -1,3 +1,14 @@
 package com.uxstate.skycast.domain.model
 
-data class GeoPoint(val latitude:Double, val longitude:Double)
+import com.uxstate.skycast.BuildConfig
+
+data class GeoPoint(val latitude:Double, val longitude:Double){
+
+    fun someFunction(){
+
+        val apiKey = BuildConfig.API_KEY
+    }
+
+}
+
+

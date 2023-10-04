@@ -13,11 +13,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.uxstate.skycast.ui.theme.SkyCastTheme
 import dagger.hilt.EntryPoint
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         setContent {
             SkyCastTheme {
                 // A surface container using the 'background' color from the theme
@@ -26,6 +29,8 @@ class MainActivity : ComponentActivity() {
                         color = MaterialTheme.colorScheme.background
                 ) {
                     Greeting("Android")
+                    val api = BuildConfig.API_KEY
+                    Timber.i("The Api Key is $api")
                 }
             }
         }
