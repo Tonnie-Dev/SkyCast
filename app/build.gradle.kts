@@ -32,7 +32,7 @@ android {
             useSupportLibrary = true
         }
 
-        val keystoreFile = project.rootProject.file("apikeys.properties")
+        val keystoreFile = project.rootProject.file("apikey.properties")
         val properties = Properties()
 
         properties.load(keystoreFile.inputStream())
