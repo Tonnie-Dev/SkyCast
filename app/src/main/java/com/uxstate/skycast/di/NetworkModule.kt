@@ -25,7 +25,7 @@ object NetworkModule {
     private const val READ_TIMEOUT_IN_SECONDS = 15L
     private const val CONNECT_TIMEOUT_IN_SECONDS = 15L
 
-
+/*
     // log feature integrated to show request and response info.
 
     @Provides
@@ -33,21 +33,59 @@ object NetworkModule {
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor =
         HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
-        }
+        }*/
 
 
     //Connect Timeout - Time period for client to establish connection with the target host
     // Read Timeout - Max latency time for waiting server's response
 
-
     @Provides
+    @Singleton
+    fun provideOkHttpClient(): OkHttpClient {
+
+        return OkHttpClient.Builder()
+                .addInterceptor { chain ->
+
+                    /* val initialRequest = chain.request()
+                     val initialUrl = initialRequest.url
+
+                     val newUrl = initialUrl.newBuilder()
+                             .addQueryParameter("appid", BuildConfig.API_KEY)
+                             .build()
+
+                     val newRequest = initialRequest.newBuilder().url(url = newUrl).build()
+
+                     chain.proceed(newRequest)*/
+
+
+                    chain.proceed(
+                            chain.request()
+                                    .apply {
+                                        url.newBuilder()
+                                                .addQueryParameter("appid", BuildConfig.API_KEY)
+                                                .build()
+                                    }
+
+
+                    )
+                }
+                .apply {
+
+                    connectTimeout(CONNECT_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
+                    readTimeout(READ_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
+
+                }
+                .build()
+    }
+
+   /* @Provides
     @Singleton
     fun provideOkHttpClient(interceptor: HttpLoggingInterceptor) =
         OkHttpClient.Builder()
                 .addInterceptor(interceptor)
                 .connectTimeout(CONNECT_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
                 .readTimeout(READ_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
-                .build()
+                .build()*/
 
     @Provides
     @Singleton
@@ -61,9 +99,14 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideWeatherApi(converter: Converter.Factory): WeatherApi=
+    fun provideWeatherApi(converter: Converter.Factory, client: OkHttpClient): WeatherApi =
         Retrofit.Builder()
                 .baseUrl(BuildConfig.BASE_URL)
+                .client(client)
                 .build()
                 .create()
 }
+
+
+
+
