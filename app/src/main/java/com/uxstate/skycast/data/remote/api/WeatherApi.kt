@@ -1,4 +1,4 @@
-package com.uxstate.skycast.data.remote.WeatherApi
+package com.uxstate.skycast.data.remote.api
 
 import com.uxstate.skycast.data.remote.dto.current.CurrentWeatherDto
 import com.uxstate.skycast.data.remote.dto.forecast.ForecastWeatherDto
@@ -10,6 +10,7 @@ import retrofit2.http.Query
 
 interface WeatherApi {
 
+    // TODO: Explore the need to wrap with Response<>
     @GET(GET_CURRENT)
     suspend fun getCurrentWeather(
         @Query("lat") latitude: Double,

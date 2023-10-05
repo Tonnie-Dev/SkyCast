@@ -32,16 +32,18 @@ android {
             useSupportLibrary = true
         }
 
+        //load the values from .properties file
         val keystoreFile = project.rootProject.file("apikey.properties")
         val properties = Properties()
-
         properties.load(keystoreFile.inputStream())
+
+        //return empty key in case something goes wrong
         val apiKey = properties.getProperty("API_KEY") ?: ""
 
         buildConfigField(
-                "String",
-                "API_KEY",
-                apiKey
+                type = "String",
+                name = "API_KEY",
+                value = apiKey
         )
 
         buildConfigField("String", "BASE_URL", "\"https://api.openweathermap.org/\"")
