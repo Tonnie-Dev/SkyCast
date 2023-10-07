@@ -9,3 +9,11 @@ enum class Theme(@StringRes val themeName:Int){
     LIGHT(R.string.light),
     DARK(R.string.dark)
 }
+
+enum class TempUnit(@StringRes val tempUnit:Int){
+
+    FAHRENHEIT(R.string.unit_fahrenheit),
+    CELSIUS(R.string.unit_celsius)
+
+
+}

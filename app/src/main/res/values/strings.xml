@@ -3,4 +3,6 @@
     <string name="light">Light</string>
     <string name="dark">Dark</string>
     <string name="system_default">System default</string>
+    <string name="unit_fahrenheit">Fahrenheit/°F</string>
+    <string name="unit_celsius">Celsius/°C</string>
 </resources>
