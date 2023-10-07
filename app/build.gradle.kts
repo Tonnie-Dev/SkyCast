@@ -169,5 +169,8 @@ dependencies {
     implementation(libs.compose.maps)
     implementation(libs.play.services.maps)
 
+    //Data Store
+    implementation(libs.data.store)
+
 
 }
