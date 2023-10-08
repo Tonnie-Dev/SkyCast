@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,7 +48,8 @@ fun HomeBody(
         Image(
                 painter = painterResource(id = icon),
                 contentDescription = null,
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+                modifier = Modifier.size(spacing.spaceOneHundredDp)
         )
         Text(text = temperature, style = MaterialTheme.typography.titleLarge)
 
@@ -70,7 +72,7 @@ fun HomeHeaderPreviewDark() {
             lastFetchTime = "Sunday, Oct 9, 07:13 AM",
             temperature = "24.2",
             weatherType = "Clear Sky",
-            icon = R.drawable.ic_heavy_snow,
+            icon = R.drawable.ic_clear_sky,
           modifier = Modifier.fillMaxWidth()
     )
 }
