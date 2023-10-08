@@ -5,6 +5,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.material3.MaterialTheme
@@ -16,9 +17,9 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.uxstate.skycast.R
 import com.uxstate.skycast.ui.theme.LocalSpacing
 import com.uxstate.skycast.ui.theme.SkyCastTheme
-import com.uxstate.skycast.R
 
 @Composable
 fun WeatherDataDisplay(modifier: Modifier, humidity: Double, pressure: Double, windSpeed: Double) {
@@ -29,7 +30,23 @@ fun WeatherDataDisplay(modifier: Modifier, humidity: Double, pressure: Double, w
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(spacing.spaceMedium)
     ) {
+        WeatherDataElement(
+                icon = R.drawable.ic_humidity,
+                text = R.string.weather_humidity,
+                value = "${humidity}%"
+        )
 
+        WeatherDataElement(
+                icon = R.drawable.ic_pressure,
+                text = R.string.weather_pressure,
+                value = "${pressure}hPa"
+        )
+
+        WeatherDataElement(
+                icon = R.drawable.ic_speed,
+                text = R.string.weather_wind_speed,
+                value = "${windSpeed}km/h"
+        )
     }
 }
 
@@ -42,32 +59,34 @@ fun WeatherDataElement(
 ) {
     val spacing = LocalSpacing.current
 
-    Image(
-            painter = painterResource(id = icon),
-            contentDescription = null,
-            colorFilter = ColorFilter.tint(
-                    MaterialTheme.colorScheme.primary
-            )
-    )
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        Image(
+                painter = painterResource(id = icon),
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(
+                        MaterialTheme.colorScheme.primary
+                )
+        )
 
-    Text(
-            text = stringResource(id = text),
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.paddingFromBaseline(
-                    top = spacing.spaceSmall,
-                    bottom = spacing.spaceSmall
-            )
+        Text(
+                text = stringResource(id = text),
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.paddingFromBaseline(
+                        top = spacing.spaceSmall,
+                        bottom = spacing.spaceSmall
+                )
 
-    )
+        )
 
-    Text(
-            text = value,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.paddingFromBaseline(
-                    top = spacing.spaceSmall,
-                    bottom = spacing.spaceSmall
-            )
-    )
+        Text(
+                text = value,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.paddingFromBaseline(
+                        top = spacing.spaceSmall,
+                        bottom = spacing.spaceSmall
+                )
+        )
+    }
 }
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
@@ -76,6 +95,20 @@ fun WeatherDataElementPreviewDark() {
 
     SkyCastTheme {
 
-        WeatherDataElement(icon = R.drawable.ic_speed, text = R.string.h, value ="33.0%" )
+        WeatherDataElement(
+                icon = R.drawable.ic_speed,
+                text = R.string.weather_humidity,
+                value = "33.0%"
+        )
+    }
+}
+
+
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
+@Composable
+fun WeatherDisplayPreviewDark() {
+
+    SkyCastTheme {
+        WeatherDataDisplay(modifier = Modifier, humidity = 23.5, pressure = 13.9, windSpeed = 76.4)
     }
 }
