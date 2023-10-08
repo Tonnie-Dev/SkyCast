@@ -12,6 +12,8 @@ data class HomeState(
     val appPreferences: AppPreferences = appPreferencesInitialState
 ) {
 
+
+    //serves to initialize app preferences initial state
     companion object {
         val appPreferencesInitialState =
             AppPreferences(
