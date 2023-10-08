@@ -1,5 +1,6 @@
 package com.uxstate.skycast.di
 
+import com.uxstate.skycast.data.repository.WeatherRepositoryImpl
 import com.uxstate.skycast.domain.repository.WeatherRepository
 import dagger.Binds
 import dagger.Module
@@ -13,5 +14,5 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindRepository(weatherRepositoryImpl: WeatherRepository): WeatherRepository
+    abstract fun bindRepository(weatherRepositoryImpl: WeatherRepositoryImpl): WeatherRepository
 }
