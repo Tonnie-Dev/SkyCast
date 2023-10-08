@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import retrofit2.http.GET
 import javax.inject.Inject
 
 @HiltViewModel
@@ -61,5 +62,10 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             prefs.updateCityId(cityId = cityId)
         }
+    }
+
+    fun refreshWeather() {
+
+        getWeatherInfo()
     }
 }
