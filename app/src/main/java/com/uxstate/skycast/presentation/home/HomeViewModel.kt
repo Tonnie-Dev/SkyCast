@@ -17,12 +17,15 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val repository: WeatherRepository,
     private val tracker: LocationTracker,
-    val prefs: DataStoreOperations
+    private val prefs: DataStoreOperations
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeState())
     val uiState = _uiState.asStateFlow()
 
+    init {
+        getWeatherInfo()
+    }
     fun getWeatherInfo(){
 
         _uiState.update {
