@@ -118,6 +118,8 @@ dependencies {
 
     //Material 3
     implementation(libs.material3)
+    //Material 2 for PullRefreshIndicator
+    implementation(libs.material)
 
     // Coil
     implementation(libs.compose.coil)

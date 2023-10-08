@@ -16,8 +16,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
+import javax.inject.Inject
 
-class DataStoreOperationsImpl(@ApplicationContext private val context: Context) : DataStoreOperations {
+class DataStoreOperationsImpl @Inject constructor (@ApplicationContext private val context: Context) : DataStoreOperations {
 
     private val Context.dataStore by preferencesDataStore(name = PREFS_NAME)
     override val appPreferences: Flow<AppPreferences> =

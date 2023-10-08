@@ -14,6 +14,6 @@ import javax.inject.Singleton
 abstract class DatastoreModule {
 
     @Binds
-    @Singleton
-   abstract fun bindDataStoreOperations(dataStoreOperationsImpl: DataStoreOperations): DataStoreOperations
+
+   abstract fun bindDataStoreOperations(dataStoreOperationsImpl: DataStoreOperationsImpl): DataStoreOperations
 }

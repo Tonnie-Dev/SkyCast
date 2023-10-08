@@ -89,19 +89,20 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideMoshiConverter(): Converter.Factory {
-        val moshi = Moshi.Builder()
+    fun provideMoshiConverter(): Moshi {
+
+
+        return Moshi.Builder()
                 .addLast(KotlinJsonAdapterFactory())
                 .build()
-
-        return MoshiConverterFactory.create(moshi)
     }
 
     @Provides
     @Singleton
-    fun provideWeatherApi(converter: Converter.Factory, client: OkHttpClient): WeatherApi =
+    fun provideWeatherApi(moshi: Moshi, client: OkHttpClient): WeatherApi =
         Retrofit.Builder()
                 .baseUrl(BuildConfig.BASE_URL)
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
                 .client(client)
                 .build()
                 .create()
