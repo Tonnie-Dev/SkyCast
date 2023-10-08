@@ -116,10 +116,11 @@ dependencies {
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
 
+    //Material 2 for PullRefreshIndicator
+    implementation(libs.material2)
     //Material 3
     implementation(libs.material3)
-    //Material 2 for PullRefreshIndicator
-    implementation(libs.material)
+
 
     // Coil
     implementation(libs.compose.coil)
