@@ -4,6 +4,7 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.material3.MaterialTheme
@@ -15,6 +16,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.uxstate.skycast.ui.theme.LocalSpacing
+import com.uxstate.skycast.R
 
 @Composable
 fun HomeBody(
@@ -58,20 +60,17 @@ fun HomeBody(
         )
     }
 
-
-
-
 }
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun HomeHeaderPreviewDark() {
-
     HomeBody(
             location = "Riruta",
             lastFetchTime = "Sunday, Oct 9, 07:13 AM",
-            temperature = 24.2,
+            temperature = "24.2",
             weatherType = "Clear Sky",
-            icon =
+            icon = R.drawable.ic_heavy_snow,
+          modifier = Modifier.fillMaxWidth()
     )
 }
