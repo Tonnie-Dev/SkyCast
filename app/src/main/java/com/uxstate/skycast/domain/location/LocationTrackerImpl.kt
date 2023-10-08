@@ -1,10 +1,103 @@
 package com.uxstate.skycast.domain.location
 
+import android.Manifest
+import android.app.Application
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.LocationManager
+import androidx.core.content.ContextCompat
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.uxstate.skycast.domain.model.GeoPoint
 import com.uxstate.skycast.utils.Resource
+import kotlinx.coroutines.suspendCancellableCoroutine
+import javax.inject.Inject
+import kotlin.coroutines.resume
 
-class LocationTrackerImpl : LocationTracker {
-    override suspend fun getCurrentLocation(): Resource<GeoPoint?> {
-        TODO("Not yet implemented")
-    }
+class LocationTrackerImpl @Inject constructor(
+    private val locationClient: FusedLocationProviderClient,
+    private val application: Application
+) :
+    LocationTracker {
+    override suspend fun getCurrentLocation(): Resource<GeoPoint?> =
+        suspendCancellableCoroutine { cancellableContinuation ->
+
+            val isFineLocAccessGranted = ContextCompat.checkSelfPermission(
+                    application,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+
+
+            val isCoarseLocPermissionGranted =
+                ContextCompat.checkSelfPermission(application, Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+
+
+            val locationManager =
+                application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+            val isGpsEnabled =
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
+                        locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+
+            if (!isFineLocAccessGranted || !isCoarseLocPermissionGranted || !isGpsEnabled) {
+
+                Resource.Error(
+                        data = null,
+                        errorMessage = "Please make sure you have enabled location permission"
+                )
+            }
+
+            //locationClient.lastLocation returns a task
+
+            locationClient.lastLocation.apply {
+                // TODO: Determine if this block is necessary
+               /* if (isComplete) {
+
+
+                    if (isSuccessful) {
+
+                        cancellableContinuation.resume(
+                                Resource.Success(
+                                        GeoPoint(
+                                                latitude = result.latitude,
+                                                longitude = result.longitude
+                                        )
+                                )
+                        )
+                    } else {
+
+                        cancellableContinuation.resume(
+                                Resource.Error(
+                                        errorMessage = "Failed getting the last known location"
+                                )
+                        )
+                    }
+
+                    return@suspendCancellableCoroutine
+                }*/
+
+                addOnSuccessListener {
+                    cancellableContinuation.resume(
+                            Resource.Success(
+                                    GeoPoint(
+                                            latitude = it.latitude,
+                                            longitude = it.longitude
+                                    )
+                            )
+                    )
+                }
+
+                addOnFailureListener {
+                    cancellableContinuation.resume(
+                            Resource.Error(
+                                    errorMessage = "Failed getting the last known location"
+                            )
+                    )
+                }
+
+                addOnCanceledListener {
+                    cancellableContinuation.cancel()
+                }
+            }
+        }
 }
