@@ -1,6 +1,7 @@
 package com.uxstate.skycast.data.prefs
 
 import android.content.Context
+import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -16,7 +17,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
-class DataStoreOperationsImpl(@ApplicationContext context: Context) : DataStoreOperations {
+class DataStoreOperationsImpl(@ApplicationContext private val context: Context) : DataStoreOperations {
 
     private val Context.dataStore by preferencesDataStore(name = PREFS_NAME)
     override val appPreferences: Flow<AppPreferences> =
@@ -41,15 +42,29 @@ class DataStoreOperationsImpl(@ApplicationContext context: Context) : DataStoreO
                 }
 
     override suspend fun updateTheme(theme: Theme) {
-        TODO("Not yet implemented")
+      context.dataStore.edit {
+          prefs ->
+
+          prefs[SELECTED_THEME] = theme.name
+      }
     }
 
     override suspend fun updateTempUnit(unit: TempUnit) {
-        TODO("Not yet implemented")
+ context.dataStore.edit {
+
+     prefs ->
+
+     prefs[SELECTED_TEMP_UNIT] = unit.name
+ }
     }
 
     override suspend fun updateCityId(cityId: Int) {
-        TODO("Not yet implemented")
+       context.dataStore.edit {
+
+           prefs ->
+
+           prefs[CITY_ID] = cityId
+       }
     }
 
     //PrefsKeysObject
