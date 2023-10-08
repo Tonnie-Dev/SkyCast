@@ -10,4 +10,8 @@ const val BASE_URL = "https://api.openweathermap.org/"
 const val GET_CURRENT= "data/2.5/weather"
 const val GET_FORECAST = "data/2.5/forecast"
 
+//Database
 const val EXPIRY_TIME = 1000L * 60
+
+//Data Store
+const val PREFS_NAME = "prefs"
