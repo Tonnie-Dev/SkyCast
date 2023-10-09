@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import com.uxstate.skycast.presentation.home.components.HomeBody
 import com.uxstate.skycast.presentation.home.components.WeatherDataDisplay
 import com.uxstate.skycast.ui.theme.LocalSpacing
+import com.uxstate.skycast.utils.toDateFormat
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -36,7 +37,9 @@ fun HomeScreen(modifier: Modifier, uiState: HomeState, refreshWeather: () -> Uni
 
 val scrollState = rememberScrollState()
 val tempUnit = uiState.appPreferences.tempUnit
-
+val temperature = if (tempUnit.toString() == Constants.FAHRENHEIT) "${
+    (it.networkWeatherCondition.temp.toFahrenheit())
+}${Constants.FAHRENHEIT_SIGN}" else "${it.networkWeatherCondition.temp.toCelsius()}${Constants.CELSIUS_SIGN}"
 
     uiState.currentWeather?.let {
 
@@ -47,8 +50,8 @@ val tempUnit = uiState.appPreferences.tempUnit
                 scrollState = scrollState,
                 isLoading = isLoading,
                 location = it.cityName,
-                lastFetchTime =it.lastFetchedTime ,
-                temperature = uiState.currentWeather.,
+                lastFetchTime =it.lastFetchedTime.toDateFormat() ,
+                temperature = uiState.currentWeather,
                 weatherType = ,
                 humidity = ,
                 pressure = ,

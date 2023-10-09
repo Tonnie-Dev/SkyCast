@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import java.text.SimpleDateFormat
 import java.util.Date
 
-// TODO: Revisit this 
+// TODO: Revisit this
 @SuppressLint("SimpleDateFormat")
 fun Long.toDateFormat(): String {
     val date = Date(this)

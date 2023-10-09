@@ -15,3 +15,8 @@ const val EXPIRY_TIME = 1000L * 60
 
 //Data Store
 const val PREFS_NAME = "prefs"
+
+//Home Screen
+const val FAHRENHEIT = "FAHRENHEIT"
+const val FAHRENHEIT_SIGN = "°F"
+const val CELSIUS_SIGN = "°C"
