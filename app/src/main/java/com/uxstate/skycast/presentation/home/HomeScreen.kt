@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +28,34 @@ import com.uxstate.skycast.ui.theme.LocalSpacing
 @Composable
 fun HomeScreen(modifier: Modifier, uiState: HomeState, refreshWeather: () -> Unit) {
 
+
+    val isLoading = uiState.isLoading
+    val pullRefreshState = rememberPullRefreshState(
+            refreshing = isLoading,
+            onRefresh = refreshWeather)
+
+val scrollState = rememberScrollState()
+val tempUnit = uiState.appPreferences.tempUnit
+
+
+    uiState.currentWeather?.let {
+
+
+        HomeContent(
+                modifier = modifier,
+                pullRefreshState = pullRefreshState,
+                scrollState = scrollState,
+                isLoading = isLoading,
+                location = it.cityName,
+                lastFetchTime =it.lastFetchedTime ,
+                temperature = uiState.currentWeather.,
+                weatherType = ,
+                humidity = ,
+                pressure = ,
+                windSpeed = ,
+                icon =
+        )
+    }
 
 }
 
