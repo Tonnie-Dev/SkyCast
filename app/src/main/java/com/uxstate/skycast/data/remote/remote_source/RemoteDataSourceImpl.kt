@@ -21,8 +21,7 @@ class RemoteDataSourceImpl @Inject constructor(private val api: WeatherApi) : Re
 
             try {
 
-                Timber.i("No Exception - inside try block ${api.getCurrentWeather(geoPoint.latitude,
-                        geoPoint.longitude).body()}")
+
                 Resource.Success(
                         data = api.getCurrentWeather(
                                 geoPoint.latitude,
@@ -31,7 +30,7 @@ class RemoteDataSourceImpl @Inject constructor(private val api: WeatherApi) : Re
                                 .body()
                 )
             } catch (e: Exception) {
-                Timber.i("Exception - $e")
+
                 Resource.Error(errorMessage = e.message ?: "Unknown Error Occurred")
 
             }

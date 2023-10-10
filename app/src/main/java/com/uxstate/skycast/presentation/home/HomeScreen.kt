@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.PullRefreshState
@@ -78,6 +80,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
     if (permissionState.status.isGranted) {
         state.currentWeather?.let {
 
+
             HomeContent(
                     pullRefreshState = pullRefreshState,
                     scrollState = scrollState,
@@ -96,6 +99,17 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
 
 
             )
+            /*if (!state.isLoading){
+
+
+            }else {
+
+                Box (contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()){
+                    CircularProgressIndicator(modifier = Modifier.size(50.dp))
+
+                }
+            }*/
+
         }
     } else {
         Box(

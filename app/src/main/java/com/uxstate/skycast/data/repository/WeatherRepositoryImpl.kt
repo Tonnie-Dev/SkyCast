@@ -23,6 +23,7 @@ class WeatherRepositoryImpl @Inject constructor(
 ) : WeatherRepository {
     override fun getCurrentWeather(geoPoint: GeoPoint): Flow<Resource<CurrentWeather>> = flow {
 
+        emit(Resource.Loading(isLoading = true))
         fetchLocalCurrentWeather()?.takeIf {
             !it.isExpired()
 
@@ -31,6 +32,7 @@ class WeatherRepositoryImpl @Inject constructor(
                 ?.let {
 
                     emit(Resource.Success(it.toModel()))
+
                 } ?: run {
 
             when (val result = remoteDataSource.getRemoteCurrentWeather(geoPoint)) {
@@ -40,12 +42,12 @@ class WeatherRepositoryImpl @Inject constructor(
                     result.data?.let {
                         localDataSource.insertCurrentWeather(it.toEntity(System.currentTimeMillis()))
                     }
-Timber.i("Repository Impl - Success Block - ${fetchLocalCurrentWeather()?.toModel()}")
+
                     emit(Resource.Success(fetchLocalCurrentWeather()?.toModel()))
                 }
 
                 is Resource.Error -> {
-                    Timber.i("Repository Impl - Error Block")
+
                     emit(
                             Resource.Error(
                                     data = fetchLocalCurrentWeather()?.toModel(),
@@ -56,10 +58,11 @@ Timber.i("Repository Impl - Success Block - ${fetchLocalCurrentWeather()?.toMode
 
                 else -> {
 
-                    emit(Resource.Loading())
+                    emit(Resource.Loading(isLoading = true))
                 }
             }
         }
+        emit(Resource.Loading(isLoading = false))
 
     }
 
