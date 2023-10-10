@@ -31,6 +31,7 @@ class WeatherRepositoryImpl @Inject constructor(
         }
                 ?.let {
 
+                    Timber.i("using local cache")
                     emit(Resource.Success(it.toModel()))
 
                 } ?: run {
@@ -41,6 +42,8 @@ class WeatherRepositoryImpl @Inject constructor(
                     localDataSource.clearCurrentWeatherData()
                     result.data?.let {
                         localDataSource.insertCurrentWeather(it.toEntity(System.currentTimeMillis()))
+
+                        Timber.i("Remote data fetched!!")
                     }
 
                     emit(Resource.Success(fetchLocalCurrentWeather()?.toModel()))

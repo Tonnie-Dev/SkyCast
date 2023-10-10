@@ -1,14 +1,20 @@
 package com.uxstate.skycast.presentation.forecast
 
 import com.uxstate.skycast.domain.model.ForecastWeather
+import com.uxstate.skycast.domain.model.GeoPoint
 import com.uxstate.skycast.domain.prefs.AppPreferences
 import com.uxstate.skycast.domain.prefs.TempUnit
 import com.uxstate.skycast.domain.prefs.Theme
 
 data class ForecastState(
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null,
+    val cityId:Int? = null,
     val forecastData: List<ForecastWeather> = emptyList(),
     val filteredForecast: List<ForecastWeather> = emptyList(),
-    val isLoading: Boolean = false,
+    val prefs: AppPreferences = appPreferencesInitialState
+
+
 ) {
 
     companion object {
@@ -19,5 +25,7 @@ data class ForecastState(
                     tempUnit = TempUnit.CELSIUS,
                     savedCityId = -1
             )
+
+
     }
 }
