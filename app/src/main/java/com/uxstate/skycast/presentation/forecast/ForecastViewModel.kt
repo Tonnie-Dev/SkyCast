@@ -20,8 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ForecastViewModel @Inject constructor(
     private val repository: WeatherRepository,
-   private val tracker: LocationTracker,
-   private val prefs: DataStoreOperations
+    private val tracker: LocationTracker,
+    private val prefs: DataStoreOperations
 ) : ViewModel() {
 
 
@@ -37,37 +37,41 @@ class ForecastViewModel @Inject constructor(
 
         val cityId = _state.value.cityId
 
-        cityId?.let {id ->
+        cityId?.let { id ->
 
-            repository.getForecastWeather(id).onEach { result ->
+            repository.getForecastWeather(id)
+                    .onEach { result ->
 
-                when(result){
+                        when (result) {
 
-                    is Resource.Loading -> {
+                            is Resource.Loading -> {
 
-                        _state.update { it.copy(isLoading = result.isLoading)  }
-                    }
-                    is Resource.Error -> {
+                                _state.update { it.copy(isLoading = result.isLoading) }
+                            }
 
-                        _state.update { it.copy(errorMessage = result.errorMessage)  }
-                    }
-                    is Resource.Success -> {
+                            is Resource.Error -> {
 
-                        result.data?.let {forecastWeather ->
+                                _state.update { it.copy(errorMessage = result.errorMessage) }
+                            }
 
-                            _state.update { it.copy(forecastData = forecastWeather) }
+                            is Resource.Success -> {
+
+                                result.data?.let { forecastWeather ->
+
+                                    _state.update { it.copy(forecastData = forecastWeather) }
+                                }
+                            }
+
                         }
+
                     }
-
-                }
-
-            }.launchIn(viewModelScope)
+                    .launchIn(viewModelScope)
         }
 
 
     }
 
-    private fun getCityId(){
+    private fun getCityId() {
 
         viewModelScope.launch {
             prefs.appPreferences.collectLatest { savedPrefs ->
@@ -77,9 +81,8 @@ class ForecastViewModel @Inject constructor(
 
         }
 
-        }
-
-
     }
 
+
 }
+
