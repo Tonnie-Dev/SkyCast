@@ -9,8 +9,6 @@ plugins {
 }
 
 
-
-
 android {
 
     namespace = "com.uxstate.skycast"
@@ -28,6 +26,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -51,20 +50,6 @@ android {
 
     }
 
-    //Kotlin Block - makes sure that the KSP Plugin looks at
-    // the right paths when it comes to generated classes
-
-    kotlin {
-        sourceSets {
-            debug {
-                kotlin.srcDir("build/generated/ksp/debug/kotlin")
-            }
-            release {
-                kotlin.srcDir("build/generated/ksp/release/kotlin")
-            }
-        }
-    }
-
     buildTypes {
 
 
@@ -75,7 +60,7 @@ android {
                     "proguard-rules.pro"
             )
         }
-
+        // TODO: check this block
         debug {
 
 
@@ -160,13 +145,13 @@ dependencies {
 
     // Compose Nav Destinations
     implementation(libs.compose.destinations.core)
-    ksp(libs.compose.destinations.core)
-    /*
-        //Compose Animation
-        implementation libs.compose.animation
+    ksp(libs.compose.destinations.ksp)
 
-                //Accompanist Animation
-                implementation libs.accompanist.nav.animation*/
+    //Compose Animation
+    implementation(libs.compose.animation)
+
+    //Accompanist Animation
+    implementation(libs.accompanist.nav.animation)
 
     //Maps Compose library
     implementation(libs.compose.maps)

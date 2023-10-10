@@ -17,32 +17,47 @@ import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.uxstate.skycast.domain.model.WeatherType
 import com.uxstate.skycast.presentation.home.components.HomeBody
 import com.uxstate.skycast.presentation.home.components.WeatherDataDisplay
 import com.uxstate.skycast.ui.theme.LocalSpacing
+import com.uxstate.skycast.utils.CELSIUS_SIGN
+import com.uxstate.skycast.utils.FAHRENHEIT
+import com.uxstate.skycast.utils.FAHRENHEIT_SIGN
+import com.uxstate.skycast.utils.toCelsius
 import com.uxstate.skycast.utils.toDateFormat
+import com.uxstate.skycast.utils.toFahrenheit
 
 
-@OptIn(ExperimentalMaterialApi::class)
+@RootNavGraph(start = true)
+@Destination
 @Composable
-fun HomeScreen(modifier: Modifier, uiState: HomeState, refreshWeather: () -> Unit) {
+@OptIn(ExperimentalMaterialApi::class)
 
+fun HomeScreen(modifier: Modifier, viewModel: HomeViewModel = hiltViewModel(), navigator: DestinationsNavigator) {
 
-    val isLoading = uiState.isLoading
+    val state by viewModel.uiState.collectAsState()
+
+    val isLoading = state.isLoading
     val pullRefreshState = rememberPullRefreshState(
             refreshing = isLoading,
-            onRefresh = refreshWeather)
+            onRefresh = viewModel::refreshWeather
+    )
 
-val scrollState = rememberScrollState()
-val tempUnit = uiState.appPreferences.tempUnit
-val temperature = if (tempUnit.toString() == Constants.FAHRENHEIT) "${
-    (it.networkWeatherCondition.temp.toFahrenheit())
-}${Constants.FAHRENHEIT_SIGN}" else "${it.networkWeatherCondition.temp.toCelsius()}${Constants.CELSIUS_SIGN}"
 
-    uiState.currentWeather?.let {
+    val scrollState = rememberScrollState()
+    val tempUnit = state.appPreferences.tempUnit
 
+
+  state.currentWeather?.let {
 
         HomeContent(
                 modifier = modifier,
@@ -50,13 +65,18 @@ val temperature = if (tempUnit.toString() == Constants.FAHRENHEIT) "${
                 scrollState = scrollState,
                 isLoading = isLoading,
                 location = it.cityName,
-                lastFetchTime =it.lastFetchedTime.toDateFormat() ,
-                temperature = uiState.currentWeather,
-                weatherType = ,
-                humidity = ,
-                pressure = ,
-                windSpeed = ,
-                icon =
+                lastFetchTime = it.lastFetchedTime.toDateFormat(),
+                weatherType = it.networkWeatherDescription.first().description,
+                humidity = it.networkWeatherCondition.humidity,
+                pressure = it.networkWeatherCondition.pressure,
+                windSpeed = it.wind.speed,
+                icon = WeatherType.fromWMO(it.networkWeatherDescription.first().icon).icon,
+                temperature = if (tempUnit.toString() == FAHRENHEIT)
+                    "${(it.networkWeatherCondition.temp.toFahrenheit())}${FAHRENHEIT_SIGN}"
+                else
+                    "${it.networkWeatherCondition.temp.toCelsius()}${CELSIUS_SIGN}"
+
+
         )
     }
 
