@@ -14,6 +14,7 @@ import com.uxstate.skycast.utils.EXPIRY_TIME
 import com.uxstate.skycast.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import timber.log.Timber
 import javax.inject.Inject
 
 class WeatherRepositoryImpl @Inject constructor(
@@ -39,12 +40,12 @@ class WeatherRepositoryImpl @Inject constructor(
                     result.data?.let {
                         localDataSource.insertCurrentWeather(it.toEntity(System.currentTimeMillis()))
                     }
-
+Timber.i("Repository Impl - Success Block - ${fetchLocalCurrentWeather()?.toModel()}")
                     emit(Resource.Success(fetchLocalCurrentWeather()?.toModel()))
                 }
 
                 is Resource.Error -> {
-
+                    Timber.i("Repository Impl - Error Block")
                     emit(
                             Resource.Error(
                                     data = fetchLocalCurrentWeather()?.toModel(),

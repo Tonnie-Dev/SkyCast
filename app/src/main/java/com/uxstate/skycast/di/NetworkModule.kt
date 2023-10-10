@@ -25,16 +25,6 @@ object NetworkModule {
     private const val READ_TIMEOUT_IN_SECONDS = 15L
     private const val CONNECT_TIMEOUT_IN_SECONDS = 15L
 
-/*
-    // log feature integrated to show request and response info.
-
-    @Provides
-    @Singleton
-    fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor =
-        HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }*/
-
 
     //Connect Timeout - Time period for client to establish connection with the target host
     // Read Timeout - Max latency time for waiting server's response
@@ -45,29 +35,19 @@ object NetworkModule {
 
         return OkHttpClient.Builder()
                 .addInterceptor { chain ->
+                    
+                 val originalRequest = chain.request()
+                    val newRequest = originalRequest.newBuilder()
+                            .apply {
+                                url(originalRequest.url.newBuilder()
+                                        .addQueryParameter("appid", BuildConfig.API_KEY)
+                                        .build())
+                            }
+                            .build()
 
-                    /* val initialRequest = chain.request()
-                     val initialUrl = initialRequest.url
-
-                     val newUrl = initialUrl.newBuilder()
-                             .addQueryParameter("appid", BuildConfig.API_KEY)
-                             .build()
-
-                     val newRequest = initialRequest.newBuilder().url(url = newUrl).build()
-
-                     chain.proceed(newRequest)*/
-
-
-                    chain.proceed(
-                            chain.request()
-                                    .apply {
-                                        url.newBuilder()
-                                                .addQueryParameter("appid", BuildConfig.API_KEY)
-                                                .build()
-                                    }
+                     chain.proceed(newRequest)
 
 
-                    )
                 }
                 .apply {
 
@@ -78,14 +58,6 @@ object NetworkModule {
                 .build()
     }
 
-   /* @Provides
-    @Singleton
-    fun provideOkHttpClient(interceptor: HttpLoggingInterceptor) =
-        OkHttpClient.Builder()
-                .addInterceptor(interceptor)
-                .connectTimeout(CONNECT_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
-                .readTimeout(READ_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
-                .build()*/
 
     @Provides
     @Singleton
@@ -106,8 +78,8 @@ object NetworkModule {
                 .client(client)
                 .build()
                 .create()
+
+
 }
-
-
 
 

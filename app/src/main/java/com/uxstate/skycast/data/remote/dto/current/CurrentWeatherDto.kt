@@ -18,8 +18,8 @@ data class CurrentWeatherDto(
     val id: Int,
     @Json(name = "main")
     val main: Main,
-    @Json(name = "cityName")
-    val name: String,
+    @Json(name = "name")
+    val cityName: String,
     @Json(name = "sys")
     val sys: Sys,
     @Json(name = "timezone")

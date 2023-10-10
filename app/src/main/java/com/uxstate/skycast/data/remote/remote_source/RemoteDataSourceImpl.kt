@@ -21,7 +21,8 @@ class RemoteDataSourceImpl @Inject constructor(private val api: WeatherApi) : Re
 
             try {
 
-                Timber.i("No Exception - inside try block")
+                Timber.i("No Exception - inside try block ${api.getCurrentWeather(geoPoint.latitude,
+                        geoPoint.longitude).body()}")
                 Resource.Success(
                         data = api.getCurrentWeather(
                                 geoPoint.latitude,

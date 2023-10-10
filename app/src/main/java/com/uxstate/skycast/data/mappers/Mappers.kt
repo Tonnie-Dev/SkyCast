@@ -18,7 +18,7 @@ fun CurrentWeatherDto.toEntity(lastFetchTime: Long): CurrentEntity {
 
     return CurrentEntity(
             lastFetchTime = lastFetchTime,
-            cityName = this.name,
+            cityName = this.cityName,
             cityId = this.id,
             weatherDesc = this.weather.map { it.toModel() },
             wind = this.wind.toModel(),
