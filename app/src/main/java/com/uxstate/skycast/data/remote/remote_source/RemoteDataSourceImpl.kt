@@ -7,6 +7,7 @@ import com.uxstate.skycast.domain.model.GeoPoint
 import com.uxstate.skycast.utils.Resource
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 class RemoteDataSourceImpl @Inject constructor(private val api: WeatherApi) : RemoteDataSource {
@@ -20,6 +21,7 @@ class RemoteDataSourceImpl @Inject constructor(private val api: WeatherApi) : Re
 
             try {
 
+                Timber.i("No Exception - inside try block")
                 Resource.Success(
                         data = api.getCurrentWeather(
                                 geoPoint.latitude,
@@ -28,6 +30,7 @@ class RemoteDataSourceImpl @Inject constructor(private val api: WeatherApi) : Re
                                 .body()
                 )
             } catch (e: Exception) {
+                Timber.i("Exception - $e")
                 Resource.Error(errorMessage = e.message ?: "Unknown Error Occurred")
 
             }

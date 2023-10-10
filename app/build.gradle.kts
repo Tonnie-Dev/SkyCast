@@ -137,8 +137,6 @@ dependencies {
     //Timber
     implementation(libs.timber)
 
-    //Flow Layout
-    implementation(libs.accompanist.flowlayout)
 
     //Lottie Animation
     implementation(libs.lottie.compose)
@@ -150,8 +148,14 @@ dependencies {
     //Compose Animation
     implementation(libs.compose.animation)
 
-    //Accompanist Animation
+    //Accompanist - Animation
     implementation(libs.accompanist.nav.animation)
+
+    //Accompanist - Flow Layout
+    implementation(libs.accompanist.flowlayout)
+
+    //Accompanist - Permissions
+    implementation(libs.accompanist.permissions)
 
     //Maps Compose library
     implementation(libs.compose.maps)
