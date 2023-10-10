@@ -23,7 +23,7 @@ data class HomeState(
                     tempUnit = TempUnit.CELSIUS,
                     savedCityId = -1
             )
-        val geoPointInitialState = GeoPoint(latitude = 0.0, longitude = 0.0)
+        val geoPointInitialState = GeoPoint(latitude = 51.509865, longitude = -0.118092)
     }
 
 
