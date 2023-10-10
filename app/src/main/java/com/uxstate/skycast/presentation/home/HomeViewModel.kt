@@ -39,9 +39,11 @@ class HomeViewModel @Inject constructor(
                 geoPoint ->
 
             } ?: run {
+                _uiState.update { it.copy(errorMessage = "Error getting location") }
+
             }
 
-   _uiState.update { it.copy(errorMessage = "Error getting location") }
+
 
             }
 
