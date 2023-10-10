@@ -8,9 +8,12 @@ import com.uxstate.skycast.domain.repository.WeatherRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.http.GET
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,8 +29,27 @@ class HomeViewModel @Inject constructor(
     init {
         getWeatherInfo()
     }
+
+
+    fun getLastLocation(){
+        viewModelScope.launch {
+
+            tracker.getCurrentLocation().data?.let {
+
+                geoPoint ->
+
+            } ?: run {
+            }
+
+   _uiState.update { it.copy(errorMessage = "Error getting location") }
+
+            }
+
+
+    }
     fun getWeatherInfo(){
 
+        Timber.i("GetWeather called")
         _uiState.update {
             it.copy(isLoading = true)
         }
@@ -56,7 +78,7 @@ class HomeViewModel @Inject constructor(
         }
 
         _uiState.update {
-            it.copy(isLoading = true)
+            it.copy(isLoading = false)
         }
     }
 

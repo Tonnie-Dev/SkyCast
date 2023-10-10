@@ -35,7 +35,7 @@ object NetworkModule {
 
         return OkHttpClient.Builder()
                 .addInterceptor { chain ->
-                    
+
                  val originalRequest = chain.request()
                     val newRequest = originalRequest.newBuilder()
                             .apply {

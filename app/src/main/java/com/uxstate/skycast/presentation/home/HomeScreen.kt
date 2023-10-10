@@ -61,19 +61,14 @@ import com.uxstate.skycast.utils.toFahrenheit
 
 fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: DestinationsNavigator) {
 
-    val homeUiState by viewModel.uiState.collectAsState()
+
     val permissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
-  /*  LaunchedEffect(permissionState.status.isGranted) {
 
-            viewModel.refreshWeather()
-
-    }*/
 
     val state by viewModel.uiState.collectAsState()
 
-    val isLoading = state.isLoading
     val pullRefreshState = rememberPullRefreshState(
-            refreshing = isLoading,
+            refreshing = state.isLoading,
             onRefresh = viewModel::refreshWeather
     )
 
@@ -86,7 +81,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
             HomeContent(
                     pullRefreshState = pullRefreshState,
                     scrollState = scrollState,
-                    isLoading = isLoading,
+                    isLoading = state.isLoading,
                     location = it.cityName,
                     lastFetchTime = it.lastFetchedTime.toDateFormat(),
                     weatherType = it.networkWeatherDescription.first().description,
