@@ -62,7 +62,7 @@ class WeatherRepositoryImpl @Inject constructor(
                 }
             }
         }
-        emit(Resource.Loading(isLoading = false))
+       emit(Resource.Loading(isLoading = false))
 
     }
 
