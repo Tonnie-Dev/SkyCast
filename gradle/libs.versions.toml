@@ -61,7 +61,7 @@ junit-junit = "4.13.2"
 
 androidx-compose-compiler = "1.5.3"
 appcompat = "1.6.1"
-
+kizito-calendar = "2.4.0"
 
 androidx-compose-animation = "1.4.3"
 
@@ -94,6 +94,9 @@ compose-maps = { group = "com.google.maps.android", name = "maps-compose", versi
 compose-animation = { group = "androidx.compose.animation", name = "animation", version.ref = "androidx-compose-animation" }
 
 compose-coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil-kt" }
+
+kizito-wose-calendar = { group = "com.kizitonwose.calendar", name = "compose", version.ref = "kizito-calendar" }
+
 
 compose-destinations-core = "io.github.raamcosta.compose-destinations:animations-core:1.9.53"
 

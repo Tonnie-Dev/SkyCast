@@ -164,5 +164,7 @@ dependencies {
     //Data Store
     implementation(libs.data.store)
 
+    //Kizito Wose Calendar
+    implementation(libs.kizito.wose.calendar)
 
 }
