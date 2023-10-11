@@ -2,16 +2,21 @@ package com.uxstate.skycast.presentation.forecast.components
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -23,21 +28,35 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kizitonwose.calendar.compose.WeekCalendar
 import com.kizitonwose.calendar.compose.weekcalendar.rememberWeekCalendarState
+import com.uxstate.skycast.R
+import com.uxstate.skycast.domain.model.WeatherType
 import com.uxstate.skycast.presentation.forecast.ForecastState
 import com.uxstate.skycast.ui.theme.LocalSpacing
+import com.uxstate.skycast.utils.CELSIUS_SIGN
+import com.uxstate.skycast.utils.FAHRENHEIT
+import com.uxstate.skycast.utils.FAHRENHEIT_SIGN
 import com.uxstate.skycast.utils.displayText
+import com.uxstate.skycast.utils.filterForecastWeatherByDay
 import com.uxstate.skycast.utils.getDifferences
+import com.uxstate.skycast.utils.toCelsius
+import com.uxstate.skycast.utils.toDateFormat
+import com.uxstate.skycast.utils.toFahrenheit
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterialApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-internal fun ForecastScreen(
+internal fun ForecastContent(
     modifier: Modifier = Modifier,
     forecastState: ForecastState,
     refreshWeatherForecast: () -> Unit
@@ -81,7 +100,7 @@ internal fun ForecastScreen(
 
            forecastState.forecastData?.let {
                 if (dayNo in 0..5) {
-                    it.filteredForecast(dayNo)
+                    it.filterForecastWeatherByDay(dayNo)
                             .let { filteredList ->
                                 LazyColumn(
                                         contentPadding = PaddingValues(bottom = 16.dp)
@@ -91,17 +110,17 @@ internal fun ForecastScreen(
                                             Spacer(modifier = Modifier.height(16.dp))
                                         }
 
-                                        item.networkWeatherDescription.forEach { description ->
+                                        item.forecastWeatherDescription.forEach { description ->
                                             ForecastItem(
-                                                    dateAndTime = item.date.toDateFormat(),
+                                                    dateTime = item.date.toDateFormat(),
                                                     weatherType = description.description.toString(),
                                                     temperature =
-                                                    if (selectedTempUnit == Constants.FAHRENHEIT) "${
-                                                        (item.networkWeatherCondition.temp.toFahrenheit())
-                                                    }${Constants.FAHRENHEIT_SIGN}" else "${item.networkWeatherCondition.temp.toCelsius()}${Constants.CELSIUS_SIGN}",
-                                                    weatherIcon = WeatherType.fromWMO(description.icon.toString()).iconRes
+                                                    if (selectedTempUnit == FAHRENHEIT) "${
+                                                        (item.forecastWeatherParams.temp.toFahrenheit())
+                                                    }${FAHRENHEIT_SIGN}" else "${item.forecastWeatherParams.temp.toCelsius()}${CELSIUS_SIGN}",
+                                                   icon = WeatherType.fromWMO(description.icon.toString()).icon
                                             )
-                                            Spacer(modifier = Modifier.height(8.dp))
+                                            Spacer(modifier = Modifier.height(spacing.spaceSmall))
                                         }
                                     }
                                 }

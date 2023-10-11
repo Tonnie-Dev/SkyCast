@@ -23,6 +23,13 @@ fun Long.toDateFormat(): String {
     return dateFormat.format(date)
 }
 
+fun String.toDateFormat(): String {
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
+    val outputFormat = SimpleDateFormat("EEEE MMM d, hh:mm a", Locale.ENGLISH)
+    val inputDate = inputFormat.parse(this)
+    return outputFormat.format(inputDate)
+}
+
 @RequiresApi(Build.VERSION_CODES.O)
 fun DayOfWeek.displayText(uppercase: Boolean = false): String {
     return getDisplayName(TextStyle.SHORT, Locale.ENGLISH).let { value ->

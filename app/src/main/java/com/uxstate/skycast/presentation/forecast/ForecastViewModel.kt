@@ -84,5 +84,9 @@ class ForecastViewModel @Inject constructor(
     }
 
 
+    fun refreshForecastWeather(){
+
+        getForecastWeather()
+    }
 }
 
