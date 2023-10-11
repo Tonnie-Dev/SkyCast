@@ -7,11 +7,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,9 +25,12 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.kizitonwose.calendar.compose.WeekCalendar
+import com.kizitonwose.calendar.compose.weekcalendar.rememberWeekCalendarState
 import com.uxstate.skycast.presentation.forecast.ForecastState
 import com.uxstate.skycast.ui.theme.LocalSpacing
 import com.uxstate.skycast.utils.displayText
+import com.uxstate.skycast.utils.getDifferences
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -72,34 +77,35 @@ internal fun ForecastScreen(
                     },
             )
 
-            Spacer(modifier = Modifier.height(22.dp))
+            Spacer(modifier = Modifier.height(spacing.spaceMedium + spacing.spaceSmall))
 
-            uiState.weatherForecastList?.let {
+           forecastState.forecastData?.let {
                 if (dayNo in 0..5) {
-                    it.filterWeatherForecastsByDay(dayNo).let { filteredList ->
-                        LazyColumn(
-                                contentPadding = PaddingValues(bottom = 16.dp)
-                        ) {
-                            itemsIndexed(filteredList) { index, item ->
-                                if (index != 0) {
-                                    Spacer(modifier = Modifier.height(16.dp))
-                                }
+                    it.filteredForecast(dayNo)
+                            .let { filteredList ->
+                                LazyColumn(
+                                        contentPadding = PaddingValues(bottom = 16.dp)
+                                ) {
+                                    itemsIndexed(filteredList) { index, item ->
+                                        if (index != 0) {
+                                            Spacer(modifier = Modifier.height(16.dp))
+                                        }
 
-                                item.networkWeatherDescription.forEach { description ->
-                                    ForecastItem(
-                                            dateAndTime = item.date.toDateFormat(),
-                                            weatherType = description.description.toString(),
-                                            temperature =
-                                            if (selectedTempUnit == Constants.FAHRENHEIT) "${
-                                                (item.networkWeatherCondition.temp.toFahrenheit())
-                                            }${Constants.FAHRENHEIT_SIGN}" else "${item.networkWeatherCondition.temp.toCelsius()}${Constants.CELSIUS_SIGN}",
-                                            weatherIcon = WeatherType.fromWMO(description.icon.toString()).iconRes
-                                    )
-                                    Spacer(modifier = Modifier.height(8.dp))
+                                        item.networkWeatherDescription.forEach { description ->
+                                            ForecastItem(
+                                                    dateAndTime = item.date.toDateFormat(),
+                                                    weatherType = description.description.toString(),
+                                                    temperature =
+                                                    if (selectedTempUnit == Constants.FAHRENHEIT) "${
+                                                        (item.networkWeatherCondition.temp.toFahrenheit())
+                                                    }${Constants.FAHRENHEIT_SIGN}" else "${item.networkWeatherCondition.temp.toCelsius()}${Constants.CELSIUS_SIGN}",
+                                                    weatherIcon = WeatherType.fromWMO(description.icon.toString()).iconRes
+                                            )
+                                            Spacer(modifier = Modifier.height(8.dp))
+                                        }
+                                    }
                                 }
                             }
-                        }
-                    }
                 } else {
                     Box(
                             modifier = modifier
@@ -126,7 +132,7 @@ internal fun ForecastScreen(
                     }
                 }
             }
-        }
+        }}}
 
 
 

@@ -4,11 +4,14 @@ import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
+import com.uxstate.skycast.domain.model.ForecastWeather
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.Period
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -35,3 +38,28 @@ fun MutableState<LocalDate>.getDifferences(fromDate: LocalDate): Int {
 
     return Period.between(from, to).days
 }
+
+fun List<ForecastWeather>.filterForecastWeatherByDay(selectedDay: Int): List<ForecastWeather> {
+    val calendar = Calendar.getInstance()
+    calendar.add(Calendar.DATE, selectedDay)
+    val checkerDay = calendar.get(Calendar.DATE)
+    val checkerMonth = calendar.get(Calendar.MONTH)
+    val checkerYear = calendar.get(Calendar.YEAR)
+
+    val filteredList = this.filter { weatherForecast ->
+        val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
+        val formattedDate = format.parse(weatherForecast.date)
+        val weatherForecastDay = formattedDate?.date
+        val weatherForecastMonth = formattedDate?.month
+        val weatherForecastYear = formattedDate?.year
+
+        // This checks if the selected day, month and year are equal. The year requires an addition of 1900 to get the correct year.
+        weatherForecastDay == checkerDay && weatherForecastMonth == checkerMonth && weatherForecastYear?.plus(
+                1900
+        ) == checkerYear
+    }
+
+    return filteredList
+}
+
+
