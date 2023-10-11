@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -18,6 +19,6 @@ fun ForecastScreen(navigator: DestinationsNavigator, viewModel:ForecastViewModel
     ForecastContent(
 
            forecastState = state,
-            refreshWeatherForecast = viewModel::refreshWeatherForecast
+            refreshWeatherForecast = viewModel::refreshForecastWeather
     )
 }

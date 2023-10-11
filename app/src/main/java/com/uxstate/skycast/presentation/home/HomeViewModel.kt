@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uxstate.skycast.domain.location.LocationTracker
 import com.uxstate.skycast.domain.model.GeoPoint
+import com.uxstate.skycast.domain.prefs.AppPreferences
 import com.uxstate.skycast.domain.prefs.DataStoreOperations
 import com.uxstate.skycast.domain.repository.WeatherRepository
 import com.uxstate.skycast.utils.Resource
@@ -31,9 +32,20 @@ class HomeViewModel @Inject constructor(
     init {
         //getWeatherInfo()
         getLastLocation()
-        getCurrentWeather()
+       getCurrentWeather()
     }
 
+
+    /*fun readPrefs(){
+
+        viewModelScope.launch {
+
+            prefs.appPreferences.collect{ appPreferences ->
+
+                _uiState.update { it.copy(appPreferences = AppPreferences()) }
+            }
+        }
+    }*/
 
     fun getLastLocation(){
         viewModelScope.launch {
@@ -67,20 +79,32 @@ class HomeViewModel @Inject constructor(
             when(result){
 
                 is Resource.Error -> {
-                    Timber.i("is Error ${result.errorMessage}")
+
                     _uiState.update { it.copy(errorMessage = result.errorMessage) }
                 }
                 is Resource.Loading -> {
-                    Timber.i("is Loading")
+
                     _uiState.update { it.copy(isLoading = result.isLoading) }
 
                 }
                 is Resource.Success -> {
 
-                    Timber.i("Is Success")
+
                     result.data?.let {
                         currentWeather->
-                        _uiState.update { it.copy(currentWeather = currentWeather) }
+
+
+                        prefs.appPreferences.collect{
+                            appPreferences ->
+
+
+                                saveCityId(currentWeather.cityId)
+
+
+                            _uiState.update { it.copy(currentWeather = currentWeather,appPreferences = appPreferences) }
+                        }
+
+                       // _uiState.update { it.copy(currentWeather = currentWeather) }
                     }
                 }
             }
@@ -132,6 +156,6 @@ class HomeViewModel @Inject constructor(
 
     fun refreshWeather() {
         getCurrentWeather()
-        //getWeatherInfo()
+      //  getWeatherInfo()
     }
 }

@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -29,16 +30,17 @@ class ForecastViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     init {
+        Timber.i("Init Block called for ForecastViewModel")
         getCityId()
         getForecastWeather()
     }
 
     private fun getForecastWeather() {
-
+        Timber.i("getForecastWeather()")
         val cityId = _state.value.cityId
 
         cityId?.let { id ->
-
+            Timber.i("getForecastWeather() past null check")
             repository.getForecastWeather(id)
                     .onEach { result ->
 

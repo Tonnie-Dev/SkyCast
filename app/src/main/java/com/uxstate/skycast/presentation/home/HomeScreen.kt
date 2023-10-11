@@ -45,6 +45,7 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.uxstate.skycast.R
 import com.uxstate.skycast.domain.model.WeatherType
+import com.uxstate.skycast.presentation.destinations.ForecastScreenDestination
 import com.uxstate.skycast.presentation.home.components.HomeBody
 import com.uxstate.skycast.presentation.home.components.WeatherDataDisplay
 import com.uxstate.skycast.ui.theme.LocalSpacing
@@ -92,6 +93,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
                     pressure = it.networkWeatherCondition.pressure,
                     windSpeed = it.wind.speed,
                     icon = WeatherType.fromWMO(it.networkWeatherDescription.first().icon).icon,
+                    onForecastButtonClick = { navigator.navigate(ForecastScreenDestination)},
                     temperature = if (tempUnit.toString() == FAHRENHEIT)
                         "${(it.networkWeatherCondition.temp.toFahrenheit())}${FAHRENHEIT_SIGN}"
                     else
@@ -159,7 +161,8 @@ fun HomeContent(
     humidity: Double,
     pressure: Double,
     windSpeed: Double,
-    @DrawableRes icon: Int
+    @DrawableRes icon: Int,
+     onForecastButtonClick:()-> Unit
 ) {
     val spacing = LocalSpacing.current
 
@@ -193,6 +196,11 @@ fun HomeContent(
                     pressure = pressure,
                     windSpeed = windSpeed
             )
+
+            Button(onClick = onForecastButtonClick) {
+
+                Text("Forecast")
+            }
         }
 
         PullRefreshIndicator(

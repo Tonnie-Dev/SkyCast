@@ -31,7 +31,7 @@ class WeatherRepositoryImpl @Inject constructor(
         }
                 ?.let {
 
-                    Timber.i("using local cache")
+
                     emit(Resource.Success(it.toModel()))
 
                 } ?: run {
@@ -43,7 +43,7 @@ class WeatherRepositoryImpl @Inject constructor(
                     result.data?.let {
                         localDataSource.insertCurrentWeather(it.toEntity(System.currentTimeMillis()))
 
-                        Timber.i("Remote data fetched!!")
+
                     }
 
                     emit(Resource.Success(fetchLocalCurrentWeather()?.toModel()))
@@ -70,7 +70,7 @@ class WeatherRepositoryImpl @Inject constructor(
     }
 
     override fun getForecastWeather(cityId: Int): Flow<Resource<List<ForecastWeather>>> = flow {
-
+        Timber.i("getForecastWeather() invoked")
 
         fetchLocalForecastWeather()?.takeIf { !it.isExpired() && it.isNotEmpty() }
                 ?.let {
@@ -80,18 +80,19 @@ class WeatherRepositoryImpl @Inject constructor(
 
                 is Resource.Success -> {
 
+
                     localDataSource.clearForecastWeatherData()
 
                     result.data?.let { data ->
                         localDataSource.insertForecastWeather(data.map { it.toEntity(System.currentTimeMillis()) })
                     }
-
+                    Timber.i("Success - ${fetchLocalForecastWeather()?.map { it.toModel() }}")
                     emit(Resource.Success(data = fetchLocalForecastWeather()?.map { it.toModel() }))
 
                 }
 
                 is Resource.Error -> {
-
+                    Timber.i("Error - ${result.errorMessage}")
                     emit(
                             Resource.Error(
                                     data = fetchLocalForecastWeather()?.map { it.toModel() },
@@ -102,7 +103,7 @@ class WeatherRepositoryImpl @Inject constructor(
                 }
 
                 else -> {
-
+Timber.i("Loading")
                     emit(Resource.Loading())
                 }
             }
