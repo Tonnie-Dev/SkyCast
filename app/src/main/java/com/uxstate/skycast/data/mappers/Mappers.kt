@@ -57,8 +57,7 @@ fun ForecastDataDto.toEntity(lastFetchTime: Long): ForecastEntity {
             wind = this.forecastWindDto.toModel(),
             forecastWeatherParams = WeatherParams(
                     temp = this.main.temp,
-
-                    // TODO: check if these need to be doubles or int
+                    //TODO: check if these need to be doubles or int
                     pressure = this.main.pressure.toDouble(),
                     humidity = this.main.humidity.toDouble()
             )

@@ -23,6 +23,7 @@ class WeatherRepositoryImpl @Inject constructor(
 ) : WeatherRepository {
     override fun getCurrentWeather(geoPoint: GeoPoint): Flow<Resource<CurrentWeather>> = flow {
 
+
         emit(Resource.Loading(isLoading = true))
         fetchLocalCurrentWeather()?.takeIf {
             !it.isExpired()
@@ -70,13 +71,15 @@ class WeatherRepositoryImpl @Inject constructor(
     }
 
     override fun getForecastWeather(cityId: Int): Flow<Resource<List<ForecastWeather>>> = flow {
-        Timber.i("getForecastWeather() invoked")
+        Timber.i("WRepoImpl F2 called")
+
 
         fetchLocalForecastWeather()?.takeIf { !it.isExpired() && it.isNotEmpty() }
                 ?.let {
                     Timber.i("Checking Local Cache")
                     emit(Resource.Success(data = it.map { entity -> entity.toModel() }))
-                } ?: run {
+                }
+            ?: run {
 
             Timber.i("Skipped Local cache")
             when (val result = remoteDataSource.getRemoteForecastWeather(cityId = cityId)) {
@@ -114,6 +117,7 @@ Timber.i("Loading")
         }
 
 
+        Timber.i("Exiting Function 2")
     }
 
     private suspend fun fetchLocalCurrentWeather(): CurrentEntity? {
@@ -122,6 +126,8 @@ Timber.i("Loading")
 
     private suspend fun fetchLocalForecastWeather(): List<ForecastEntity>? {
 
+        Timber.i("fetchLocalForecastWeather() called - ${localDataSource.getForecastWeather()
+                ?.isEmpty()} ")
         return localDataSource.getForecastWeather()
     }
 
@@ -132,6 +138,6 @@ Timber.i("Loading")
 
     private fun List<ForecastEntity>.isExpired(): Boolean {
 
-        return System.currentTimeMillis() - this.first().lastFetchTime > EXPIRY_TIME
+        return if (isEmpty()) true else System.currentTimeMillis() - this.first().lastFetchTime > EXPIRY_TIME
     }
 }
