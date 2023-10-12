@@ -74,8 +74,11 @@ class WeatherRepositoryImpl @Inject constructor(
 
         fetchLocalForecastWeather()?.takeIf { !it.isExpired() && it.isNotEmpty() }
                 ?.let {
+                    Timber.i("Checking Local Cache")
                     emit(Resource.Success(data = it.map { entity -> entity.toModel() }))
                 } ?: run {
+
+            Timber.i("Skipped Local cache")
             when (val result = remoteDataSource.getRemoteForecastWeather(cityId = cityId)) {
 
                 is Resource.Success -> {

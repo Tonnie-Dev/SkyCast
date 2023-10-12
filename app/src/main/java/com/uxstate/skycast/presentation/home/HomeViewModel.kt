@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uxstate.skycast.domain.location.LocationTracker
 import com.uxstate.skycast.domain.model.GeoPoint
-import com.uxstate.skycast.domain.prefs.AppPreferences
 import com.uxstate.skycast.domain.prefs.DataStoreOperations
 import com.uxstate.skycast.domain.repository.WeatherRepository
 import com.uxstate.skycast.utils.Resource
@@ -15,7 +14,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import retrofit2.http.GET
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -30,89 +28,78 @@ class HomeViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
-        //getWeatherInfo()
+
         getLastLocation()
-       getCurrentWeather()
+
     }
 
-
-    /*fun readPrefs(){
-
-        viewModelScope.launch {
-
-            prefs.appPreferences.collect{ appPreferences ->
-
-                _uiState.update { it.copy(appPreferences = AppPreferences()) }
-            }
-        }
-    }*/
-
-    fun getLastLocation(){
+    private fun getLastLocation() {
         viewModelScope.launch {
 
             tracker.getCurrentLocation().data?.let {
 
                 geoPoint ->
 
-                _uiState.update { it.copy(geoPoint = GeoPoint(latitude = geoPoint.latitude,geoPoint.longitude)) }
-
+                _uiState.update {
+                    it.copy(
+                            geoPoint = GeoPoint(
+                                    latitude = geoPoint.latitude,
+                                    geoPoint.longitude
+                            )
+                    )
+                }
+                getCurrentWeather(geoPoint)
             } ?: run {
+
+
                 _uiState.update { it.copy(errorMessage = "Error getting location") }
 
             }
 
 
-
-            }
+        }
 
 
     }
 
-    fun getCurrentWeather(){
+    private fun getCurrentWeather(geoPoint: GeoPoint = _uiState.value.geoPoint) {
 
-        Timber.i("getCurrentWeatherCalled")
-        repository.getCurrentWeather(_uiState.value.geoPoint).onEach {
-
-
-            result ->
-
-            when(result){
-
-                is Resource.Error -> {
-
-                    _uiState.update { it.copy(errorMessage = result.errorMessage) }
-                }
-                is Resource.Loading -> {
-
-                    _uiState.update { it.copy(isLoading = result.isLoading) }
-
-                }
-                is Resource.Success -> {
+        repository.getCurrentWeather(geoPoint)
+                .onEach {
 
 
-                    result.data?.let {
-                        currentWeather->
+                    result ->
 
+                    when (result) {
 
-                        prefs.appPreferences.collect{
-                            appPreferences ->
+                        is Resource.Error -> {
 
-
-                                saveCityId(currentWeather.cityId)
-
-
-                            _uiState.update { it.copy(currentWeather = currentWeather,appPreferences = appPreferences) }
+                            _uiState.update { it.copy(errorMessage = result.errorMessage) }
                         }
 
-                       // _uiState.update { it.copy(currentWeather = currentWeather) }
-                    }
-                }
-            }
+                        is Resource.Loading -> {
 
-        }.launchIn(viewModelScope)
+                            _uiState.update { it.copy(isLoading = result.isLoading) }
+
+                        }
+
+                        is Resource.Success -> {
+
+
+                            result.data?.let { currentWeather ->
+
+                                saveCityId(currentWeather.cityId)
+                             _uiState.update { it.copy(currentWeather = currentWeather) }
+                            }
+                        }
+                    }
+
+                }
+                .launchIn(viewModelScope)
 
     }
-    fun getWeatherInfo(){
+
+    fun getWeatherInfo() {
 
         Timber.i("GetWeather called")
         _uiState.update {
@@ -125,20 +112,25 @@ class HomeViewModel @Inject constructor(
 
                 geoPoint ->
 
-                repository.getCurrentWeather(geoPoint).collect{
+                repository.getCurrentWeather(geoPoint)
+                        .collect {
 
-                    response ->
+                            response ->
 
-                    prefs.appPreferences.collect{
-                        appPreferences ->
+                            prefs.appPreferences.collect { appPreferences ->
 
-                        response.data?.cityId?.let {
-                            saveCityId(it)
+                                response.data?.cityId?.let {
+                                    saveCityId(it)
+                                }
+
+                                _uiState.update {
+                                    it.copy(
+                                            currentWeather = response.data,
+                                            appPreferences = appPreferences
+                                    )
+                                }
+                            }
                         }
-
-                        _uiState.update { it.copy(currentWeather = response.data,appPreferences = appPreferences) }
-                    }
-                }
             }
         }
 
@@ -147,7 +139,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun saveCityId(cityId:Int){
+    private fun saveCityId(cityId: Int) {
 
         viewModelScope.launch {
             prefs.updateCityId(cityId = cityId)
@@ -156,6 +148,6 @@ class HomeViewModel @Inject constructor(
 
     fun refreshWeather() {
         getCurrentWeather()
-      //  getWeatherInfo()
+        //  getWeatherInfo()
     }
 }

@@ -21,7 +21,6 @@ import javax.inject.Inject
 @HiltViewModel
 class ForecastViewModel @Inject constructor(
     private val repository: WeatherRepository,
-    private val tracker: LocationTracker,
     private val prefs: DataStoreOperations
 ) : ViewModel() {
 
@@ -30,14 +29,12 @@ class ForecastViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     init {
-        Timber.i("Init Block called for ForecastViewModel")
+
         getCityId()
-        getForecastWeather()
+
     }
 
-    private fun getForecastWeather() {
-        Timber.i("getForecastWeather()")
-        val cityId = _state.value.cityId
+    private fun getForecastWeather(cityId:Int? = _state.value.cityId) {
 
         cityId?.let { id ->
             Timber.i("getForecastWeather() past null check")
@@ -79,6 +76,7 @@ class ForecastViewModel @Inject constructor(
             prefs.appPreferences.collectLatest { savedPrefs ->
 
                 _state.update { it.copy(cityId = savedPrefs.savedCityId) }
+                getForecastWeather( savedPrefs.savedCityId)
             }
 
         }
