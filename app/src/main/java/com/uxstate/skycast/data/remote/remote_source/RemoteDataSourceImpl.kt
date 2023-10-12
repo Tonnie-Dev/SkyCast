@@ -35,7 +35,7 @@ class RemoteDataSourceImpl @Inject constructor(private val api: WeatherApi) : Re
                                 .body()
                 )
             } catch (e: Exception) {
-                Timber.i("RDS Error - e.message")
+                Timber.i("RDS Error - ${e.message}")
                 Resource.Error(errorMessage = e.message ?: "Unknown Error Occurred")
 
             }
