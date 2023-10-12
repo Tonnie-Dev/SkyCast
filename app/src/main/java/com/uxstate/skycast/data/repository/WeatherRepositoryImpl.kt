@@ -44,6 +44,7 @@ class WeatherRepositoryImpl @Inject constructor(
                     result.data?.let {
                         localDataSource.insertCurrentWeather(it.toEntity(System.currentTimeMillis()))
 
+                        Timber.i("Repo Success - ${it.toEntity(System.currentTimeMillis())} ")
 
                     }
 
@@ -52,6 +53,7 @@ class WeatherRepositoryImpl @Inject constructor(
 
                 is Resource.Error -> {
 
+                    Timber.i("Repo Error - ${result.errorMessage} ")
                     emit(
                             Resource.Error(
                                     data = fetchLocalCurrentWeather()?.toModel(),

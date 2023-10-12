@@ -15,13 +15,17 @@ class RemoteDataSourceImpl @Inject constructor(private val api: WeatherApi) : Re
 
     // TODO: Add Explicit catch block
     override suspend fun getRemoteCurrentWeather(geoPoint: GeoPoint): Resource<CurrentWeatherDto> {
-
+        Timber.i("Current Weather F1 called")
 
         return withContext(IO) {
 
             try {
 
-
+                Timber.i("RDS Success ${api.getCurrentWeather(
+                        geoPoint.latitude,
+                        geoPoint.longitude
+                )
+                        .body()}")
 
                 Resource.Success(
                         data = api.getCurrentWeather(
@@ -31,7 +35,7 @@ class RemoteDataSourceImpl @Inject constructor(private val api: WeatherApi) : Re
                                 .body()
                 )
             } catch (e: Exception) {
-
+                Timber.i("RDS Error - e.message")
                 Resource.Error(errorMessage = e.message ?: "Unknown Error Occurred")
 
             }
@@ -41,7 +45,7 @@ class RemoteDataSourceImpl @Inject constructor(private val api: WeatherApi) : Re
     // TODO: Add Explicit catch blocks
     override suspend fun getRemoteForecastWeather(cityId: Int): Resource<List<ForecastDataDto>> {
 
-        Timber.i("Current Weather F2 called")
+        Timber.i("Forecast Weather F2 called")
        return withContext(IO){
 
             try {

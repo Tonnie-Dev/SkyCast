@@ -28,18 +28,20 @@ class HomeViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
-
+Timber.i("Init block called")
         getLastLocation()
 
     }
 
     private fun getLastLocation() {
+
+        Timber.i("Get Location called")
         viewModelScope.launch {
 
             tracker.getCurrentLocation().data?.let {
 
                 geoPoint ->
-
+                Timber.i("Geopoint is $geoPoint")
                 _uiState.update {
                     it.copy(
                             geoPoint = GeoPoint(
@@ -51,7 +53,7 @@ class HomeViewModel @Inject constructor(
                 getCurrentWeather(geoPoint)
             } ?: run {
 
-
+                Timber.i("Error in getting location")
                 _uiState.update { it.copy(errorMessage = "Error getting location") }
 
             }
@@ -64,6 +66,7 @@ class HomeViewModel @Inject constructor(
 
     private fun getCurrentWeather(geoPoint: GeoPoint = _uiState.value.geoPoint) {
 
+        Timber.i("GetCurrentWeather() called - $geoPoint")
         repository.getCurrentWeather(geoPoint)
                 .onEach {
 
@@ -73,21 +76,22 @@ class HomeViewModel @Inject constructor(
                     when (result) {
 
                         is Resource.Error -> {
-
+                            Timber.i("Repo Error - ${result.errorMessage} ")
                             _uiState.update { it.copy(errorMessage = result.errorMessage) }
                         }
 
                         is Resource.Loading -> {
 
+                            Timber.i("Loading called")
                             _uiState.update { it.copy(isLoading = result.isLoading) }
 
                         }
 
                         is Resource.Success -> {
 
-
+Timber.i("Success in the Repo - ${result.data}")
                             result.data?.let { currentWeather ->
-
+                                Timber.i("Repo Success - $currentWeather ")
                                 saveCityId(currentWeather.cityId)
                              _uiState.update { it.copy(currentWeather = currentWeather) }
                             }
