@@ -188,7 +188,7 @@ fun HomeContent(
                             )
             )
 
-            Spacer(modifier = Modifier.height(spacing.spaceOneHundredDp))
+            Spacer(modifier = Modifier.height(spacing.spaceOneHundred))
 
             WeatherDataDisplay(
                     modifier = Modifier.paddingFromBaseline(top = spacing.spaceExtraLarge),

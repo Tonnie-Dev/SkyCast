@@ -127,7 +127,7 @@ class WeatherRepositoryImpl @Inject constructor(
 
     private suspend fun fetchLocalForecastWeather(): List<ForecastEntity>? {
 
-       
+
         return localDataSource.getForecastWeather()
     }
 

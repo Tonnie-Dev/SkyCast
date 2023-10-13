@@ -49,7 +49,7 @@ fun HomeBody(
                 painter = painterResource(id = icon),
                 contentDescription = null,
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
-                modifier = Modifier.size(spacing.spaceOneHundredDp)
+                modifier = Modifier.size(spacing.spaceOneHundred)
         )
         Text(text = temperature, style = MaterialTheme.typography.titleLarge)
 

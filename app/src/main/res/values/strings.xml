@@ -35,4 +35,7 @@
     <string name="future_weather_msg">You know what? Life is too short, let\'s live in the moment</string>
     <string name="location_permission_msg">Uh-oh! It looks like our weather app is a bit lost without your location. 🤷‍♂️ To help us show you the most accurate and personalized weather updates, we need to know where you are on this wonderful planet. 🌍</string>
     <string name="back">Back</string>
+
+    <!--Forecast Screen-->
+    <string name="today_text">Today</string>
 </resources>
