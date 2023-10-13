@@ -14,13 +14,11 @@ data class ForecastDataDto(
     val main: Main,
     @Json(name = "pop")
     val pop: Double,
-    @Json(name = "rain")
-    val rain: Rain,
     @Json(name = "sys")
     val sys: Sys,
     @Json(name = "visibility")
     val visibility: Int,
-    @Json(name = "forecastWeatherDescDto")
+    @Json(name = "weather")
     val forecastWeatherDescDto: List<ForecastWeatherDescDto>,
     @Json(name = "wind")
     val forecastWindDto: ForecastWindDto

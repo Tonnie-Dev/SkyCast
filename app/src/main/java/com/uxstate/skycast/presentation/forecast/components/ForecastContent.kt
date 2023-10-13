@@ -50,6 +50,7 @@ import com.uxstate.skycast.utils.getDifferences
 import com.uxstate.skycast.utils.toCelsius
 import com.uxstate.skycast.utils.toDateFormat
 import com.uxstate.skycast.utils.toFahrenheit
+import timber.log.Timber
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -99,9 +100,13 @@ internal fun ForecastContent(
             Spacer(modifier = Modifier.height(spacing.spaceMedium + spacing.spaceSmall))
 
            forecastState.forecastData?.let {
+
+               Timber.i("ForecastContent - $it")
                 if (dayNo in 0..5) {
                     it.filterForecastWeatherByDay(dayNo)
                             .let { filteredList ->
+
+                                Timber.i("FilteredList - $filteredList ")
                                 LazyColumn(
                                         contentPadding = PaddingValues(bottom = 16.dp)
                                 ) {

@@ -50,13 +50,14 @@ class ForecastViewModel @Inject constructor(
 
                             is Resource.Error -> {
 
+                                Timber.i ("Error ${result.errorMessage}")
                                 _state.update { it.copy(errorMessage = result.errorMessage) }
                             }
 
                             is Resource.Success -> {
 
                                 result.data?.let { forecastWeather ->
-
+                                    Timber.i ("Success $forecastWeather")
                                     _state.update { it.copy(forecastData = forecastWeather) }
                                 }
                             }

@@ -11,7 +11,7 @@ data class ForecastWeatherDto(
     @Json(name = "cod")
     val cod: String,
     @Json(name = "list")
-    val list: List<ForecastDataDto>,
+    val myList: List<ForecastDataDto>,
     @Json(name = "message")
     val message: Int
 )
