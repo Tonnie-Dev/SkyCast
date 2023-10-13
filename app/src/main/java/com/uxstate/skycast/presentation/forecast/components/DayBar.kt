@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import com.uxstate.skycast.R
 import com.uxstate.skycast.ui.theme.LocalSpacing
 import com.uxstate.skycast.ui.theme.SkyCastTheme
+import com.uxstate.skycast.utils.conditional
 
 @Composable
 fun DayBar(
@@ -35,39 +36,56 @@ fun DayBar(
 
     val spacing = LocalSpacing.current
     val dayOfWeekText = if (isToday) stringResource(id = R.string.today_text) else dayOfWeek
-Surface {
-    Column(
-            modifier = modifier.padding(spacing.spaceSmall),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(spacing.spaceExtraSmall)
-    ) {
+    Surface(modifier = modifier) {
+        Column(
+                modifier = Modifier
+                        .conditional(isSelected) {
+                            Modifier.padding(
+                                    bottom = spacing.spaceExtraSmall,
+                                    top = spacing.spaceSmall,
+                                    end = spacing.spaceSmall,
+                                    start = spacing.spaceSmall
+                            )
+                        }
+                        .conditional(!isSelected) {
 
-        Text(
-                text = dayOfWeekText,
-                style = MaterialTheme.typography.bodySmall,
-                fontWeight = FontWeight.Light,
-                color = MaterialTheme.colorScheme.primary
-        )
-        Text(
-                text = day,
-                style = MaterialTheme.typography.bodySmall,
-                fontSize = 10.sp,
-                color = MaterialTheme.colorScheme.primary
-        )
+                            Modifier.padding(
+                                    bottom = spacing.spaceSmall + spacing.spaceExtraSmall,
+                                    top = spacing.spaceSmall,
+                                    end = spacing.spaceSmall,
+                                    start = spacing.spaceSmall
+                            )
+                        },
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(spacing.spaceExtraSmall)
+        ) {
+
+            Text(
+                    text = dayOfWeekText,
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.Light,
+                    color = MaterialTheme.colorScheme.primary
+            )
+            Text(
+                    text = day,
+                    style = MaterialTheme.typography.bodySmall,
+                    fontSize = 10.sp,
+                    color = MaterialTheme.colorScheme.primary
+            )
 
 
-        AnimatedVisibility(visible = isSelected) {
-            Surface(
-                    shape = RectangleShape,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier
-                            .width(spacing.spaceLarge + spacing.spaceSmall)
-                            .height(spacing.spaceExtraSmall)
-            ) {}
+            AnimatedVisibility(visible = isSelected) {
+                Surface(
+                        shape = RectangleShape,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                                .width(spacing.spaceLarge + spacing.spaceSmall)
+                                .height(spacing.spaceExtraSmall)
+                ) {}
+            }
+
         }
-
     }
-}
 
 
 }
@@ -93,7 +111,7 @@ fun DayOfWeekPreviewDark() {
         Row() {
             DayBar(isToday = true, isSelected = true, day = "09 OCT", dayOfWeek = "Fri")
             DayBar(isToday = false, isSelected = false, day = "10 OCT", dayOfWeek = "Sat")
-            DayBar(isToday = false, isSelected = false, day = "15 OCT", dayOfWeek = "Sun")
+            DayBar(isToday = false, isSelected = true, day = "15 OCT", dayOfWeek = "Sun")
         }
 
     }
