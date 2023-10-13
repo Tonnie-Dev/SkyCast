@@ -14,7 +14,6 @@ import com.uxstate.skycast.utils.EXPIRY_TIME
 import com.uxstate.skycast.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import timber.log.Timber
 import javax.inject.Inject
 
 class WeatherRepositoryImpl @Inject constructor(
@@ -44,7 +43,7 @@ class WeatherRepositoryImpl @Inject constructor(
                     result.data?.let {
                         localDataSource.insertCurrentWeather(it.toEntity(System.currentTimeMillis()))
 
-                        Timber.i("Repo Success - ${it.toEntity(System.currentTimeMillis())} ")
+
 
                     }
 
@@ -53,7 +52,7 @@ class WeatherRepositoryImpl @Inject constructor(
 
                 is Resource.Error -> {
 
-                    Timber.i("Repo Error - ${result.errorMessage} ")
+
                     emit(
                             Resource.Error(
                                     data = fetchLocalCurrentWeather()?.toModel(),
@@ -73,17 +72,17 @@ class WeatherRepositoryImpl @Inject constructor(
     }
 
     override fun getForecastWeather(cityId: Int): Flow<Resource<List<ForecastWeather>>> = flow {
-        Timber.i("WRepoImpl F2 called")
+
 
 
         fetchLocalForecastWeather()?.takeIf { !it.isExpired() && it.isNotEmpty() }
                 ?.let {
-                    Timber.i("Checking Local Cache")
+
                     emit(Resource.Success(data = it.map { entity -> entity.toModel() }))
                 }
             ?: run {
 
-            Timber.i("Skipped Local cache")
+
             when (val result = remoteDataSource.getRemoteForecastWeather(cityId = cityId)) {
 
                 is Resource.Success -> {
@@ -94,13 +93,13 @@ class WeatherRepositoryImpl @Inject constructor(
                     result.data?.let { data ->
                         localDataSource.insertForecastWeather(data.map { it.toEntity(System.currentTimeMillis()) })
                     }
-                    Timber.i("Success - ${fetchLocalForecastWeather()?.map { it.toModel() }}")
+
                     emit(Resource.Success(data = fetchLocalForecastWeather()?.map { it.toModel() }))
 
                 }
 
                 is Resource.Error -> {
-                    Timber.i("Error - ${result.errorMessage}")
+
                     emit(
                             Resource.Error(
                                     data = fetchLocalForecastWeather()?.map { it.toModel() },
@@ -111,7 +110,7 @@ class WeatherRepositoryImpl @Inject constructor(
                 }
 
                 else -> {
-Timber.i("Loading")
+
                     emit(Resource.Loading())
                 }
             }
@@ -119,7 +118,7 @@ Timber.i("Loading")
         }
 
 
-        Timber.i("Exiting Function 2")
+
     }
 
     private suspend fun fetchLocalCurrentWeather(): CurrentEntity? {
@@ -128,8 +127,7 @@ Timber.i("Loading")
 
     private suspend fun fetchLocalForecastWeather(): List<ForecastEntity>? {
 
-        Timber.i("fetchLocalForecastWeather() called - ${localDataSource.getForecastWeather()
-                ?.isEmpty()} ")
+       
         return localDataSource.getForecastWeather()
     }
 

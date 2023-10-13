@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -37,7 +36,7 @@ class ForecastViewModel @Inject constructor(
     private fun getForecastWeather(cityId:Int? = _state.value.cityId) {
 
         cityId?.let { id ->
-            Timber.i("getForecastWeather() past null check")
+
             repository.getForecastWeather(id)
                     .onEach { result ->
 
@@ -50,14 +49,14 @@ class ForecastViewModel @Inject constructor(
 
                             is Resource.Error -> {
 
-                                Timber.i ("Error ${result.errorMessage}")
+
                                 _state.update { it.copy(errorMessage = result.errorMessage) }
                             }
 
                             is Resource.Success -> {
 
                                 result.data?.let { forecastWeather ->
-                                    Timber.i ("Success $forecastWeather")
+
                                     _state.update { it.copy(forecastData = forecastWeather) }
                                 }
                             }

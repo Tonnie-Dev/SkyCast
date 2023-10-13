@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,20 +27,20 @@ class HomeViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
-Timber.i("Init block called")
+
         getLastLocation()
 
     }
 
     private fun getLastLocation() {
 
-        Timber.i("Get Location called")
+
         viewModelScope.launch {
 
             tracker.getCurrentLocation().data?.let {
 
                 geoPoint ->
-                Timber.i("Geopoint is $geoPoint")
+
                 _uiState.update {
                     it.copy(
                             geoPoint = GeoPoint(
@@ -53,7 +52,7 @@ Timber.i("Init block called")
                 getCurrentWeather(geoPoint)
             } ?: run {
 
-                Timber.i("Error in getting location")
+
                 _uiState.update { it.copy(errorMessage = "Error getting location") }
 
             }
@@ -66,7 +65,7 @@ Timber.i("Init block called")
 
     private fun getCurrentWeather(geoPoint: GeoPoint = _uiState.value.geoPoint) {
 
-        Timber.i("GetCurrentWeather() called - $geoPoint")
+
         repository.getCurrentWeather(geoPoint)
                 .onEach {
 
@@ -76,22 +75,22 @@ Timber.i("Init block called")
                     when (result) {
 
                         is Resource.Error -> {
-                            Timber.i("Repo Error - ${result.errorMessage} ")
+
                             _uiState.update { it.copy(errorMessage = result.errorMessage) }
                         }
 
                         is Resource.Loading -> {
 
-                            Timber.i("Loading called")
+
                             _uiState.update { it.copy(isLoading = result.isLoading) }
 
                         }
 
                         is Resource.Success -> {
 
-Timber.i("Success in the Repo - ${result.data}")
+
                             result.data?.let { currentWeather ->
-                                Timber.i("Repo Success - $currentWeather ")
+
                                 saveCityId(currentWeather.cityId)
                              _uiState.update { it.copy(currentWeather = currentWeather) }
                             }
@@ -103,45 +102,6 @@ Timber.i("Success in the Repo - ${result.data}")
 
     }
 
-    fun getWeatherInfo() {
-
-        Timber.i("GetWeather called")
-        _uiState.update {
-            it.copy(isLoading = true)
-        }
-
-        viewModelScope.launch {
-
-            tracker.getCurrentLocation().data?.let {
-
-                geoPoint ->
-
-                repository.getCurrentWeather(geoPoint)
-                        .collect {
-
-                            response ->
-
-                            prefs.appPreferences.collect { appPreferences ->
-
-                                response.data?.cityId?.let {
-                                    saveCityId(it)
-                                }
-
-                                _uiState.update {
-                                    it.copy(
-                                            currentWeather = response.data,
-                                            appPreferences = appPreferences
-                                    )
-                                }
-                            }
-                        }
-            }
-        }
-
-        _uiState.update {
-            it.copy(isLoading = false)
-        }
-    }
 
     private fun saveCityId(cityId: Int) {
 
@@ -152,6 +112,6 @@ Timber.i("Success in the Repo - ${result.data}")
 
     fun refreshWeather() {
         getCurrentWeather()
-        //  getWeatherInfo()
+
     }
 }

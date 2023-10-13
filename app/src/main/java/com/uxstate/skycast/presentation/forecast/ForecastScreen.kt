@@ -9,7 +9,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.uxstate.skycast.presentation.forecast.components.ForecastContent
-import timber.log.Timber
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Destination
@@ -17,9 +17,8 @@ import timber.log.Timber
 fun ForecastScreen(navigator: DestinationsNavigator, viewModel:ForecastViewModel= hiltViewModel()) {
     val state by viewModel.state.collectAsState()
 
-    Timber.i("Forecast - ${state.forecastData}")
-    ForecastContent(
 
+    ForecastContent(
            forecastState = state,
             refreshWeatherForecast = viewModel::refreshForecastWeather
     )
