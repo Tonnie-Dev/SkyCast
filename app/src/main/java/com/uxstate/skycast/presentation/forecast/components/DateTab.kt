@@ -2,7 +2,10 @@ package com.uxstate.skycast.presentation.forecast.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -24,19 +28,47 @@ import com.uxstate.skycast.R
 import com.uxstate.skycast.ui.theme.LocalSpacing
 import com.uxstate.skycast.ui.theme.SkyCastTheme
 import com.uxstate.skycast.utils.conditional
+import java.time.LocalDate
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DayBar(
-    isToday: Boolean,
-    isSelected: Boolean,
-    day: String,
-    dayOfWeek: String,
-    modifier: Modifier = Modifier
+fun DateTab(
+    index: Int,
+    isSelected: Boolean = false,
+    modifier: Modifier = Modifier,
+    onClickDateTab: (date: LocalDate) -> Unit
 ) {
 
     val spacing = LocalSpacing.current
-    val dayOfWeekText = if (isToday) stringResource(id = R.string.today_text) else dayOfWeek
-    Surface(modifier = modifier) {
+    val today = LocalDate.now()
+
+    val tabDate = rememberSaveable {
+
+        when (index) {
+
+            0 -> today
+            1 -> today.plusDays(1)
+            2 -> today.plusDays(2)
+            3 -> today.plusDays(3)
+            4 -> today.plusDays(4)
+            else -> today
+        }
+
+    }
+
+    val isToday = (tabDate.dayOfMonth == today.dayOfMonth)
+
+    val dayOfWeek = if (isToday) stringResource(id = R.string.today_text)
+    else
+        tabDate.dayOfWeek.name.substring(0..2)
+
+
+    val shortMonth = tabDate.month.name.substring(0..2)
+    val dayOfMonth = tabDate.dayOfMonth.toString()
+    val displayDate = dayOfMonth.let { it.plus(" ").plus(shortMonth) }
+
+
+    Surface(modifier = modifier.clickable{onClickDateTab(tabDate)}) {
         Column(
                 modifier = Modifier
                         .conditional(isSelected) {
@@ -61,13 +93,13 @@ fun DayBar(
         ) {
 
             Text(
-                    text = dayOfWeekText,
+                    text = dayOfWeek,
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Light,
                     color = MaterialTheme.colorScheme.primary
             )
             Text(
-                    text = day,
+                    text = displayDate,
                     style = MaterialTheme.typography.bodySmall,
                     fontSize = 10.sp,
                     color = MaterialTheme.colorScheme.primary
@@ -90,28 +122,31 @@ fun DayBar(
 
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(uiMode = UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
-fun DayOfWeekPreviewLight() {
+fun DateTabPreviewLight() {
 
     SkyCastTheme {
         Row() {
-            DayBar(isToday = true, isSelected = true, day = "04 OCT", dayOfWeek = "Fri")
-            DayBar(isToday = false, isSelected = false, day = "13 OCT", dayOfWeek = "Sat")
-            DayBar(isToday = false, isSelected = false, day = "14 OCT", dayOfWeek = "Sun")
+            DateTab(index = 0, isSelected = true, onClickDateTab = {})
+            DateTab(index = 1, isSelected = false, onClickDateTab = {})
+            DateTab(index = 2, isSelected = false, onClickDateTab = {})
+
         }
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-fun DayOfWeekPreviewDark() {
+fun DateTabPreviewDark() {
 
     SkyCastTheme {
         Row() {
-            DayBar(isToday = true, isSelected = true, day = "09 OCT", dayOfWeek = "Fri")
-            DayBar(isToday = false, isSelected = false, day = "10 OCT", dayOfWeek = "Sat")
-            DayBar(isToday = false, isSelected = true, day = "15 OCT", dayOfWeek = "Sun")
+            DateTab(index = 0, isSelected = true, onClickDateTab = {})
+            DateTab(index = 1, isSelected = false, onClickDateTab = {})
+            DateTab(index = 2, isSelected = false, onClickDateTab = {})
         }
 
     }
