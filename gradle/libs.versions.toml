@@ -61,7 +61,7 @@ junit-junit = "4.13.2"
 
 androidx-compose-compiler = "1.5.3"
 appcompat = "1.6.1"
-kizito-calendar = "2.4.0"
+desugar_jdk_libs = "1.1.6"
 
 androidx-compose-animation = "1.4.3"
 
@@ -94,8 +94,6 @@ compose-maps = { group = "com.google.maps.android", name = "maps-compose", versi
 compose-animation = { group = "androidx.compose.animation", name = "animation", version.ref = "androidx-compose-animation" }
 
 compose-coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil-kt" }
-
-kizito-wose-calendar = { group = "com.kizitonwose.calendar", name = "compose", version.ref = "kizito-calendar" }
 
 
 compose-destinations-core = "io.github.raamcosta.compose-destinations:animations-core:1.9.53"
@@ -156,7 +154,7 @@ accompanist-nav-animation = { group = "com.google.accompanist", name = "accompan
 accompanist-permissions = {group = "com.google.accompanist", name = "accompanist-permissions", version.ref ="google-accompanist-permissions"}
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-test-espresso" }
 
-
+desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
 
 
 ## THE END

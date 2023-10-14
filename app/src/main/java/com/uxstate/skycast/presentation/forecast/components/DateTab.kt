@@ -30,7 +30,7 @@ import com.uxstate.skycast.ui.theme.SkyCastTheme
 import com.uxstate.skycast.utils.conditional
 import java.time.LocalDate
 
-@RequiresApi(Build.VERSION_CODES.O)
+
 @Composable
 fun DateTab(
     index: Int,
@@ -122,7 +122,7 @@ fun DateTab(
 
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
+
 @Preview(uiMode = UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
 fun DateTabPreviewLight() {
@@ -137,7 +137,7 @@ fun DateTabPreviewLight() {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
+
 @Preview(uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun DateTabPreviewDark() {

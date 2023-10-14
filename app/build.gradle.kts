@@ -69,6 +69,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_18
         targetCompatibility = JavaVersion.VERSION_18
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "18"
@@ -164,7 +165,7 @@ dependencies {
     //Data Store
     implementation(libs.data.store)
 
-    //Kizito Wose Calendar
-    implementation(libs.kizito.wose.calendar)
+    // DesugaringLib
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 
 }
