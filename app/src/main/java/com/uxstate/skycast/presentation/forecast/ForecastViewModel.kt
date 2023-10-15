@@ -88,5 +88,15 @@ class ForecastViewModel @Inject constructor(
 
         getForecastWeather()
     }
+
+    fun onEvent(event: ForecastEvent) {
+
+        when(event){
+
+            is ForecastEvent.OnDateChangeEvent -> {
+                _state.update { it.copy(selectedDay = event.date) }
+            }
+        }
+    }
 }
 

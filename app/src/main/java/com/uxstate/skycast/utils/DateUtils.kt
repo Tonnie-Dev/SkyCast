@@ -70,3 +70,15 @@ fun List<ForecastWeather>.filterForecastWeatherByDay(selectedDay: Int): List<For
 }
 
 
+fun List<ForecastWeather>.mapForecastWeather(selectedDay:Int):List<ForecastWeather>? {
+
+    val mappedForecastByDate = this.groupBy { it.date }
+    val dateKeys = mappedForecastByDate.keys.toList()
+    val index = dateKeys[selectedDay]
+
+  // check(selectedDay in 0..4){"Invalid Day Selection"}
+
+    return mappedForecastByDate[index]
+}
+
+

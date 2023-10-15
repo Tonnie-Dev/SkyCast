@@ -35,8 +35,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.kizitonwose.calendar.compose.WeekCalendar
-import com.kizitonwose.calendar.compose.weekcalendar.rememberWeekCalendarState
 import com.uxstate.skycast.R
 import com.uxstate.skycast.domain.model.WeatherType
 import com.uxstate.skycast.presentation.forecast.ForecastState
@@ -67,16 +65,7 @@ internal fun ForecastContent(
     val pullRefreshState =
         rememberPullRefreshState(refreshing = isForecastLoading, { refreshWeatherForecast() })
     val selectedTempUnit = forecastState.prefs.tempUnit.toString()
-    val currentDate = remember { LocalDate.now() }
-    val startDate = remember { currentDate }
-    val endDate = remember { currentDate.plusDays(7) }
-    val selection = remember { mutableStateOf(currentDate) }
-    val weatherState = rememberWeekCalendarState(
-            startDate = startDate,
-            endDate = endDate,
-            firstVisibleWeekDate = currentDate,
-    )
-    val dayNo = selection.getDifferences(LocalDate.now())
+
 
     Box(
             modifier = modifier
@@ -86,20 +75,13 @@ internal fun ForecastContent(
         Column(
                 horizontalAlignment = CenterHorizontally
         ) {
-            WeekCalendar(
-                    state = weatherState,
-                    dayContent = { day ->
-                        Day(day.date, isSelected = selection.value == day.date) { clicked ->
-                            if (selection.value != clicked) {
-                                selection.value = clicked
-                            }
-                        }
-                    },
-            )
+
 
             Spacer(modifier = Modifier.height(spacing.spaceMedium + spacing.spaceSmall))
 
-           forecastState.forecastData?.let {
+            forecastState.forecastData.let {
+
+val x = forecastState.forecastData.groupBy { data -> data.date }
 
 
                 if (dayNo in 0..5) {
@@ -110,10 +92,12 @@ internal fun ForecastContent(
                                 LazyColumn(
                                         contentPadding = PaddingValues(bottom = 16.dp)
                                 ) {
+
                                     itemsIndexed(filteredList) { index, item ->
                                         if (index != 0) {
                                             Spacer(modifier = Modifier.height(16.dp))
                                         }
+
 
                                         item.forecastWeatherDescription.forEach { description ->
                                             ForecastItem(
@@ -123,7 +107,7 @@ internal fun ForecastContent(
                                                     if (selectedTempUnit == FAHRENHEIT) "${
                                                         (item.forecastWeatherParams.temp.toFahrenheit())
                                                     }${FAHRENHEIT_SIGN}" else "${item.forecastWeatherParams.temp.toCelsius()}${CELSIUS_SIGN}",
-                                                   icon = WeatherType.fromWMO(description.icon.toString()).icon
+                                                    icon = WeatherType.fromWMO(description.icon.toString()).icon
                                             )
                                             Spacer(modifier = Modifier.height(spacing.spaceSmall))
                                         }
