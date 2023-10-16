@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.uxstate.skycast.ui.theme.SkyCastTheme
 
 @Composable
-fun DateRow(modifier: Modifier = Modifier, onSelectDate: () -> Unit) {
+fun DateRow(modifier: Modifier = Modifier, onSelectDate: (Int) -> Unit) {
 
 
     var selectedIndex by rememberSaveable {
@@ -33,7 +33,7 @@ fun DateRow(modifier: Modifier = Modifier, onSelectDate: () -> Unit) {
             DateTab(index = i, isSelected = isSelected,
                     onClickDateTab = {
                         selectedIndex = i
-                        onSelectDate()
+                        onSelectDate(i)
                     })
 
         }

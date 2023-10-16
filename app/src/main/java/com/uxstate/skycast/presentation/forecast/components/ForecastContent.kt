@@ -17,16 +17,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
@@ -44,7 +44,7 @@ import com.uxstate.skycast.utils.FAHRENHEIT
 import com.uxstate.skycast.utils.FAHRENHEIT_SIGN
 import com.uxstate.skycast.utils.displayText
 import com.uxstate.skycast.utils.filterForecastWeatherByDay
-import com.uxstate.skycast.utils.getDifferences
+import com.uxstate.skycast.utils.mapForecastWeather
 import com.uxstate.skycast.utils.toCelsius
 import com.uxstate.skycast.utils.toDateFormat
 import com.uxstate.skycast.utils.toFahrenheit
@@ -57,15 +57,15 @@ import java.time.format.DateTimeFormatter
 @Composable
 internal fun ForecastContent(
     modifier: Modifier = Modifier,
-    forecastState: ForecastState,
+    state: ForecastState,
     refreshWeatherForecast: () -> Unit
 ) {
     val spacing = LocalSpacing.current
-    val isForecastLoading = forecastState.isLoading
+    val isForecastLoading = state.isLoading
     val pullRefreshState =
         rememberPullRefreshState(refreshing = isForecastLoading, { refreshWeatherForecast() })
-    val selectedTempUnit = forecastState.prefs.tempUnit.toString()
-
+    val selectedTempUnit = state.prefs.tempUnit.toString()
+val selectedDay = state.selectedDay
 
     Box(
             modifier = modifier
@@ -76,17 +76,12 @@ internal fun ForecastContent(
                 horizontalAlignment = CenterHorizontally
         ) {
 
+          
 
             Spacer(modifier = Modifier.height(spacing.spaceMedium + spacing.spaceSmall))
 
-            forecastState.forecastData.let {
-
-val x = forecastState.forecastData.groupBy { data -> data.date }
-
-
-                if (dayNo in 0..5) {
-                    it.filterForecastWeatherByDay(dayNo)
-                            .let { filteredList ->
+            if (state.forecastData.isNotEmpty()){
+            state.forecastData.mapForecastWeather(selectedDay)?.let  { filteredList ->
 
 
                                 LazyColumn(
@@ -113,8 +108,7 @@ val x = forecastState.forecastData.groupBy { data -> data.date }
                                         }
                                     }
                                 }
-                            }
-                } else {
+                            } ?: run {
                     Box(
                             modifier = modifier
                                     .fillMaxSize()
@@ -139,8 +133,14 @@ val x = forecastState.forecastData.groupBy { data -> data.date }
                         }
                     }
                 }
+            } else {
+                
+                Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+                    
+                   CircularProgressIndicator()
+                }
             }
-        }}}
+        }}} 
 
 
 

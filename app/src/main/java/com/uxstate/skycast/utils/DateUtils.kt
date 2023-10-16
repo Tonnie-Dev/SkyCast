@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.MutableState
 import com.uxstate.skycast.domain.model.ForecastWeather
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -72,8 +73,9 @@ fun List<ForecastWeather>.filterForecastWeatherByDay(selectedDay: Int): List<For
 
 fun List<ForecastWeather>.mapForecastWeather(selectedDay:Int):List<ForecastWeather>? {
 
-    val mappedForecastByDate = this.groupBy { it.date }
+    val mappedForecastByDate = this.groupBy { it.date.substring(0..9) }
     val dateKeys = mappedForecastByDate.keys.toList()
+    Timber.i("The length is ${dateKeys.size}")
     val index = dateKeys[selectedDay]
 
   // check(selectedDay in 0..4){"Invalid Day Selection"}

@@ -36,7 +36,7 @@ fun DateTab(
     index: Int,
     isSelected: Boolean = false,
     modifier: Modifier = Modifier,
-    onClickDateTab: () -> Unit
+    onClickDateTab: (index:Int) -> Unit
 ) {
 
     val spacing = LocalSpacing.current
@@ -68,7 +68,7 @@ fun DateTab(
     val displayDate = dayOfMonth.let { it.plus(" ").plus(shortMonth) }
 
 
-    Surface(modifier = modifier.clickable{onClickDateTab()}) {
+    Surface(modifier = modifier.clickable{onClickDateTab(index)}) {
         Column(
                 modifier = Modifier
                         .conditional(isSelected) {

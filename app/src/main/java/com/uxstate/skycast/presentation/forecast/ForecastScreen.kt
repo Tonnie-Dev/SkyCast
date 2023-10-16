@@ -2,12 +2,16 @@ package com.uxstate.skycast.presentation.forecast
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.uxstate.skycast.presentation.forecast.components.DateRow
 import com.uxstate.skycast.presentation.forecast.components.ForecastContent
 
 
@@ -16,10 +20,17 @@ import com.uxstate.skycast.presentation.forecast.components.ForecastContent
 @Composable
 fun ForecastScreen(navigator: DestinationsNavigator, viewModel:ForecastViewModel= hiltViewModel()) {
     val state by viewModel.state.collectAsState()
+val selectedDay = state.selectedDay
 
+    Column {
+        DateRow(modifier = Modifier.fillMaxWidth() ){
 
-    ForecastContent(
-           forecastState = state,
-            refreshWeatherForecast = viewModel::refreshForecastWeather
-    )
+            viewModel.onEvent(ForecastEvent.OnDateChangeEvent(it))
+        }
+        ForecastContent(
+                state = state,
+                refreshWeatherForecast = viewModel::refreshForecastWeather
+        )
+    }
+
 }
