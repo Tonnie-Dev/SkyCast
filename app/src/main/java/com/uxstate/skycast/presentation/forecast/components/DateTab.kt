@@ -5,10 +5,13 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -65,18 +68,19 @@ fun DateTab(
 
     val shortMonth = tabDate.month.name.substring(0..2)
     val dayOfMonth = tabDate.dayOfMonth.toString()
-    val displayDate = dayOfMonth.let { it.plus(" ").plus(shortMonth) }
+    val displayDate = dayOfMonth.plus(" ")
+            .plus(shortMonth)
 
 
-    Surface(modifier = modifier.clickable{onClickDateTab(index)}) {
+    Surface(modifier = modifier.clickable{onClickDateTab(index)}.animateContentSize()) {
         Column(
-                modifier = Modifier
+                modifier = Modifier.width(IntrinsicSize.Max)
                         .conditional(isSelected) {
                             Modifier.padding(
                                     bottom = spacing.spaceExtraSmall,
                                     top = spacing.spaceSmall,
-                                    end = spacing.spaceSmall,
-                                    start = spacing.spaceSmall
+                                    end = spacing.spaceMedium,
+                                    start = spacing.spaceMedium
                             )
                         }
                         .conditional(!isSelected) {
@@ -84,8 +88,8 @@ fun DateTab(
                             Modifier.padding(
                                     bottom = spacing.spaceSmall + spacing.spaceExtraSmall,
                                     top = spacing.spaceSmall,
-                                    end = spacing.spaceSmall,
-                                    start = spacing.spaceSmall
+                                    end = spacing.spaceMedium,
+                                    start = spacing.spaceMedium
                             )
                         },
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -96,23 +100,28 @@ fun DateTab(
                     text = dayOfWeek,
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Light,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+
             )
             Text(
                     text = displayDate,
                     style = MaterialTheme.typography.bodySmall,
                     fontSize = 10.sp,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+
             )
 
 
-            AnimatedVisibility(visible = isSelected) {
+          if( isSelected) {
                 Surface(
                         shape = RectangleShape,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier
-                                .width(spacing.spaceLarge + spacing.spaceSmall)
                                 .height(spacing.spaceExtraSmall)
+                                .fillMaxWidth()
+
                 ) {}
             }
 

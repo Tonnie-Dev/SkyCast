@@ -3,7 +3,9 @@ package com.uxstate.skycast.presentation.forecast
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -23,7 +25,7 @@ fun ForecastScreen(navigator: DestinationsNavigator, viewModel:ForecastViewModel
 val selectedDay = state.selectedDay
 
     Column {
-        DateRow(modifier = Modifier.fillMaxWidth() ){
+        DateRow() {
 
             viewModel.onEvent(ForecastEvent.OnDateChangeEvent(it))
         }
