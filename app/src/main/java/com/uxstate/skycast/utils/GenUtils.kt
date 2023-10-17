@@ -17,7 +17,17 @@ fun Double.roundOffDoubleToInt():Int  {
     val intValue = this.toInt()
     val fractionValue = this - intValue
 
+    return if (fractionValue >= 0.5) intValue + 1 else intValue
 
-    return if (fractionValue >= 0.5) intValue +1 else intValue
+}
 
+fun String.toTitleCase(delimiter:String = " "):String{
+
+    return split(delimiter).joinToString {
+         word ->
+
+        val smallCaseWord = word.lowercase()
+
+        smallCaseWord.replaceFirstChar (Char::titlecase)
+    }
 }
