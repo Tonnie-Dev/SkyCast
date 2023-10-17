@@ -26,7 +26,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
@@ -43,12 +42,10 @@ import com.uxstate.skycast.utils.CELSIUS_SIGN
 import com.uxstate.skycast.utils.FAHRENHEIT
 import com.uxstate.skycast.utils.FAHRENHEIT_SIGN
 import com.uxstate.skycast.utils.displayText
-import com.uxstate.skycast.utils.filterForecastWeatherByDay
 import com.uxstate.skycast.utils.mapForecastWeather
 import com.uxstate.skycast.utils.toCelsius
 import com.uxstate.skycast.utils.toDateFormat
 import com.uxstate.skycast.utils.toFahrenheit
-
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -65,7 +62,7 @@ internal fun ForecastContent(
     val pullRefreshState =
         rememberPullRefreshState(refreshing = isForecastLoading, { refreshWeatherForecast() })
     val selectedTempUnit = state.prefs.tempUnit.toString()
-val selectedDay = state.selectedDay
+    val selectedDay = state.selectedDay
 
     Box(
             modifier = modifier
@@ -76,39 +73,39 @@ val selectedDay = state.selectedDay
                 horizontalAlignment = CenterHorizontally
         ) {
 
-          
 
             Spacer(modifier = Modifier.height(spacing.spaceMedium + spacing.spaceSmall))
 
-            if (state.forecastData.isNotEmpty()){
-            state.forecastData.mapForecastWeather(selectedDay)?.let  { filteredList ->
+            if (state.forecastData.isNotEmpty()) {
+                state.forecastData.mapForecastWeather(selectedDay)
+                        ?.let { filteredList ->
 
 
-                                LazyColumn(
-                                        contentPadding = PaddingValues(bottom = 16.dp)
-                                ) {
+                            LazyColumn(
+                                    contentPadding = PaddingValues(bottom = 16.dp)
+                            ) {
 
-                                    itemsIndexed(filteredList) { index, item ->
-                                        if (index != 0) {
-                                            Spacer(modifier = Modifier.height(16.dp))
-                                        }
+                                itemsIndexed(filteredList) { index, item ->
+                                    if (index != 0) {
+                                        Spacer(modifier = Modifier.height(16.dp))
+                                    }
 
 
-                                        item.forecastWeatherDescription.forEach { description ->
-                                            ForecastItem(
-                                                    dateTime = item.date.toDateFormat(),
-                                                    weatherType = description.description.toString(),
-                                                    temperature =
-                                                    if (selectedTempUnit == FAHRENHEIT) "${
-                                                        (item.forecastWeatherParams.temp.toFahrenheit())
-                                                    }${FAHRENHEIT_SIGN}" else "${item.forecastWeatherParams.temp.toCelsius()}${CELSIUS_SIGN}",
-                                                    icon = WeatherType.fromWMO(description.icon.toString()).icon
-                                            )
-                                            Spacer(modifier = Modifier.height(spacing.spaceSmall))
-                                        }
+                                    item.forecastWeatherDescription.forEach { description ->
+                                        ForecastItem(
+                                                dateTime = item.date.toDateFormat(),
+                                                weatherType = description.description.toString(),
+                                                temperature =
+                                                if (selectedTempUnit == FAHRENHEIT) "${
+                                                    (item.forecastWeatherParams.temp.toFahrenheit())
+                                                }${FAHRENHEIT_SIGN}" else "${item.forecastWeatherParams.temp.toCelsius()}${CELSIUS_SIGN}",
+                                                icon = WeatherType.fromWMO(description.icon.toString()).icon
+                                        )
+                                        Spacer(modifier = Modifier.height(spacing.spaceSmall))
                                     }
                                 }
-                            } ?: run {
+                            }
+                        } ?: run {
                     Box(
                             modifier = modifier
                                     .fillMaxSize()
@@ -134,16 +131,18 @@ val selectedDay = state.selectedDay
                     }
                 }
             } else {
-                
-                Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    
-                   CircularProgressIndicator()
+
+                Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    CircularProgressIndicator()
                 }
             }
-        }}} 
-
-
-
+        }
+    }
+}
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -156,7 +155,8 @@ private fun Day(date: LocalDate, isSelected: Boolean, onClick: (date: LocalDate)
             modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .clickable { onClick(date) }, contentAlignment = Alignment.Center)
+                    .clickable { onClick(date) }, contentAlignment = Alignment.Center
+    )
     {
 
 
