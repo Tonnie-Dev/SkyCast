@@ -43,6 +43,7 @@ import com.uxstate.skycast.utils.FAHRENHEIT
 import com.uxstate.skycast.utils.FAHRENHEIT_SIGN
 import com.uxstate.skycast.utils.displayText
 import com.uxstate.skycast.utils.mapForecastWeather
+import com.uxstate.skycast.utils.roundOffDoubleToInt
 import com.uxstate.skycast.utils.toCelsius
 import com.uxstate.skycast.utils.toDateFormat
 import com.uxstate.skycast.utils.toFahrenheit
@@ -97,8 +98,12 @@ internal fun ForecastContent(
                                                 weatherType = description.description.toString(),
                                                 temperature =
                                                 if (selectedTempUnit == FAHRENHEIT) "${
-                                                    (item.forecastWeatherParams.temp.toFahrenheit())
-                                                }${FAHRENHEIT_SIGN}" else "${item.forecastWeatherParams.temp.toCelsius()}${CELSIUS_SIGN}",
+                                                    (item.forecastWeatherParams.temp.toFahrenheit()
+                                                            .roundOffDoubleToInt())
+                                                }${FAHRENHEIT_SIGN}" else "${
+                                                    item.forecastWeatherParams.temp.toCelsius()
+                                                            .roundOffDoubleToInt()
+                                                }${CELSIUS_SIGN}",
                                                 icon = WeatherType.fromWMO(description.icon.toString()).icon
                                         )
                                         Spacer(modifier = Modifier.height(spacing.spaceSmall))

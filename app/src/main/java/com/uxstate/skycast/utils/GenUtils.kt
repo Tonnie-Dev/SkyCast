@@ -1,7 +1,7 @@
 package com.uxstate.skycast.utils
 
 import androidx.compose.ui.Modifier
-import java.lang.Math.ceil
+
 
 fun Modifier.conditional(condition: Boolean, modifier: Modifier.() -> Modifier): Modifier {
 
@@ -10,7 +10,6 @@ fun Modifier.conditional(condition: Boolean, modifier: Modifier.() -> Modifier):
     else
         this
 }
-
 
 
 fun Double.roundOffDoubleToInt():Int  {

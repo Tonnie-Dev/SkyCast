@@ -52,6 +52,7 @@ import com.uxstate.skycast.ui.theme.LocalSpacing
 import com.uxstate.skycast.utils.CELSIUS_SIGN
 import com.uxstate.skycast.utils.FAHRENHEIT
 import com.uxstate.skycast.utils.FAHRENHEIT_SIGN
+import com.uxstate.skycast.utils.roundOffDoubleToInt
 import com.uxstate.skycast.utils.toCelsius
 import com.uxstate.skycast.utils.toDateFormat
 import com.uxstate.skycast.utils.toFahrenheit
@@ -95,9 +96,9 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
                     icon = WeatherType.fromWMO(it.networkWeatherDescription.first().icon).icon,
                     onForecastButtonClick = { navigator.navigate(ForecastScreenDestination)},
                     temperature = if (tempUnit.toString() == FAHRENHEIT)
-                        "${(it.networkWeatherCondition.temp.toFahrenheit())}${FAHRENHEIT_SIGN}"
+                        "${(it.networkWeatherCondition.temp.toFahrenheit().roundOffDoubleToInt())}${FAHRENHEIT_SIGN}"
                     else
-                        "${it.networkWeatherCondition.temp.toCelsius()}${CELSIUS_SIGN}"
+                        "${it.networkWeatherCondition.temp.toCelsius().roundOffDoubleToInt()}${CELSIUS_SIGN}"
 
 
             )
