@@ -56,6 +56,7 @@ import com.uxstate.skycast.utils.roundOffDoubleToInt
 import com.uxstate.skycast.utils.toCelsius
 import com.uxstate.skycast.utils.toDateFormat
 import com.uxstate.skycast.utils.toFahrenheit
+import com.uxstate.skycast.utils.toTitleCase
 
 
 @RootNavGraph(start = true)
@@ -89,7 +90,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
                     isLoading = state.isLoading,
                     location = it.cityName,
                     lastFetchTime = it.lastFetchedTime.toDateFormat(),
-                    weatherType = it.networkWeatherDescription.first().description,
+                    weatherType = it.networkWeatherDescription.first().description.toTitleCase(),
                     humidity = it.networkWeatherCondition.humidity,
                     pressure = it.networkWeatherCondition.pressure,
                     windSpeed = it.wind.speed,

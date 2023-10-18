@@ -47,6 +47,7 @@ import com.uxstate.skycast.utils.roundOffDoubleToInt
 import com.uxstate.skycast.utils.toCelsius
 import com.uxstate.skycast.utils.toDateFormat
 import com.uxstate.skycast.utils.toFahrenheit
+import com.uxstate.skycast.utils.toTitleCase
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -95,7 +96,7 @@ internal fun ForecastContent(
                                     item.forecastWeatherDescription.forEach { description ->
                                         ForecastItem(
                                                 dateTime = item.date.toDateFormat(),
-                                                weatherType = description.description.toString(),
+                                                weatherType = description.description.toTitleCase(),
                                                 temperature =
                                                 if (selectedTempUnit == FAHRENHEIT) "${
                                                     (item.forecastWeatherParams.temp.toFahrenheit()
@@ -104,7 +105,7 @@ internal fun ForecastContent(
                                                     item.forecastWeatherParams.temp.toCelsius()
                                                             .roundOffDoubleToInt()
                                                 }${CELSIUS_SIGN}",
-                                                icon = WeatherType.fromWMO(description.icon.toString()).icon
+                                                icon = WeatherType.fromWMO(description.icon).icon
                                         )
                                         Spacer(modifier = Modifier.height(spacing.spaceSmall))
                                     }
