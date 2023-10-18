@@ -13,18 +13,22 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -72,7 +76,8 @@ internal fun ForecastContent(
                     .fillMaxWidth()
     ) {
         Column(
-                horizontalAlignment = CenterHorizontally
+                horizontalAlignment = CenterHorizontally,
+
         ) {
 
 
@@ -138,15 +143,20 @@ internal fun ForecastContent(
                 }
             } else {
 
-                Column(
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally
+               Box(contentAlignment = Center, modifier = Modifier.fillMaxSize()
+
                 ) {
 
                     CircularProgressIndicator()
                 }
             }
         }
+
+        PullRefreshIndicator(
+                refreshing = state.isLoading, state = pullRefreshState, modifier = Modifier.align(
+                Alignment.TopCenter
+        )
+        )
     }
 }
 

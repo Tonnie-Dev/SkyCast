@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -24,7 +26,7 @@ fun ForecastScreen(navigator: DestinationsNavigator, viewModel:ForecastViewModel
     val state by viewModel.state.collectAsState()
 val selectedDay = state.selectedDay
 
-    Column {
+    Column ( modifier = Modifier.statusBarsPadding().navigationBarsPadding()){
         DateRow() {
 
             viewModel.onEvent(ForecastEvent.OnDateChangeEvent(it))
