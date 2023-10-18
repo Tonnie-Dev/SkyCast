@@ -1,7 +1,6 @@
 package com.uxstate.skycast.presentation.home
 
 import android.Manifest
-
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
@@ -11,12 +10,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.PullRefreshState
@@ -26,7 +25,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -95,11 +93,17 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
                     pressure = it.networkWeatherCondition.pressure,
                     windSpeed = it.wind.speed,
                     icon = WeatherType.fromWMO(it.networkWeatherDescription.first().icon).icon,
-                    onForecastButtonClick = { navigator.navigate(ForecastScreenDestination)},
+                    onForecastButtonClick = { navigator.navigate(ForecastScreenDestination) },
                     temperature = if (tempUnit.toString() == FAHRENHEIT)
-                        "${(it.networkWeatherCondition.temp.toFahrenheit().roundOffDoubleToInt())}${FAHRENHEIT_SIGN}"
+                        "${
+                            (it.networkWeatherCondition.temp.toFahrenheit()
+                                    .roundOffDoubleToInt())
+                        }${FAHRENHEIT_SIGN}"
                     else
-                        "${it.networkWeatherCondition.temp.toCelsius().roundOffDoubleToInt()}${CELSIUS_SIGN}"
+                        "${
+                            it.networkWeatherCondition.temp.toCelsius()
+                                    .roundOffDoubleToInt()
+                        }${CELSIUS_SIGN}"
 
 
             )
@@ -146,7 +150,6 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
     }
 
 
-
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -164,14 +167,17 @@ fun HomeContent(
     pressure: Double,
     windSpeed: Double,
     @DrawableRes icon: Int,
-     onForecastButtonClick:()-> Unit
+    onForecastButtonClick: () -> Unit
 ) {
     val spacing = LocalSpacing.current
 
     Box(modifier = modifier.pullRefresh(pullRefreshState)) {
 
         Column(
-                modifier = Modifier.verticalScroll(scrollState),
+                modifier = Modifier
+                        .verticalScroll(scrollState)
+                        .statusBarsPadding()
+                        .navigationBarsPadding(),
                 horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
