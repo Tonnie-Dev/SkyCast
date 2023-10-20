@@ -4,7 +4,7 @@ import com.uxstate.skycast.domain.prefs.AppPreferences
 import com.uxstate.skycast.domain.prefs.TempUnit
 import com.uxstate.skycast.domain.prefs.Theme
 
-data class SettingsScreenState(
+data class SettingsState(
     val appPreferences: AppPreferences = initialAppPreferences,
     val isShowThemeDialog: Boolean = false,
     val isShowTempUnitDialog: Boolean = false
@@ -18,7 +18,7 @@ data class SettingsScreenState(
                 tempUnit = TempUnit.CELSIUS,
                 savedCityId = -1
         )
-        val initialSettingsState = SettingsScreenState(
+        val initialSettingsState = SettingsState(
                 appPreferences = AppPreferences(
                         theme = Theme.SYSTEM,
                         tempUnit = TempUnit.CELSIUS,

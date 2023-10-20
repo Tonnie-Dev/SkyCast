@@ -3,7 +3,7 @@ package com.uxstate.skycast.presentation.settings
 import com.uxstate.skycast.domain.prefs.TempUnit
 import com.uxstate.skycast.domain.prefs.Theme
 
-interface SettingsScreenActions {
+interface SettingsActions {
 
     fun onThemePreferenceClick()
     fun onTempUnitPreferenceClick()

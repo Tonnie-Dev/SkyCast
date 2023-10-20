@@ -2,7 +2,6 @@ package com.uxstate.skycast.presentation.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.uxstate.skycast.domain.prefs.AppPreferences
 import com.uxstate.skycast.domain.prefs.DataStoreOperations
 import com.uxstate.skycast.domain.prefs.TempUnit
 import com.uxstate.skycast.domain.prefs.Theme
@@ -15,10 +14,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(private val prefs: DataStoreOperations) :
-    ViewModel(), SettingsScreenActions {
+    ViewModel(), SettingsActions {
 
 
-    private val _state = MutableStateFlow(SettingsScreenState())
+    private val _state = MutableStateFlow(SettingsState())
     val state = _state.asStateFlow()
 
     override fun onThemePreferenceClick() {
