@@ -11,7 +11,7 @@ data class ForecastState(
     val cityId: Int? = null,
     val selectedDay: Int = 0,
     val forecastData: List<ForecastWeather> = emptyList(),
-    val prefs: AppPreferences = appPreferencesInitialState
+    val appPreferences: AppPreferences = appPreferencesInitialState
 
 
 ) {

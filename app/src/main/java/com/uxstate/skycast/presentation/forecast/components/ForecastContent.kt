@@ -64,7 +64,7 @@ internal fun ForecastContent(
     val isForecastLoading = state.isLoading
     val pullRefreshState =
         rememberPullRefreshState(refreshing = isForecastLoading, { refreshWeatherForecast() })
-    val selectedTempUnit = state.prefs.tempUnit.toString()
+    val selectedTempUnit = state.appPreferences.tempUnit.toString()
     val selectedDay = state.selectedDay
 
     Box(

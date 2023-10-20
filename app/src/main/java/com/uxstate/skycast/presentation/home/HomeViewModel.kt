@@ -4,12 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uxstate.skycast.domain.location.LocationTracker
 import com.uxstate.skycast.domain.model.GeoPoint
+import com.uxstate.skycast.domain.prefs.AppPreferences
 import com.uxstate.skycast.domain.prefs.DataStoreOperations
 import com.uxstate.skycast.domain.repository.WeatherRepository
 import com.uxstate.skycast.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -23,11 +25,11 @@ class HomeViewModel @Inject constructor(
     private val prefs: DataStoreOperations
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(HomeState())
-    val uiState = _uiState.asStateFlow()
+    private val _state = MutableStateFlow(HomeState())
+    val state = _state.asStateFlow()
 
     init {
-
+        observePrefsFlow()
         getLastLocation()
 
     }
@@ -41,7 +43,7 @@ class HomeViewModel @Inject constructor(
 
                 geoPoint ->
 
-                _uiState.update {
+                _state.update {
                     it.copy(
                             geoPoint = GeoPoint(
                                     latitude = geoPoint.latitude,
@@ -53,7 +55,7 @@ class HomeViewModel @Inject constructor(
             } ?: run {
 
 
-                _uiState.update { it.copy(errorMessage = "Error getting location") }
+                _state.update { it.copy(errorMessage = "Error getting location") }
 
             }
 
@@ -63,7 +65,7 @@ class HomeViewModel @Inject constructor(
 
     }
 
-    private fun getCurrentWeather(geoPoint: GeoPoint = _uiState.value.geoPoint) {
+    private fun getCurrentWeather(geoPoint: GeoPoint = _state.value.geoPoint) {
 
 
         repository.getCurrentWeather(geoPoint)
@@ -76,13 +78,13 @@ class HomeViewModel @Inject constructor(
 
                         is Resource.Error -> {
 
-                            _uiState.update { it.copy(errorMessage = result.errorMessage) }
+                            _state.update { it.copy(errorMessage = result.errorMessage) }
                         }
 
                         is Resource.Loading -> {
 
 
-                            _uiState.update { it.copy(isLoading = result.isLoading) }
+                            _state.update { it.copy(isLoading = result.isLoading) }
 
                         }
 
@@ -92,7 +94,7 @@ class HomeViewModel @Inject constructor(
                             result.data?.let { currentWeather ->
 
                                 saveCityId(currentWeather.cityId)
-                             _uiState.update { it.copy(currentWeather = currentWeather) }
+                             _state.update { it.copy(currentWeather = currentWeather) }
                             }
                         }
                     }
@@ -110,6 +112,29 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+
+    private fun observePrefsFlow() {
+
+        viewModelScope.launch {
+
+
+            prefs.appPreferences.collectLatest {
+
+                appPrefs ->
+
+
+                _state.update {
+                    it.copy(
+                            appPreferences = AppPreferences(
+                                    tempUnit = appPrefs.tempUnit,
+                                    theme = appPrefs.theme,
+                                    savedCityId = appPrefs.savedCityId
+                            )
+                    )
+                }
+            }
+        }
+    }
     fun refreshWeather() {
         getCurrentWeather()
 

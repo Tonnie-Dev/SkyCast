@@ -3,6 +3,7 @@ package com.uxstate.skycast.presentation.forecast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uxstate.skycast.domain.location.LocationTracker
+import com.uxstate.skycast.domain.prefs.AppPreferences
 import com.uxstate.skycast.domain.prefs.DataStoreOperations
 import com.uxstate.skycast.domain.repository.WeatherRepository
 import com.uxstate.skycast.utils.Resource
@@ -30,7 +31,7 @@ class ForecastViewModel @Inject constructor(
     init {
 
         getCityId()
-
+observePrefsFlow()
     }
 
     private fun getForecastWeather(cityId:Int? = _state.value.cityId) {
@@ -95,6 +96,29 @@ class ForecastViewModel @Inject constructor(
 
             is ForecastEvent.OnDateChangeEvent -> {
                 _state.update { it.copy(selectedDay = event.date) }
+            }
+        }
+    }
+
+    private fun observePrefsFlow() {
+
+        viewModelScope.launch {
+
+
+            prefs.appPreferences.collectLatest {
+
+                appPrefs ->
+
+
+                _state.update {
+                    it.copy(
+                            appPreferences = AppPreferences(
+                                    tempUnit = appPrefs.tempUnit,
+                                    theme = appPrefs.theme,
+                                    savedCityId = appPrefs.savedCityId
+                            )
+                    )
+                }
             }
         }
     }
