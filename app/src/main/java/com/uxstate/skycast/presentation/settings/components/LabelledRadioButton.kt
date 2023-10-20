@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.RadioButton
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,7 +27,7 @@ fun LabelledRadioButton(
 
     val spacing = LocalSpacing.current
 
-
+Surface {
     Row(
             modifier = modifier
                     .fillMaxWidth()
@@ -36,6 +37,8 @@ fun LabelledRadioButton(
         RadioButton(selected = isSelected, onClick = onClick)
         Text(text = text)
     }
+}
+
 }
 
 
