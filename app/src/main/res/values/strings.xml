@@ -23,10 +23,10 @@
     <string name="share_application">Share us</string>
     <string name="invite_friends">Invite your friends to join us</string>
     <string name="report_issue">Report an issue</string>
-    <string name="help_us">Help us to make cloudy better</string>
+    <string name="help_us">Help us to make SkyCast</string>
     <string name="rate_us">Rate us</string>
-    <string name="give_feedbacks">Share your feedbacks with us</string>
-    <string name="version">Version: 0.1.4</string>
+    <string name="give_feedback">Share your feedbacks with us</string>
+    <string name="version">Version: 1.0</string>
     <string name="app_version">Current app version</string>
     <string name="close">Close</string>
     <string name="ok">OK</string>
