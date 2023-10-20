@@ -6,8 +6,8 @@ import com.uxstate.skycast.domain.prefs.Theme
 
 data class SettingsScreenState(
     val appPreferences: AppPreferences = initialAppPreferences,
-    val showThemeDialog: Boolean = false,
-    val showTempUnitDialog: Boolean = false
+    val isShowThemeDialog: Boolean = false,
+    val isShowTempUnitDialog: Boolean = false
 ) {
 
 
@@ -23,7 +23,7 @@ data class SettingsScreenState(
                         theme = Theme.SYSTEM,
                         tempUnit = TempUnit.CELSIUS,
                         savedCityId = -1
-                ), showThemeDialog = false, showTempUnitDialog = false
+                ), isShowThemeDialog = false, isShowTempUnitDialog = false
         )
     }
 }
