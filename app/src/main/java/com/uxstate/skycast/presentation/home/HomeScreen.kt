@@ -80,13 +80,11 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
     val state by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
     val tempUnit = state.appPreferences.tempUnit
+
     val pullRefreshState = rememberPullRefreshState(
             refreshing = state.isLoading,
             onRefresh = viewModel::refreshWeather
     )
-
-
-
 
         if (permissionState.status.isGranted) {
             state.currentWeather?.let {
@@ -194,7 +192,7 @@ fun HomeContent(
                 horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Row (modifier = Modifier.fillMaxWidth(), Arrangement.End){
+            Row (modifier = Modifier.fillMaxWidth().padding(spacing.spaceSmall), Arrangement.End){
                 IconButton(onClick= navigateToSettings) {
 
                     Icon(

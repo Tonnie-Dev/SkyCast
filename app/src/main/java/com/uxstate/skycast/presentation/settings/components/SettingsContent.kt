@@ -23,15 +23,15 @@ import com.uxstate.skycast.utils.APP_URL
 
 
 @Composable
-fun SettingsContent(appPreferences: AppPreferences, actions: SettingsActions) {
+fun SettingsContent(appPreferences: AppPreferences, actions: SettingsActions, modifier: Modifier = Modifier) {
 
+    val spacing = LocalSpacing.current
     val context = LocalContext.current
     Column(
-            modifier = Modifier
+            modifier = modifier
                     .statusBarsPadding()
                     .navigationBarsPadding()
     ) {
-
 
         SettingsContainer(title = R.string.general_settings) {
             SettingsItem(
@@ -137,10 +137,7 @@ fun SettingsContainer(
                 text = stringResource(id = title),
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier
-                        .paddingFromBaseline(
-                                top = spacing.spaceLarge,
-                                bottom = spacing.spaceMedium
-                        )
+
                         .padding(spacing.spaceMedium)
         )
     }

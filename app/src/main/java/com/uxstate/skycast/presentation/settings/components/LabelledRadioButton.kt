@@ -27,7 +27,7 @@ fun LabelledRadioButton(
 
     val spacing = LocalSpacing.current
 
-Surface {
+
     Row(
             modifier = modifier
                     .fillMaxWidth()
@@ -39,7 +39,7 @@ Surface {
     }
 }
 
-}
+
 
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)

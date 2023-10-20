@@ -34,7 +34,7 @@ fun SettingsItem(
 ) {
 
     val spacing = LocalSpacing.current
-Surface {
+
     Row(
             modifier = modifier
                     .clickable(onClick = onClickSetting).padding(spacing.spaceSmall)
@@ -69,7 +69,7 @@ Surface {
 
 
 
-}
+
 
 
 @Preview(uiMode = UI_MODE_NIGHT_NO,  showBackground = true)
