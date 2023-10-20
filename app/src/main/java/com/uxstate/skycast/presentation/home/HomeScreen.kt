@@ -4,8 +4,10 @@ import android.Manifest
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,11 +15,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ScaffoldState
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -46,6 +53,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.uxstate.skycast.R
 import com.uxstate.skycast.domain.model.WeatherType
 import com.uxstate.skycast.presentation.destinations.ForecastScreenDestination
+import com.uxstate.skycast.presentation.destinations.SettingsScreenDestination
 import com.uxstate.skycast.presentation.home.components.HomeBody
 import com.uxstate.skycast.presentation.home.components.WeatherDataDisplay
 import com.uxstate.skycast.ui.theme.LocalSpacing
@@ -67,6 +75,7 @@ import com.uxstate.skycast.utils.toTitleCase
 fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: DestinationsNavigator) {
 
 
+    val spacing = LocalSpacing.current
     val permissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
     val state by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
@@ -77,88 +86,83 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
     )
 
 
-    Scaffold() {
-
-        paddingValues ->
 
 
+        if (permissionState.status.isGranted) {
+            state.currentWeather?.let {
 
 
+                HomeContent(
 
-    if (permissionState.status.isGranted) {
-        state.currentWeather?.let {
-
-
-            HomeContent(
-                    modifier = Modifier.padding(paddingValues),
-                    pullRefreshState = pullRefreshState,
-                    scrollState = scrollState,
-                    isLoading = state.isLoading,
-                    location = it.cityName,
-                    lastFetchTime = it.lastFetchedTime.toDateFormat(),
-                    weatherType = it.networkWeatherDescription.first().description.toTitleCase(),
-                    humidity = it.networkWeatherCondition.humidity,
-                    pressure = it.networkWeatherCondition.pressure,
-                    windSpeed = it.wind.speed,
-                    icon = WeatherType.fromWMO(it.networkWeatherDescription.first().icon).icon,
-                    onForecastButtonClick = { navigator.navigate(ForecastScreenDestination) },
-                    temperature = if (tempUnit.toString() == FAHRENHEIT)
-                        "${
-                            (it.networkWeatherCondition.temp.toFahrenheit()
-                                    .roundOffDoubleToInt())
-                        }${FAHRENHEIT_SIGN}"
-                    else
-                        "${
-                            it.networkWeatherCondition.temp.toCelsius()
-                                    .roundOffDoubleToInt()
-                        }${CELSIUS_SIGN}"
+                        pullRefreshState = pullRefreshState,
+                        scrollState = scrollState,
+                        isLoading = state.isLoading,
+                        location = it.cityName,
+                        lastFetchTime = it.lastFetchedTime.toDateFormat(),
+                        weatherType = it.networkWeatherDescription.first().description.toTitleCase(),
+                        humidity = it.networkWeatherCondition.humidity,
+                        pressure = it.networkWeatherCondition.pressure,
+                        windSpeed = it.wind.speed,
+                        icon = WeatherType.fromWMO(it.networkWeatherDescription.first().icon).icon,
+                        onForecastButtonClick = { navigator.navigate(ForecastScreenDestination) },
+                        navigateToSettings = {navigator.navigate(SettingsScreenDestination)},
+                        temperature = if (tempUnit.toString() == FAHRENHEIT)
+                            "${
+                                (it.networkWeatherCondition.temp.toFahrenheit()
+                                        .roundOffDoubleToInt())
+                            }${FAHRENHEIT_SIGN}"
+                        else
+                            "${
+                                it.networkWeatherCondition.temp.toCelsius()
+                                        .roundOffDoubleToInt()
+                            }${CELSIUS_SIGN}"
 
 
-            )
-            /*if (!state.isLoading){
+                )
+                /*if (!state.isLoading){
 
 
-            }else {
+                }else {
 
-                Box (contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()){
-                    CircularProgressIndicator(modifier = Modifier.size(50.dp))
+                    Box (contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()){
+                        CircularProgressIndicator(modifier = Modifier.size(50.dp))
 
-                }
-            }*/
+                    }
+                }*/
 
-        }
-    } else {
-        Box(
-                modifier = Modifier
-                        .fillMaxSize()
-                        .padding(8.dp),
-                contentAlignment = Alignment.Center
-        ) {
-            Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
+            }
+        } else {
+            Box(
+                    modifier = Modifier
+                            .fillMaxSize()
+                            .padding(8.dp),
+                    contentAlignment = Alignment.Center
             ) {
-                Image(
-                        painter = painterResource(id = R.drawable.ic_no_weather_info),
-                        contentDescription = null,
-                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
-                )
+                Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Image(
+                            painter = painterResource(id = R.drawable.ic_no_weather_info),
+                            contentDescription = null,
+                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+                    )
 
-                Text(
-                        text = stringResource(id = R.string.location_permission_msg),
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.bodyMedium
-                )
+                    Text(
+                            text = stringResource(id = R.string.location_permission_msg),
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.bodyMedium
+                    )
 
-                Button(onClick = { permissionState.launchPermissionRequest() }) {
-                    Text("Request permission")
+                    Button(onClick = { permissionState.launchPermissionRequest() }) {
+                        Text("Request permission")
+                    }
                 }
             }
         }
+
     }
 
-}
-}
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -175,7 +179,8 @@ fun HomeContent(
     pressure: Double,
     windSpeed: Double,
     @DrawableRes icon: Int,
-    onForecastButtonClick: () -> Unit
+    onForecastButtonClick: () -> Unit,
+     navigateToSettings:()-> Unit
 ) {
     val spacing = LocalSpacing.current
 
@@ -189,6 +194,17 @@ fun HomeContent(
                 horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
+            Row (modifier = Modifier.fillMaxWidth(), Arrangement.End){
+                IconButton(onClick= navigateToSettings) {
+
+                    Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = stringResource(id = R.string.settings),
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(spacing.spaceLarge)
+                    )
+                }
+            }
             HomeBody(
                     location = location,
                     lastFetchTime = lastFetchTime,
