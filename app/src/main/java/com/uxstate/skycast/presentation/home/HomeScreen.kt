@@ -17,12 +17,14 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -66,23 +68,29 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
 
 
     val permissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
-
-
     val state by viewModel.uiState.collectAsState()
-
+    val scrollState = rememberScrollState()
+    val tempUnit = state.appPreferences.tempUnit
     val pullRefreshState = rememberPullRefreshState(
             refreshing = state.isLoading,
             onRefresh = viewModel::refreshWeather
     )
 
 
-    val scrollState = rememberScrollState()
-    val tempUnit = state.appPreferences.tempUnit
+    Scaffold() {
+
+        paddingValues ->
+
+
+
+
+
     if (permissionState.status.isGranted) {
         state.currentWeather?.let {
 
 
             HomeContent(
+                    modifier = Modifier.padding(paddingValues),
                     pullRefreshState = pullRefreshState,
                     scrollState = scrollState,
                     isLoading = state.isLoading,
@@ -149,7 +157,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
         }
     }
 
-
+}
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -204,7 +212,7 @@ fun HomeContent(
                     pressure = pressure,
                     windSpeed = windSpeed
             )
-
+            Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
             Button(onClick = onForecastButtonClick) {
 
                 Text("Forecast")
