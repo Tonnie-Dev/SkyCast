@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+
 import com.uxstate.skycast.domain.prefs.AppPreferences
 import com.uxstate.skycast.domain.prefs.DataStoreOperations
 import com.uxstate.skycast.domain.prefs.TempUnit
@@ -15,6 +16,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
 
@@ -47,15 +49,19 @@ class DataStoreOperationsImpl @Inject constructor (@ApplicationContext private v
           prefs ->
 
           prefs[SELECTED_THEME] = theme.name
+
+          Timber.i("Theme Change - ${prefs[SELECTED_THEME]}")
       }
     }
 
     override suspend fun updateTempUnit(unit: TempUnit) {
  context.dataStore.edit {
 
+
      prefs ->
 
      prefs[SELECTED_TEMP_UNIT] = unit.name
+     Timber.i("TempmChange - ${prefs[SELECTED_THEME]}")
  }
     }
 

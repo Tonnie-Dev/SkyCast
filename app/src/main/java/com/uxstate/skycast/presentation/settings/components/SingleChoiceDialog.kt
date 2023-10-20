@@ -43,7 +43,8 @@ fun SingleChoiceDialog(
             modifier = Modifier.clip(RoundedCornerShape(spacing.spaceMedium)),
             title = { Text(title) },
             confirmButton = {
-                TextButton(onClick = { onConfirmOption(selectedOptionIndex) })
+                TextButton(onClick = {
+                    onConfirmOption(selectedOptionIndex) })
                 {
                     Text(text = stringResource(id = R.string.ok))
                 }

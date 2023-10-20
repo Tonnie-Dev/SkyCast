@@ -2,14 +2,17 @@ package com.uxstate.skycast.presentation.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.uxstate.skycast.domain.prefs.AppPreferences
 import com.uxstate.skycast.domain.prefs.DataStoreOperations
 import com.uxstate.skycast.domain.prefs.TempUnit
 import com.uxstate.skycast.domain.prefs.Theme
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,6 +22,33 @@ class SettingsViewModel @Inject constructor(private val prefs: DataStoreOperatio
 
     private val _state = MutableStateFlow(SettingsState())
     val state = _state.asStateFlow()
+
+    init {
+        observePrefsFlow()
+    }
+
+    private fun observePrefsFlow() {
+
+        viewModelScope.launch {
+
+
+            prefs.appPreferences.collectLatest {
+
+                appPrefs ->
+
+
+                _state.update {
+                    it.copy(
+                            appPreferences = AppPreferences(
+                                    tempUnit = appPrefs.tempUnit,
+                                    theme = appPrefs.theme,
+                                    savedCityId = appPrefs.savedCityId
+                            )
+                    )
+                }
+            }
+        }
+    }
 
     override fun onThemePreferenceClick() {
 
@@ -31,24 +61,29 @@ class SettingsViewModel @Inject constructor(private val prefs: DataStoreOperatio
 
     override fun onThemeChange(theme: Theme) {
         viewModelScope.launch {
-
+            Timber.i("On Theme Change - ${theme.name}")
             prefs.updateTheme(theme)
+            observePrefsFlow()
         }
 
         _state.update { it.copy(isShowThemeDialog = false) }
+        Timber.i("Theme Status - ${_state.value.appPreferences.theme.name}")
     }
 
     override fun onTempUnitChange(tempUnit: TempUnit) {
-    viewModelScope.launch {
+        viewModelScope.launch {
 
-        prefs.updateTempUnit(tempUnit)
-    }
+            Timber.i("On Temp Change - ${tempUnit.name}")
+            prefs.updateTempUnit(tempUnit)
+            observePrefsFlow()
+        }
 
         _state.update { it.copy(isShowTempUnitDialog = false) }
+        Timber.i("Temp Status - ${_state.value.appPreferences.tempUnit.name}")
     }
 
     override fun onDismissThemeSelectionDialog() {
-       _state.update { it.copy(isShowThemeDialog = false) }
+        _state.update { it.copy(isShowThemeDialog = false) }
     }
 
     override fun onDismissTempUnitSelectionDialog() {
