@@ -24,6 +24,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -197,7 +198,7 @@ fun HomeContent(
                             imageVector = Icons.Default.Settings,
                             contentDescription = stringResource(id = R.string.settings),
                             tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(spacing.spaceLarge)
+                            modifier = Modifier.minimumInteractiveComponentSize()
                     )
                 }
             }
