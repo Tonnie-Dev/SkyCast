@@ -9,20 +9,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Icon
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.uxstate.skycast.R
 import com.uxstate.skycast.ui.theme.LocalSpacing
 import com.uxstate.skycast.ui.theme.SkyCastTheme
-import com.uxstate.skycast.R
 
 @Composable
 fun SettingsItem(
@@ -35,9 +32,11 @@ fun SettingsItem(
 
     val spacing = LocalSpacing.current
 
+
     Row(
             modifier = modifier
-                    .clickable(onClick = onClickSetting).padding(spacing.spaceSmall)
+                    .clickable(onClick = onClickSetting)
+                    .padding(spacing.spaceSmall)
                     .fillMaxWidth()
     ) {
 
@@ -63,8 +62,8 @@ fun SettingsItem(
             )
         }
 
-    }
-}
+    }}
+
 
 
 

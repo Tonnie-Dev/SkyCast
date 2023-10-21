@@ -114,7 +114,7 @@ fun SettingsContent(appPreferences: AppPreferences, actions: SettingsActions, mo
                     title = R.string.version,
                     subTitle = R.string.app_version,
                     icon = R.drawable.version,
-                    onClickSetting = {}
+                    onClickSetting = { }
             )
 
         }
@@ -140,7 +140,9 @@ fun SettingsContainer(
 
                         .padding(spacing.spaceMedium)
         )
+
+       content()
     }
 
-    content()
+
 }
