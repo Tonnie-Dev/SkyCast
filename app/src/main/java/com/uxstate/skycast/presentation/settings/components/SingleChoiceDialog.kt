@@ -6,7 +6,6 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -44,7 +43,8 @@ fun SingleChoiceDialog(
             title = { Text(title) },
             confirmButton = {
                 TextButton(onClick = {
-                    onConfirmOption(selectedOptionIndex) })
+                    onConfirmOption(selectedOptionIndex)
+                })
                 {
                     Text(text = stringResource(id = R.string.ok))
                 }
