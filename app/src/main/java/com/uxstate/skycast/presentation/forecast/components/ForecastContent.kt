@@ -86,7 +86,7 @@ internal fun ForecastContent(
 
 
                             LazyColumn(
-                                    contentPadding = PaddingValues(bottom = 16.dp)
+                                    contentPadding = PaddingValues(16.dp)
                             ) {
 
                                 itemsIndexed(filteredList) { index, item ->
@@ -96,10 +96,10 @@ internal fun ForecastContent(
 
 
                                     item.forecastWeatherDescription.forEach { description ->
-                                        ForecastItem(
-                                                dateTime = item.date.toDateFormat(),
-                                                weatherType = description.description.toTitleCase(),
-                                                temperature =
+                                        TrapizForecastItem(
+                                                dateTime = item.date,
+                                                weatherDesc = description.description.toTitleCase(),
+                                                temp =
                                                 if (selectedTempUnit == FAHRENHEIT) "${
                                                     (item.forecastWeatherParams.temp.toFahrenheit()
                                                             .roundOffDoubleToInt())

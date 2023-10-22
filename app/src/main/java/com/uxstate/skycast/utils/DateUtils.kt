@@ -9,6 +9,7 @@ import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.Period
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
@@ -81,6 +82,21 @@ fun List<ForecastWeather>.mapForecastWeather(selectedDay:Int):List<ForecastWeath
   // check(selectedDay in 0..4){"Invalid Day Selection"}
 
     return mappedForecastByDate[index]
+}
+
+fun String.extractTime(): String {
+
+    val pattern = "yyyy-MM-dd HH:mm:ss"
+    val dateTimeFormatter = DateTimeFormatter.ofPattern(pattern)
+    val localDateTime =  LocalDateTime.parse(this, dateTimeFormatter)
+
+    val hour = localDateTime.hour
+    val minute = localDateTime.minute
+
+    val formattedHour = if(hour in 0..9) "0$hour" else hour
+    val formattedMinute = if(minute in 0..9) "0$minute" else minute
+
+    return "$formattedHour:$formattedMinute"
 }
 
 
