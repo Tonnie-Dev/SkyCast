@@ -96,7 +96,14 @@ fun String.extractTime(): String {
     val formattedHour = if(hour in 0..9) "0$hour" else hour
     val formattedMinute = if(minute in 0..9) "0$minute" else minute
 
-    return "$formattedHour:$formattedMinute"
+   // return "$formattedHour:$formattedMinute"
+    return  localDateTime.extractAmPmTime()
 }
 
+fun LocalDateTime.extractAmPmTime():String {
+
+    val pattern = "hh:mm a"
+    val dateTimeFormatter = DateTimeFormatter.ofPattern(pattern)
+    return  format(dateTimeFormatter)
+}
 
