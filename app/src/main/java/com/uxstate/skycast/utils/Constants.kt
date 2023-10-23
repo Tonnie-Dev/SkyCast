@@ -18,8 +18,8 @@ const val PREFS_NAME = "prefs"
 
 //Home Screen
 const val FAHRENHEIT = "FAHRENHEIT"
-const val FAHRENHEIT_SIGN = "°F"
-const val CELSIUS_SIGN = "°C"
+const val FAHRENHEIT_SIGN = "°\u1DA0"
+const val CELSIUS_SIGN = "°\u1D9C"
 
 //Settings Screen
 const val APP_URL = "https://play.google.com/store/apps/details?id=com.androidshowtime.asteroidradar&pcampaignid=web_share"

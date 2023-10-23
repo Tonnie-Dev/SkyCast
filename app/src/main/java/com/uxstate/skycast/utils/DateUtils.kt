@@ -104,6 +104,8 @@ fun LocalDateTime.extractAmPmTime():String {
 
     val pattern = "hh:mm a"
     val dateTimeFormatter = DateTimeFormatter.ofPattern(pattern)
-    return  format(dateTimeFormatter)
+    val formattedTime = format(dateTimeFormatter)
+    val amPmSubstring = formattedTime.substring(6..7).uppercase()
+    return  formattedTime.substring(0..5) + amPmSubstring
 }
 
