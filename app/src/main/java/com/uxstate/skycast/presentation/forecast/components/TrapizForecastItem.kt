@@ -67,7 +67,7 @@ fun TrapizForecastItem(
                     color = MaterialTheme.colorScheme.onPrimaryContainer
             )
 
-            Text(text = dateTime.extractTime(), style = MaterialTheme.typography.bodyLarge)
+            Text(text = dateTime.extractTime(), style = MaterialTheme.typography.labelLarge)
         }
 
         Column(

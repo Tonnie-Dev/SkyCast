@@ -39,25 +39,40 @@ class HomeViewModel @Inject constructor(
 
         viewModelScope.launch {
 
-            tracker.getCurrentLocation().data?.let {
 
-                geoPoint ->
+            when(val locData = tracker.getCurrentLocation()){
 
-                _state.update {
-                    it.copy(
-                            geoPoint = GeoPoint(
-                                    latitude = geoPoint.latitude,
-                                    geoPoint.longitude
+                is Resource.Success -> {
+                    tracker.getCurrentLocation().data?.let {
+
+                        geoPoint ->
+
+                        _state.update {
+                            it.copy(
+                                    geoPoint = GeoPoint(
+                                            latitude = geoPoint.latitude,
+                                            geoPoint.longitude
+                                    )
                             )
-                    )
+                        }
+                        getCurrentWeather(geoPoint)
+                    } ?: run {
+
+
+                        _state.update { it.copy(errorMessage = "Error getting location", isLocationNull = true) }
+
+                    }
+
                 }
-                getCurrentWeather(geoPoint)
-            } ?: run {
+                is Resource.Error -> {
+
+                    _state.update { it.copy(isLocationNull = true) }
 
 
-                _state.update { it.copy(errorMessage = "Error getting location") }
-
+                }
+                else -> Unit
             }
+
 
 
         }
