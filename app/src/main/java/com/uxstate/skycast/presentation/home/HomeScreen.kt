@@ -59,6 +59,8 @@ import com.uxstate.skycast.domain.model.WeatherType
 import com.uxstate.skycast.presentation.destinations.ForecastScreenDestination
 import com.uxstate.skycast.presentation.destinations.SettingsScreenDestination
 import com.uxstate.skycast.presentation.home.components.HomeBody
+import com.uxstate.skycast.presentation.home.components.HomeContent
+import com.uxstate.skycast.presentation.home.components.LocationDialog
 import com.uxstate.skycast.presentation.home.components.WeatherDataDisplay
 import com.uxstate.skycast.ui.theme.LocalSpacing
 import com.uxstate.skycast.utils.CELSIUS_SIGN
@@ -95,19 +97,12 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
                 .background(Color.Cyan)){
 
 
-            AlertDialog(onDismissRequest = { /*TODO*/ },
-                    title = { Text(text = "Error")},
-                    text = { Text(text = state.errorMessage ?: "Unknown Error")} ,
-                    confirmButton = { TextButton(onClick = { /*TODO*/ }) {
-
-                        Text(text = "OK")
-                        }}, dismissButton = { TextButton(onClick = { /*TODO*/ }) {
-
-                            Text(text = "No, thanks")
-            }}
-
-
-            )
+          LocationDialog(
+                  text = "Error",
+                  onDismissDialog = { /*TODO*/ },
+                  onPositiveButtonClick = { /*TODO*/ }) {
+                
+          }
         }
     }
 
@@ -192,83 +187,3 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
     }
 
 
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun HomeContent(
-    modifier: Modifier = Modifier,
-    pullRefreshState: PullRefreshState,
-    scrollState: ScrollState,
-    isLoading: Boolean,
-    location: String,
-    lastFetchTime: String,
-    temperature: String,
-    weatherType: String,
-    humidity: Double,
-    pressure: Double,
-    windSpeed: Double,
-    @DrawableRes icon: Int,
-    onForecastButtonClick: () -> Unit,
-     navigateToSettings:()-> Unit
-) {
-    val spacing = LocalSpacing.current
-
-    Box(modifier = modifier.pullRefresh(pullRefreshState)) {
-
-        Column(
-                modifier = Modifier
-                        .verticalScroll(scrollState)
-                        .statusBarsPadding()
-                        .navigationBarsPadding(),
-                horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-
-            Row (modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(spacing.spaceSmall), Arrangement.End){
-                IconButton(onClick= navigateToSettings) {
-
-                    Icon(
-                            imageVector = Icons.Default.Settings,
-                            contentDescription = stringResource(id = R.string.settings),
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.minimumInteractiveComponentSize()
-                    )
-                }
-            }
-            HomeBody(
-                    location = location,
-                    lastFetchTime = lastFetchTime,
-                    temperature = temperature,
-                    weatherType = weatherType,
-                    icon = icon,
-                    modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                    top = spacing.spaceSmall,
-                                    start = spacing.spaceSmall,
-                                    end = spacing.spaceSmall
-                            )
-            )
-
-            Spacer(modifier = Modifier.height(spacing.spaceOneHundred))
-
-            WeatherDataDisplay(
-                    modifier = Modifier.paddingFromBaseline(top = spacing.spaceExtraLarge),
-                    humidity = humidity,
-                    pressure = pressure,
-                    windSpeed = windSpeed
-            )
-            Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
-            Button(onClick = onForecastButtonClick) {
-
-                Text("Forecast")
-            }
-        }
-
-        PullRefreshIndicator(
-                refreshing = isLoading, state = pullRefreshState, modifier = Modifier.align(
-                Alignment.TopCenter
-        )
-        )
-    }
-}
