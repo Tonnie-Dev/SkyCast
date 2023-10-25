@@ -24,7 +24,7 @@ import com.uxstate.skycast.presentation.forecast.components.ForecastContent
 @Composable
 fun ForecastScreen(navigator: DestinationsNavigator, viewModel:ForecastViewModel= hiltViewModel()) {
     val state by viewModel.state.collectAsState()
-val selectedDay = state.selectedDay
+
 
     Column ( modifier = Modifier.statusBarsPadding().navigationBarsPadding()){
         DateRow() {

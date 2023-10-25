@@ -1,52 +1,23 @@
 package com.uxstate.skycast.presentation.home
 
 import android.Manifest
-import androidx.annotation.DrawableRes
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.paddingFromBaseline
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -54,135 +25,95 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.uxstate.skycast.R
 import com.uxstate.skycast.domain.model.WeatherType
 import com.uxstate.skycast.presentation.destinations.ForecastScreenDestination
 import com.uxstate.skycast.presentation.destinations.SettingsScreenDestination
-import com.uxstate.skycast.presentation.home.components.HomeBody
+import com.uxstate.skycast.presentation.home.components.EmptyWeatherBox
 import com.uxstate.skycast.presentation.home.components.HomeContent
 import com.uxstate.skycast.presentation.home.components.LocationDialog
-import com.uxstate.skycast.presentation.home.components.WeatherDataDisplay
 import com.uxstate.skycast.ui.theme.LocalSpacing
-import com.uxstate.skycast.utils.CELSIUS_SIGN
 import com.uxstate.skycast.utils.FAHRENHEIT
-import com.uxstate.skycast.utils.FAHRENHEIT_SIGN
-import com.uxstate.skycast.utils.roundOffDoubleToInt
-import com.uxstate.skycast.utils.toCelsius
-import com.uxstate.skycast.utils.toDateFormat
-import com.uxstate.skycast.utils.toFahrenheit
-import com.uxstate.skycast.utils.toTitleCase
 
 
 @RootNavGraph(start = true)
 @Destination
 @Composable
-@OptIn(ExperimentalMaterialApi::class, ExperimentalPermissionsApi::class,
-        ExperimentalMaterial3Api::class
+@OptIn(ExperimentalMaterialApi::class, ExperimentalPermissionsApi::class
 )
 
 fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: DestinationsNavigator) {
 
 
-    val spacing = LocalSpacing.current
     val permissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
     val state by viewModel.state.collectAsState()
-    val scrollState = rememberScrollState()
-    val tempUnit = state.appPreferences.tempUnit
+
+    val isFahrenheitUnit = state.appPreferences.tempUnit.toString() == FAHRENHEIT
     val isLocationNull = state.isLocationNull
-
-    if (isLocationNull){
-
-        Box(modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.Cyan)){
-
-
-          LocationDialog(
-                  text = "Error",
-                  onDismissDialog = { /*TODO*/ },
-                  onPositiveButtonClick = { /*TODO*/ }) {
-                
-          }
-        }
-    }
 
     val pullRefreshState = rememberPullRefreshState(
             refreshing = state.isLoading,
             onRefresh = viewModel::refreshWeather
     )
 
-        if (permissionState.status.isGranted) {
-            state.currentWeather?.let {
+        Box(modifier = Modifier
+                .statusBarsPadding()
+                .navigationBarsPadding()
+                .fillMaxSize()
+                .pullRefresh(pullRefreshState)){
 
+            if (isLocationNull){
 
-                HomeContent(
+                LocationDialog(
+                        text = "Error",
+                        onDismissDialog = { /*TODO*/ },
+                        onPositiveButtonClick = { /*TODO*/ }) {
 
-                        pullRefreshState = pullRefreshState,
-                        scrollState = scrollState,
-                        isLoading = state.isLoading,
-                        location = it.cityName,
-                        lastFetchTime = it.lastFetchedTime.toDateFormat(),
-                        weatherType = it.networkWeatherDescription.first().description.toTitleCase(),
-                        humidity = it.networkWeatherCondition.humidity,
-                        pressure = it.networkWeatherCondition.pressure,
-                        windSpeed = it.wind.speed,
-                        icon = WeatherType.fromWMO(it.networkWeatherDescription.first().icon).icon,
-                        onForecastButtonClick = { navigator.navigate(ForecastScreenDestination) },
-                        navigateToSettings = {navigator.navigate(SettingsScreenDestination)},
-                        temperature = if (tempUnit.toString() == FAHRENHEIT)
-                            "${
-                                (it.networkWeatherCondition.temp.toFahrenheit()
-                                        .roundOffDoubleToInt())
-                            }${FAHRENHEIT_SIGN}"
-                        else
-                            "${
-                                it.networkWeatherCondition.temp.toCelsius()
-                                        .roundOffDoubleToInt()
-                            }${CELSIUS_SIGN}"
-
-
-                )
-                /*if (!state.isLoading){
-
-
-                }else {
-
-                    Box (contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()){
-                        CircularProgressIndicator(modifier = Modifier.size(50.dp))
-
-                    }
-                }*/
-
-            }
-        } else {
-            Box(
-                    modifier = Modifier
-                            .fillMaxSize()
-                            .padding(8.dp),
-                    contentAlignment = Alignment.Center
-            ) {
-                Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Image(
-                            painter = painterResource(id = R.drawable.ic_no_weather_info),
-                            contentDescription = null,
-                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
-                    )
-
-                    Text(
-                            text = stringResource(id = R.string.location_permission_msg),
-                            textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.primary,
-                            style = MaterialTheme.typography.bodyMedium
-                    )
-
-                    Button(onClick = { permissionState.launchPermissionRequest() }) {
-                        Text("Request permission")
-                    }
                 }
             }
+
+
+            if (permissionState.status.isGranted) {
+
+                // TODO: Check on this null
+                state.currentWeather?.let {
+
+
+                    HomeContent(
+                            isFahrenheitUnit =isFahrenheitUnit,
+                            currentWeather = it,
+                            icon = WeatherType.fromWMO(it.networkWeatherDescription.first().icon).icon,
+                            onForecastButtonClick = { navigator.navigate(ForecastScreenDestination) },
+                            navigateToSettings = {navigator.navigate(SettingsScreenDestination)},
+
+
+
+                            )
+                    /*if (!state.isLoading){
+
+
+                    }else {
+
+                        Box (contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()){
+                            CircularProgressIndicator(modifier = Modifier.size(50.dp))
+
+                        }
+                    }*/
+
+                }
+            } else {
+                EmptyWeatherBox()
+            }
+
+            PullRefreshIndicator(
+                    refreshing = state.isLoading, state = pullRefreshState, modifier = Modifier.align(
+                    Alignment.TopCenter
+            )
+            )
+
         }
+
+
+
 
     }
 

@@ -38,4 +38,5 @@
 
     <!--Forecast Screen-->
     <string name="today_text">Today</string>
+    <string name="forecast_text">Forecast</string>
 </resources>

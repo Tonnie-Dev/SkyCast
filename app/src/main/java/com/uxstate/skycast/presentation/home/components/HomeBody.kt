@@ -22,7 +22,7 @@ import com.uxstate.skycast.R
 @Composable
 fun HomeBody(
     modifier: Modifier = Modifier,
-    location: String,
+    cityName: String,
     lastFetchTime: String,
     temperature: String,
     weatherType: String,
@@ -33,7 +33,7 @@ fun HomeBody(
 
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
 
-        Text(text = location, style = MaterialTheme.typography.headlineLarge)
+        Text(text = cityName, style = MaterialTheme.typography.headlineLarge)
 
         Text(
                 text = lastFetchTime,
@@ -68,7 +68,7 @@ fun HomeBody(
 @Composable
 fun HomeHeaderPreviewDark() {
     HomeBody(
-            location = "Riruta",
+            cityName = "Riruta",
             lastFetchTime = "Sunday, Oct 9, 07:13 AM",
             temperature = "24.2",
             weatherType = "Clear Sky",
