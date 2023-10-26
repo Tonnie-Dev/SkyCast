@@ -2,6 +2,7 @@ package com.uxstate.skycast.presentation.main
 
 import android.content.Context
 import android.content.IntentSender
+import android.location.LocationManager
 import androidx.activity.result.IntentSenderRequest
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.common.api.ResolvableApiException
@@ -18,11 +19,23 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor() : ViewModel() {
+class MainViewModel @Inject constructor(private val locationManager: LocationManager) : ViewModel() {
 
     val isLocationEnabled = MutableStateFlow(false)
 
 
+
+
+    init {
+        updateLocationServiceStatus()
+    }
+
+
+    private fun updateLocationServiceStatus() {
+
+
+        isLocationEnabled.value = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    }
     fun enableLocationRequest(
         context: Context,
         makeRequest: (intentSenderRequest: IntentSenderRequest) -> Unit//Lambda to call when locations are off.
