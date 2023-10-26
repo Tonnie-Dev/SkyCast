@@ -73,8 +73,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
                         onDismissDialog = { /*TODO*/ },
                         onPositiveButtonClick = {
 
-                            val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                            val activity = LocalLifecycleOwner.current
+
 
                         }) {
 

@@ -1,4 +1,4 @@
-package com.uxstate.skycast
+package com.uxstate.skycast.presentation.main
 
 import android.graphics.Color
 import android.os.Bundle
