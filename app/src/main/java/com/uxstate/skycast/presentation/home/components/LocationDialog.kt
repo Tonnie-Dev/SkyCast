@@ -13,6 +13,7 @@ fun LocationDialog(
     onNegativeButtonClick: () -> Unit
 ) {
 
+
     AlertDialog(
             onDismissRequest = onDismissDialog,
             title = { Text(text = "Error") },

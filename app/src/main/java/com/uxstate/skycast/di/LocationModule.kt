@@ -1,6 +1,7 @@
 package com.uxstate.skycast.di
 
 import android.content.Context
+import android.location.LocationManager
 import com.google.android.gms.location.LocationServices
 import com.uxstate.skycast.domain.location.LocationTracker
 import com.uxstate.skycast.domain.location.LocationTrackerImpl
@@ -26,5 +27,11 @@ abstract class LocationModule {
         @Singleton
         fun provideFusedLocationProviderClient(@ApplicationContext context: Context) =
             LocationServices.getFusedLocationProviderClient(context)
+
+        @Provides
+        @Singleton
+
+        fun provideLocationManager(@ApplicationContext context: Context) =
+            context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
     }
 }

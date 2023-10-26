@@ -1,6 +1,8 @@
 package com.uxstate.skycast.presentation.home
 
 import android.Manifest
+import android.content.Intent
+import android.provider.Settings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +20,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -42,8 +47,8 @@ import com.uxstate.skycast.utils.FAHRENHEIT
 )
 
 fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: DestinationsNavigator) {
-
-
+    val activity = LocalLifecycleOwner.current
+    val context = LocalContext.current
     val permissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
     val state by viewModel.state.collectAsState()
 
@@ -66,7 +71,12 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
                 LocationDialog(
                         text = "Error",
                         onDismissDialog = { /*TODO*/ },
-                        onPositiveButtonClick = { /*TODO*/ }) {
+                        onPositiveButtonClick = {
+
+                            val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                            val activity = LocalLifecycleOwner.current
+
+                        }) {
 
                 }
             }
