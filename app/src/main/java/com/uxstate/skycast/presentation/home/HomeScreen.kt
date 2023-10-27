@@ -66,11 +66,11 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
                 .fillMaxSize()
                 .pullRefresh(pullRefreshState)){
 
-            if (isLocationNull){
+      /*      if (isLocationNull){
 
                 LocationDialog(
                         text = "Error",
-                        onDismissDialog = { /*TODO*/ },
+                        onDismissDialog = { *//*TODO*//* },
                         onPositiveButtonClick = {
 
 
@@ -79,7 +79,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
 
                 }
             }
-
+*/
 
             if (permissionState.status.isGranted) {
 

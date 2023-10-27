@@ -21,9 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(private val locationManager: LocationManager) : ViewModel() {
 
-    val isLocationEnabled = MutableStateFlow(false)
-
-
+    val isLocationEnabled= MutableStateFlow(false)
 
 
     init {
@@ -36,6 +34,7 @@ class MainViewModel @Inject constructor(private val locationManager: LocationMan
 
         isLocationEnabled.value = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
+
     fun enableLocationRequest(
         context: Context,
         makeRequest: (intentSenderRequest: IntentSenderRequest) -> Unit//Lambda to call when locations are off.
@@ -68,5 +67,9 @@ class MainViewModel @Inject constructor(private val locationManager: LocationMan
                 }
             }
         }
+    }
+
+    fun updateCurrentLocationData(activity: MainActivity) {
+        TODO("Not yet implemented")
     }
 }
