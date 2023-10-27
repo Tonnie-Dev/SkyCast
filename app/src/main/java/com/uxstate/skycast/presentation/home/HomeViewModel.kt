@@ -8,7 +8,6 @@ import com.uxstate.skycast.domain.model.GeoPoint
 import com.uxstate.skycast.domain.prefs.AppPreferences
 import com.uxstate.skycast.domain.prefs.DataStoreOperations
 import com.uxstate.skycast.domain.repository.WeatherRepository
-import com.uxstate.skycast.presentation.main.MainActivity
 import com.uxstate.skycast.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,7 +34,7 @@ class HomeViewModel @Inject constructor(
     init {
         observePrefsFlow()
 
-        updateLocationServiceStatus()
+        getLastLocation()
     }
 
     private fun observePrefsFlow() {
@@ -168,41 +167,9 @@ class HomeViewModel @Inject constructor(
     fun onEvent(event: HomeEvent){
 
 
-        when(event){
-
-            is HomeEvent.GpsEnabledEvent -> {
-                _state.update {
-                    it.copy(
-                            isLocationEnabled = true
-                    )
-                }
-
-            }
-            is HomeEvent.GpsDisabledEvent -> {
-
-                _state.update {
-                    it.copy(
-                            isLocationEnabled = false
-                    )
-                }
-            }
-        }
-    }
-
-    private fun updateLocationServiceStatus() {
-
-
-        val gpsProviderString = LocationManager.GPS_PROVIDER
-        _state.update {
-            it.copy(
-                    isLocationEnabled = locationManager.isProviderEnabled(
-                            gpsProviderString
-                    )
-            )
-        }
-
 
     }
+
 
 
     fun updateCurrentLocationData() {

@@ -64,7 +64,7 @@ class LocationTrackerImpl @Inject constructor(
             ).apply {
                addOnSuccessListener { location: Location? ->
                    if (location == null) {
-
+                       Timber.i("Null Location")
                        cancellableContinuation.resume(
                                Resource.Error(
                                        data = null,
@@ -73,7 +73,11 @@ class LocationTrackerImpl @Inject constructor(
                        )
 
                    } else {
+
+
+                       Timber.i("Success ${location.latitude}")
                        Resource.Success(
+
                                GeoPoint(
                                        latitude = location.latitude,
                                        longitude = location.longitude
