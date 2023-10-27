@@ -1,19 +1,8 @@
 package com.uxstate.skycast.presentation.home
 
-import android.content.Context
-import android.content.IntentSender
 import android.location.LocationManager
-import androidx.activity.result.IntentSenderRequest
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
-import com.google.android.gms.location.LocationSettingsResponse
-import com.google.android.gms.location.Priority
-import com.google.android.gms.location.SettingsClient
-import com.google.android.gms.tasks.Task
 import com.uxstate.skycast.domain.location.LocationTracker
 import com.uxstate.skycast.domain.model.GeoPoint
 import com.uxstate.skycast.domain.prefs.AppPreferences
@@ -29,7 +18,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,12 +30,35 @@ class HomeViewModel @Inject constructor(
 
     private val _state = MutableStateFlow(HomeState())
     val state = _state.asStateFlow()
-    val isLocationEnabled= MutableStateFlow(false)
+
 
     init {
         observePrefsFlow()
 
         updateLocationServiceStatus()
+    }
+
+    private fun observePrefsFlow() {
+
+        viewModelScope.launch {
+
+
+            prefs.appPreferences.collectLatest {
+
+                appPrefs ->
+
+
+                _state.update {
+                    it.copy(
+                            appPreferences = AppPreferences(
+                                    tempUnit = appPrefs.tempUnit,
+                                    theme = appPrefs.theme,
+                                    savedCityId = appPrefs.savedCityId
+                            )
+                    )
+                }
+            }
+        }
     }
 
     private fun getLastLocation() {
@@ -56,7 +67,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
 
 
-            when(val locData = tracker.getCurrentLocation()){
+            when (val locData = tracker.getCurrentLocation()) {
 
                 is Resource.Success -> {
                     tracker.getCurrentLocation().data?.let {
@@ -75,20 +86,23 @@ class HomeViewModel @Inject constructor(
                     } ?: run {
 
 
-                        _state.update { it.copy(errorMessage = "Error getting location", isLocationNull = true) }
+                        _state.update {
+                            it.copy(
+                                    errorMessage = "Error getting location"
+                            )
+                        }
 
                     }
 
                 }
-                is Resource.Error -> {
 
-                    _state.update { it.copy(isLocationNull = true) }
+                is Resource.Error -> {
 
 
                 }
+
                 else -> Unit
             }
-
 
 
         }
@@ -125,7 +139,7 @@ class HomeViewModel @Inject constructor(
                             result.data?.let { currentWeather ->
 
                                 saveCityId(currentWeather.cityId)
-                             _state.update { it.copy(currentWeather = currentWeather) }
+                                _state.update { it.copy(currentWeather = currentWeather) }
                             }
                         }
                     }
@@ -144,75 +158,54 @@ class HomeViewModel @Inject constructor(
     }
 
 
-    private fun observePrefsFlow() {
-
-        viewModelScope.launch {
 
 
-            prefs.appPreferences.collectLatest {
-
-                appPrefs ->
-
-
-                _state.update {
-                    it.copy(
-                            appPreferences = AppPreferences(
-                                    tempUnit = appPrefs.tempUnit,
-                                    theme = appPrefs.theme,
-                                    savedCityId = appPrefs.savedCityId
-                            )
-                    )
-                }
-            }
-        }
-    }
     fun refreshWeather() {
         getCurrentWeather()
 
     }
 
+    fun onEvent(event: HomeEvent){
 
-    private fun updateLocationServiceStatus() {
 
+        when(event){
 
-        isLocationEnabled.value = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-    }
+            is HomeEvent.GpsEnabledEvent -> {
+                _state.update {
+                    it.copy(
+                            isLocationEnabled = true
+                    )
+                }
 
-    fun enableLocationRequest(
-        context: Context,
-        makeRequest: (intentSenderRequest: IntentSenderRequest) -> Unit//Lambda to call when locations are off.
-    ) {
-        val locationRequest = LocationRequest.Builder(//Create a location request object
-                Priority.PRIORITY_HIGH_ACCURACY,//Self explanatory
-                10000//Interval -> shorter the interval more frequent location updates
-        ).build()
+            }
+            is HomeEvent.GpsDisabledEvent -> {
 
-        val builder = LocationSettingsRequest.Builder()
-                .addLocationRequest(locationRequest)
-
-        val client: SettingsClient = LocationServices.getSettingsClient(context)
-        val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())//Checksettings with building a request
-        task.addOnSuccessListener { locationSettingsResponse ->
-
-            Timber.i("enableLocationRequest: LocationService Already Enabled")
-
-        }
-        task.addOnFailureListener { exception ->
-            if (exception is ResolvableApiException) {
-                // Location settings are not satisfied, but this can be fixed
-                // by showing the user a dialog.
-                try {
-                    val intentSenderRequest =
-                        IntentSenderRequest.Builder(exception.resolution).build()//Create the request prompt
-                    makeRequest(intentSenderRequest)//Make the request from UI
-                } catch (sendEx: IntentSender.SendIntentException) {
-                    // Ignore the error.
+                _state.update {
+                    it.copy(
+                            isLocationEnabled = false
+                    )
                 }
             }
         }
     }
 
-    fun updateCurrentLocationData(activity: MainActivity) {
+    private fun updateLocationServiceStatus() {
+
+
+        val gpsProviderString = LocationManager.GPS_PROVIDER
+        _state.update {
+            it.copy(
+                    isLocationEnabled = locationManager.isProviderEnabled(
+                            gpsProviderString
+                    )
+            )
+        }
+
+
+    }
+
+
+    fun updateCurrentLocationData() {
         getLastLocation()
     }
 }

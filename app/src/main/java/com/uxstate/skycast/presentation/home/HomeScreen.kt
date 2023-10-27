@@ -47,13 +47,12 @@ import com.uxstate.skycast.utils.FAHRENHEIT
 )
 
 fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: DestinationsNavigator) {
-    val activity = LocalLifecycleOwner.current
-    val context = LocalContext.current
+
     val permissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
     val state by viewModel.state.collectAsState()
 
     val isFahrenheitUnit = state.appPreferences.tempUnit.toString() == FAHRENHEIT
-    val isLocationNull = state.isLocationNull
+
 
     val pullRefreshState = rememberPullRefreshState(
             refreshing = state.isLoading,

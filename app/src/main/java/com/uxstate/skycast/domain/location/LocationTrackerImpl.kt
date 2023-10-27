@@ -4,10 +4,12 @@ import android.Manifest
 import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
+import android.location.Location
 import android.location.LocationManager
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.uxstate.skycast.domain.model.GeoPoint
 import com.uxstate.skycast.utils.Resource
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -43,7 +45,7 @@ class LocationTrackerImpl @Inject constructor(
 
 
 
-            if (!isFineLocAccessGranted || !isCoarseLocPermissionGranted || !isGpsEnabled) {
+            if (!isFineLocAccessGranted || !isCoarseLocPermissionGranted /*|| !isGpsEnabled*/) {
 
                Resource.Error(
                         data = null,
@@ -53,22 +55,48 @@ class LocationTrackerImpl @Inject constructor(
                 //cancellableContinuation.cancel()
             }
 
+            val priority = Priority.PRIORITY_BALANCED_POWER_ACCURACY
             //locationClient.lastLocation returns a task
 
-            locationClient.lastLocation
-                    .apply {
+           locationClient. getCurrentLocation(
+                    priority,
+                    CancellationTokenSource().token
+            ).apply {
+               addOnSuccessListener { location: Location? ->
+                   if (location == null) {
 
-                addOnSuccessListener {
+                       cancellableContinuation.resume(
+                               Resource.Error(
+                                       data = null,
+                                       errorMessage = "Please make sure you have enabled location permission"
+                               )
+                       )
+
+                   } else {
+                       Resource.Success(
+                               GeoPoint(
+                                       latitude = location.latitude,
+                                       longitude = location.longitude
+                               )
+                       )
+                   }
+
+               }
+
+               addOnFailureListener {
+
+                   Resource.Error(
+                           data = null,
+                           errorMessage = "Please make sure you have enabled location permission"
+                   )
+               }
+           }
+
+               /* addOnSuccessListener {
                     Timber.i("On Success called")
                     it?.let {
                         Timber.i("Non-Null Location")
-                        cancellableContinuation.resume(
-                                Resource.Success(
-                                        GeoPoint(
-                                                latitude = it.latitude,
-                                                longitude = it.longitude
-                                        )
-                                )
+
                         )
                     } ?: run {
                         Timber.i("Null Location inside sec run{}")
@@ -100,8 +128,7 @@ class LocationTrackerImpl @Inject constructor(
                 addOnCanceledListener {
                     Timber.i("Cancellable called")
                     cancellableContinuation.cancel()
-                }
-            }
+                }*/
 
             Timber.i("getLoc()")
         }

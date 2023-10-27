@@ -1,6 +1,8 @@
 package com.uxstate.skycast.presentation.main
 
+import android.content.Context
 import android.content.IntentFilter
+import android.content.IntentSender
 import android.graphics.Color
 import android.location.LocationManager
 import android.os.Bundle
@@ -17,20 +19,28 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsResponse
+import com.google.android.gms.location.Priority
+import com.google.android.gms.location.SettingsClient
+import com.google.android.gms.tasks.Task
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.uxstate.skycast.domain.prefs.Theme
 import com.uxstate.skycast.presentation.NavGraphs
+import com.uxstate.skycast.presentation.home.HomeEvent
 import com.uxstate.skycast.presentation.home.HomeViewModel
 import com.uxstate.skycast.presentation.settings.SettingsViewModel
 //import com.uxstate.skycast.presentation.NavGraphs
 import com.uxstate.skycast.ui.theme.SkyCastTheme
 import dagger.hilt.android.AndroidEntryPoint
-
+import timber.log.Timber
 
 
 private var br: LocationProviderChangedReceiver? = null
@@ -38,7 +48,9 @@ private var locationRequestLauncher: ActivityResultLauncher<IntentSenderRequest>
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val viewModel: HomeViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -51,12 +63,14 @@ class MainActivity : ComponentActivity() {
 
         registerLocationRequestLauncher()
         registerBroadcastReceiver()
+
         setContent {
 
             val settingsViewModel:SettingsViewModel = hiltViewModel()
-            val state by settingsViewModel.state.collectAsState()
+            val settingsState by settingsViewModel.state.collectAsStateWithLifecycle()
+            val homeState by homeViewModel.state.collectAsStateWithLifecycle()
 
-            val prefs = state.appPreferences
+            val prefs = homeState.appPreferences
 
             val isDark = when(prefs.theme){
 
@@ -65,9 +79,9 @@ class MainActivity : ComponentActivity() {
                 Theme.LIGHT -> false
             }
 
-            val isLocationEnabled by viewModel.isLocationEnabled.collectAsStateWithLifecycle()
+            val isLocationEnabled = homeState.isLocationEnabled
             if (!isLocationEnabled) {
-                viewModel.enableLocationRequest(this@MainActivity) {//Call this if GPS is OFF.
+               enableLocationRequest(this@MainActivity) {//Call this if GPS is OFF.
                     locationRequestLauncher?.launch(it)//Launch it to show the prompt.
                 }
             }
@@ -92,9 +106,9 @@ class MainActivity : ComponentActivity() {
         locationRequestLauncher =//We will create a global var
             registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { activityResult ->
                 if (activityResult.resultCode == RESULT_OK)
-                    viewModel.updateCurrentLocationData(this)//If the user clicks OK to turn on location
+                    homeViewModel.updateCurrentLocationData()//If the user clicks OK to turn on location
                 else {
-                    if (!viewModel.isLocationEnabled.value) {//If the user cancels, Still make a check and then exit the activity
+                    if (!homeViewModel.state.value.isLocationEnabled) {//If the user cancels, Still make a check and then exit the activity
                         Toast.makeText(
                                 this,
                                 "Location access is mandatory to use this feature!!",
@@ -112,11 +126,11 @@ class MainActivity : ComponentActivity() {
         br!!.init(
                 object : LocationProviderChangedReceiver.LocationListener {
                     override fun onEnabled() {
-                        viewModel.isLocationEnabled.value = true//Update our VM
+                        homeViewModel.onEvent(HomeEvent.GpsEnabledEvent)
                     }
 
                     override fun onDisabled() {
-                        viewModel.isLocationEnabled.value = false//Update our VM
+                        homeViewModel.onEvent(HomeEvent.GpsDisabledEvent)
                     }
                 }
         )
@@ -125,6 +139,41 @@ class MainActivity : ComponentActivity() {
     }
 
 
+
+
+    private fun enableLocationRequest(
+        context: Context,
+        makeRequest: (intentSenderRequest: IntentSenderRequest) -> Unit//Lambda to call when locations are off.
+    ) {
+        val locationRequest = LocationRequest.Builder(//Create a location request object
+                Priority.PRIORITY_HIGH_ACCURACY,//Self explanatory
+                10000//Interval -> shorter the interval more frequent location updates
+        ).build()
+
+        val builder = LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest)
+
+        val client: SettingsClient = LocationServices.getSettingsClient(context)
+        val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())//Checksettings with building a request
+        task.addOnSuccessListener { locationSettingsResponse ->
+
+            Timber.i("enableLocationRequest: LocationService Already Enabled")
+
+        }
+        task.addOnFailureListener { exception ->
+            if (exception is ResolvableApiException) {
+                // Location settings are not satisfied, but this can be fixed
+                // by showing the user a dialog.
+                try {
+                    val intentSenderRequest =
+                        IntentSenderRequest.Builder(exception.resolution).build()//Create the request prompt
+                    makeRequest(intentSenderRequest)//Make the request from UI
+                } catch (sendEx: IntentSender.SendIntentException) {
+                    // Ignore the error.
+                }
+            }
+        }
+    }
     override fun onDestroy() {
         super.onDestroy()
         if (br != null) unregisterReceiver(br)
