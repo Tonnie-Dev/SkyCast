@@ -8,6 +8,7 @@ import com.uxstate.skycast.domain.model.GeoPoint
 import com.uxstate.skycast.domain.prefs.AppPreferences
 import com.uxstate.skycast.domain.prefs.DataStoreOperations
 import com.uxstate.skycast.domain.repository.WeatherRepository
+
 import com.uxstate.skycast.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -69,7 +70,7 @@ class HomeViewModel @Inject constructor(
             when (val locData = tracker.getCurrentLocation()) {
 
                 is Resource.Success -> {
-                    tracker.getCurrentLocation().data?.let {
+                    locData.data?.let {
 
                         geoPoint ->
 
@@ -78,7 +79,7 @@ class HomeViewModel @Inject constructor(
                                     geoPoint = GeoPoint(
                                             latitude = geoPoint.latitude,
                                             geoPoint.longitude
-                                    )
+                                    ), isLocationNull = false
                             )
                         }
                         getCurrentWeather(geoPoint)
@@ -87,7 +88,7 @@ class HomeViewModel @Inject constructor(
 
                         _state.update {
                             it.copy(
-                                    errorMessage = "Error getting location"
+                                    isLocationNull = true
                             )
                         }
 
@@ -157,22 +158,26 @@ class HomeViewModel @Inject constructor(
     }
 
 
-
-
     fun refreshWeather() {
         getCurrentWeather()
 
     }
 
-    fun onEvent(event: HomeEvent){
+    fun onEvent(event: HomeEvent) {
 
 
+        when(event){
+
+            is HomeEvent.OnShowEmptyWeatherBox -> {
+
+                _state.update { it.copy(isShowEmptyWeatherBox = true) }
+            }
+        }
 
     }
 
 
-
     fun updateCurrentLocationData() {
-        getLastLocation()
+        // getLastLocation()
     }
 }

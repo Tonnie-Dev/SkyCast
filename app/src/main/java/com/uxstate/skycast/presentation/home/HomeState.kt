@@ -9,7 +9,8 @@ import com.uxstate.skycast.domain.prefs.Theme
 data class HomeState(
     val currentWeather: CurrentWeather? = null,
     val isLoading: Boolean = false,
-    val isLocationEnabled:Boolean = false,
+    val isShowEmptyWeatherBox:Boolean = false,
+    val isLocationNull:Boolean = true,
     val errorMessage: String? = null,
     val geoPoint: GeoPoint = geoPointInitialState,
     val appPreferences: AppPreferences = appPreferencesInitialState

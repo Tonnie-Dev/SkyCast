@@ -1,6 +1,7 @@
 package com.uxstate.skycast.presentation.home.components
 
-import android.Manifest
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,16 +17,17 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberPermissionState
 import com.uxstate.skycast.R
+import com.uxstate.skycast.ui.theme.SkyCastTheme
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun EmptyWeatherBox() {
 
-    val permissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
+    
     Box(
             modifier = Modifier
                     .fillMaxSize()
@@ -48,9 +50,30 @@ fun EmptyWeatherBox() {
                     style = MaterialTheme.typography.bodyMedium
             )
 
-            Button(onClick = { permissionState.launchPermissionRequest() }) {
+            Button(onClick = {  }) {
                 Text("Request permission")
             }
         }
+    }
+}
+
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)
+@Composable
+fun EmptyWeatherBoxPreviewLight() {
+
+    SkyCastTheme {
+
+        EmptyWeatherBox()
+    }
+}
+
+
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
+@Composable
+fun EmptyWeatherBoxPreviewDark() {
+
+    SkyCastTheme {
+
+        EmptyWeatherBox()
     }
 }
