@@ -1,5 +1,9 @@
 package com.uxstate.skycast.presentation.home
 
+import android.location.LocationManager
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uxstate.skycast.domain.location.LocationTracker
@@ -24,11 +28,18 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val repository: WeatherRepository,
     private val tracker: LocationTracker,
+    private val locationManager: LocationManager,
     private val prefs: DataStoreOperations
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeState())
     val state = _state.asStateFlow()
+
+    @RequiresApi(Build.VERSION_CODES.P)
+    val isLocationEnabled = mutableStateOf(locationManager.isLocationEnabled)
+
+
+
 
 
     init {

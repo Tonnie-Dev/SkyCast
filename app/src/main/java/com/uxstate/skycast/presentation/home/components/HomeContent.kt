@@ -2,17 +2,25 @@ package com.uxstate.skycast.presentation.home.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.pullrefresh.PullRefreshState
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,17 +48,28 @@ fun HomeContent(
     modifier: Modifier = Modifier,
     isFahrenheitUnit: Boolean,
     currentWeather: CurrentWeather,
+    isLoading: Boolean,
     @DrawableRes icon: Int,
     onForecastButtonClick: () -> Unit,
-    navigateToSettings: () -> Unit
+    navigateToSettings: () -> Unit,
+    onRefreshWeather: () -> Unit
 ) {
     val spacing = LocalSpacing.current
+    val pullRefreshState = rememberPullRefreshState(
+            refreshing = isLoading,
+            onRefresh = onRefreshWeather
+    )
 
+    Box(
+            modifier = Modifier
+                    .statusBarsPadding()
+                    .navigationBarsPadding()
+                    .fillMaxSize()
+                    .pullRefresh(pullRefreshState)
+    ) {
     Column(
-            modifier = modifier
-            /*  .verticalScroll(scrollState)
-              .statusBarsPadding()
-              .navigationBarsPadding()*/,
+            modifier = modifier.verticalScroll(rememberScrollState())
+            ,
             horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -107,6 +126,15 @@ fun HomeContent(
             Text(stringResource(R.string.forecast_text))
         }
     }
+
+    PullRefreshIndicator(
+            refreshing = isLoading,
+            state = pullRefreshState,
+            modifier = Modifier.align(
+                    Alignment.TopCenter
+            )
+    )
+}
 
 
 }

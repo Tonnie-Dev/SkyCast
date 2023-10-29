@@ -34,7 +34,7 @@ fun HomeBody(
     val spacing = LocalSpacing.current
 
     Column(
-            modifier = modifier.verticalScroll(rememberScrollState()),
+            modifier = modifier,
             horizontalAlignment = Alignment.CenterHorizontally
     ) {
 

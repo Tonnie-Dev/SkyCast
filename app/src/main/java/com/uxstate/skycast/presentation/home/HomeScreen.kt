@@ -2,24 +2,16 @@ package com.uxstate.skycast.presentation.home
 
 import android.Manifest
 import android.content.Intent
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.annotation.RequiresApi
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -31,11 +23,12 @@ import com.uxstate.skycast.presentation.destinations.ForecastScreenDestination
 import com.uxstate.skycast.presentation.destinations.SettingsScreenDestination
 import com.uxstate.skycast.presentation.home.components.EmptyWeatherBox
 import com.uxstate.skycast.presentation.home.components.HomeContent
+import com.uxstate.skycast.presentation.home.components.LinearProgressBar
 import com.uxstate.skycast.presentation.home.components.LocationDialog
 import com.uxstate.skycast.utils.FAHRENHEIT
 
 
-
+@RequiresApi(Build.VERSION_CODES.P)
 @RootNavGraph(start = true)
 @Destination
 @Composable
@@ -53,107 +46,90 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
     val startLocationSettings =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
 
-    val isShowLocationDialog = state.isLocationNull && state.isShowDialog
-
+    val isLoading = state.isLoading
+    val isLocationEnabled by viewModel.isLocationEnabled
+    val isShowLocationDialog = !isLocationEnabled && state.isShowDialog
     val isFahrenheitUnit = state.appPreferences.tempUnit.toString() == FAHRENHEIT
 
 
-    val pullRefreshState = rememberPullRefreshState(
-            refreshing = state.isLoading,
-            onRefresh = viewModel::refreshWeather
-    )
-
-
-    LaunchedEffect(key1 = isPermissionGranted, block = {viewModel.refreshWeather()})
-
-    Box(
-            modifier = Modifier
-                    .statusBarsPadding()
-                    .navigationBarsPadding()
-                    .fillMaxSize()
-                    .pullRefresh(pullRefreshState)
-    ) {
 
 
 
-            if (isShowLocationDialog) {
-
-                EmptyWeatherBox() {
-
-                    viewModel.onEvent(HomeEvent.OnRetry)
-                }
-                LocationDialog(
-
-                        onDismissDialog = {
-                            viewModel.onEvent(HomeEvent.OnDismissDialog)
-
-                        },
-                        onNegativeButtonClick = { viewModel.onEvent(HomeEvent.OnCancelDialog) },
-                        onPositiveButtonClick = {
+    LaunchedEffect(key1 = isPermissionGranted, block = { viewModel.refreshWeather() })
 
 
-                            viewModel.onEvent(HomeEvent.OnConfirmDialog)
-                            val intent =
-                                Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                            startLocationSettings.launch(intent)
-
-                        })
-            }
 
 
-            // TODO: Check on this null
-            state.currentWeather?.let {
+
+    if (isShowLocationDialog) {
+
+        EmptyWeatherBox() { viewModel.onEvent(HomeEvent.OnRetry) }
+        LocationDialog(
+
+                onDismissDialog = {
+                    viewModel.onEvent(HomeEvent.OnDismissDialog)
+
+                },
+                onNegativeButtonClick = { viewModel.onEvent(HomeEvent.OnCancelDialog) },
+                onPositiveButtonClick = {
 
 
-                HomeContent(
-                        isFahrenheitUnit = isFahrenheitUnit,
-                        currentWeather = it,
-                        icon = WeatherType.fromWMO(it.networkWeatherDescription.first().icon).icon,
-                        onForecastButtonClick = {
-                            navigator.navigate(
-                                    ForecastScreenDestination
-                            )
-                        },
-                        navigateToSettings = {
-                            navigator.navigate(
-                                    SettingsScreenDestination
-                            )
-                        },
+                    viewModel.onEvent(HomeEvent.OnConfirmDialog)
+                    val intent =
+                        Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                    startLocationSettings.launch(intent)
 
-
-                        )
-                /*if (!state.isLoading){
-
-
-                }else {
-
-                    Box (contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()){
-                        CircularProgressIndicator(modifier = Modifier.size(50.dp))
-
-                    }
-                }*/
-
-            } ?: kotlin.run {
-
-                EmptyWeatherBox() {
-
-                    viewModel.onEvent(HomeEvent.OnRetry)
-                }
-            }
-
-
-        PullRefreshIndicator(
-                refreshing = state.isLoading,
-                state = pullRefreshState,
-                modifier = Modifier.align(
-                        Alignment.TopCenter
-                )
-        )
-
-        }
-
-
+                })
     }
+
+
+    if (state.isLoading) {
+
+        LinearProgressBar()
+    }
+    // TODO: Check on this null
+    state.currentWeather?.let {
+
+
+        HomeContent(
+                isLoading = isLoading,
+                isFahrenheitUnit = isFahrenheitUnit,
+                currentWeather = it,
+                icon = WeatherType.fromWMO(it.networkWeatherDescription.first().icon).icon,
+                onForecastButtonClick = {
+                    navigator.navigate(
+                            ForecastScreenDestination
+                    )
+                },
+                navigateToSettings = {
+                    navigator.navigate(
+                            SettingsScreenDestination
+                    )
+                }, onRefreshWeather = viewModel::refreshWeather
+
+
+        )
+        /*if (!state.isLoading){
+
+
+        }else {
+
+            Box (contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()){
+                CircularProgressIndicator(modifier = Modifier.size(50.dp))
+
+            }
+        }*/
+
+    } ?: kotlin.run {
+
+        /* EmptyWeatherBox() {
+
+             viewModel.onEvent(HomeEvent.OnRetry)
+         }*/
+    }
+
+
+}
 
 
 
