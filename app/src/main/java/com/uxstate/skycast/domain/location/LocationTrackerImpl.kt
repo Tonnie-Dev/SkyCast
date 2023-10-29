@@ -66,12 +66,12 @@ class LocationTrackerImpl @Inject constructor(
                     priority,
                     CancellationTokenSource().token
             ).apply {
+
+
                addOnSuccessListener {
 
                    location: Location? ->
                    if (location != null) {
-
-
 
                        cont.resume(
 

@@ -17,23 +17,20 @@ fun LocationDialog(
     onNegativeButtonClick: () -> Unit
 ) {
 
-    var isShowDialog by remember {
-        mutableStateOf(true)
-    }
 
 
-    if (isShowDialog){
+
         AlertDialog(
-                onDismissRequest = { onDismissDialog
-                    isShowDialog = false
+                onDismissRequest = { onDismissDialog()
+
 
                                    },
-                title = { Text(text = "Error") },
-                text = { Text(text = text) },
+                title = { Text(text = "Location is Off") },
+                text = { Text(text = "Press OK to enable Location") },
                 confirmButton = {
                     TextButton(onClick = { onPositiveButtonClick ()
 
-                        isShowDialog = false
+
                     }) {
 
                         Text(text = "OK")
@@ -41,9 +38,9 @@ fun LocationDialog(
                 },
 
                 dismissButton = {
-                    TextButton(onClick = { onNegativeButtonClick
+                    TextButton(onClick = { onNegativeButtonClick()
 
-                        isShowDialog = false
+
                     }) {
 
                         Text(text = "No, thanks")
@@ -55,4 +52,3 @@ fun LocationDialog(
 
     }
 
-}

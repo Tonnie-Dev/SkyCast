@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -62,7 +63,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getLastLocation() {
-
+Timber.i("getLastLocation() called")
 
         viewModelScope.launch {
 
@@ -73,22 +74,24 @@ class HomeViewModel @Inject constructor(
                     locData.data?.let {
 
                         geoPoint ->
-
+                        Timber.i("Success - Data is NOT null")
                         _state.update {
                             it.copy(
                                     geoPoint = GeoPoint(
                                             latitude = geoPoint.latitude,
                                             geoPoint.longitude
-                                    ), isLocationNull = false
+                                    ), isLocationNull = false, isShowDialog = false
                             )
                         }
+
                         getCurrentWeather(geoPoint)
+
                     } ?: run {
 
-
+                        Timber.i("Success - Data IS NULL")
                         _state.update {
                             it.copy(
-                                    isLocationNull = true
+                                    isLocationNull = true, isShowDialog = true
                             )
                         }
 
@@ -97,8 +100,8 @@ class HomeViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
-
-
+                    Timber.i("Error")
+                    _state.update { it.copy(errorMessage = locData.errorMessage) }
                 }
 
                 else -> Unit
@@ -166,11 +169,31 @@ class HomeViewModel @Inject constructor(
     fun onEvent(event: HomeEvent) {
 
 
-        when(event){
+        when (event) {
 
-            is HomeEvent.OnShowEmptyWeatherBox -> {
+            is HomeEvent.OnConfirmDialog -> {
 
-                _state.update { it.copy(isShowEmptyWeatherBox = true) }
+                _state.update { it.copy(isShowDialog = false) }
+Timber.i("Dialog Confirmed - ${_state.value.isShowDialog}")
+
+            }
+
+            is HomeEvent.OnDismissDialog-> {
+
+                _state.update { it.copy(isShowDialog = false) }
+                Timber.i("Dialog Dismissed - ${_state.value.isShowDialog}")
+
+            }
+
+            is HomeEvent.OnCancelDialog-> {
+
+                _state.update { it.copy(isShowDialog = false) }
+
+                Timber.i("Dialog Cancelled - ${_state.value.isShowDialog}")
+            }
+            is HomeEvent.OnRetry -> {
+
+                getLastLocation()
             }
         }
 

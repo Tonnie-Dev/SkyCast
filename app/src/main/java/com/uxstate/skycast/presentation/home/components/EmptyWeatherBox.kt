@@ -25,9 +25,9 @@ import com.uxstate.skycast.ui.theme.SkyCastTheme
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun EmptyWeatherBox() {
+fun EmptyWeatherBox( onGetLocation:()-> Unit) {
 
-    
+
     Box(
             modifier = Modifier
                     .fillMaxSize()
@@ -50,8 +50,8 @@ fun EmptyWeatherBox() {
                     style = MaterialTheme.typography.bodyMedium
             )
 
-            Button(onClick = {  }) {
-                Text("Request permission")
+            Button(onClick = { onGetLocation() }) {
+                Text("Try Again")
             }
         }
     }
@@ -63,7 +63,7 @@ fun EmptyWeatherBoxPreviewLight() {
 
     SkyCastTheme {
 
-        EmptyWeatherBox()
+        EmptyWeatherBox(){}
     }
 }
 
@@ -74,6 +74,6 @@ fun EmptyWeatherBoxPreviewDark() {
 
     SkyCastTheme {
 
-        EmptyWeatherBox()
+        EmptyWeatherBox(){}
     }
 }

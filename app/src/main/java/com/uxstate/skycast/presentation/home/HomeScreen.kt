@@ -13,10 +13,10 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -32,6 +32,7 @@ import com.uxstate.skycast.presentation.home.components.EmptyWeatherBox
 import com.uxstate.skycast.presentation.home.components.HomeContent
 import com.uxstate.skycast.presentation.home.components.LocationDialog
 import com.uxstate.skycast.utils.FAHRENHEIT
+import timber.log.Timber
 
 
 @RootNavGraph(start = true)
@@ -42,16 +43,16 @@ import com.uxstate.skycast.utils.FAHRENHEIT
 )
 
 fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: DestinationsNavigator) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    val context = LocalContext.current
+    val state by viewModel.state.collectAsState()
+    Timber.i("Home Screen called")
 
     val permissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
 
     val startLocationSettings =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
 
-    val isShowLocationDialog = state.isLocationNull
-    val isShowEmptyWeatherBox = state.isShowEmptyWeatherBox
+    val isShowLocationDialog = state.isLocationNull && state.isShowDialog
+
     val isFahrenheitUnit = state.appPreferences.tempUnit.toString() == FAHRENHEIT
 
 
@@ -70,36 +71,39 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
                     .pullRefresh(pullRefreshState)
     ) {
 
-        if (isShowLocationDialog ) {
 
-            LocationDialog(
-                    text = "Error",
-                    onDismissDialog =  {
-                                       viewModel.onEvent(HomeEvent.OnShowEmptyWeatherBox)
-
-                    }
-
-
-                    ,
-                    onPositiveButtonClick = {
+        Timber.i("Box Recomposition - isShowLocationDialog: $isShowLocationDialog")
 
 
 
-                        val intent =
-                            Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                        startLocationSettings.launch(intent)
 
-                    }) {
-                viewModel.onEvent(HomeEvent.OnShowEmptyWeatherBox)
-            }
-        }
-
-        if (isShowEmptyWeatherBox){
-
-            EmptyWeatherBox()
-        }
 
         if (permissionState.status.isGranted) {
+
+            if (isShowLocationDialog) {
+
+                EmptyWeatherBox() {
+
+                    viewModel.onEvent(HomeEvent.OnRetry)
+                }
+                LocationDialog(
+                        text = "Error",
+                        onDismissDialog = {
+                            viewModel.onEvent(HomeEvent.OnDismissDialog)
+
+                        },
+                        onNegativeButtonClick = { viewModel.onEvent(HomeEvent.OnCancelDialog) },
+                        onPositiveButtonClick = {
+
+
+                            viewModel.onEvent(HomeEvent.OnConfirmDialog)
+                            val intent =
+                                Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                            startLocationSettings.launch(intent)
+
+                        })
+            }
+
 
             // TODO: Check on this null
             state.currentWeather?.let {
@@ -133,9 +137,20 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
                     }
                 }*/
 
+            } ?: kotlin.run {
+
+                EmptyWeatherBox() {
+
+                    viewModel.onEvent(HomeEvent.OnRetry)
+                }
             }
         } else {
-            EmptyWeatherBox()
+
+            // TODO:Review for permissions
+            EmptyWeatherBox() {
+
+                viewModel.onEvent(HomeEvent.OnRetry)
+            }
         }
 
         PullRefreshIndicator(
