@@ -32,7 +32,7 @@ import com.uxstate.skycast.presentation.home.components.EmptyWeatherBox
 import com.uxstate.skycast.presentation.home.components.HomeContent
 import com.uxstate.skycast.presentation.home.components.LocationDialog
 import com.uxstate.skycast.utils.FAHRENHEIT
-import timber.log.Timber
+
 
 
 @RootNavGraph(start = true)
@@ -44,7 +44,7 @@ import timber.log.Timber
 
 fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: DestinationsNavigator) {
     val state by viewModel.state.collectAsState()
-    Timber.i("Home Screen called")
+
 
     val permissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
 
@@ -72,7 +72,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
     ) {
 
 
-        Timber.i("Box Recomposition - isShowLocationDialog: $isShowLocationDialog")
+
 
 
 
@@ -87,7 +87,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
                     viewModel.onEvent(HomeEvent.OnRetry)
                 }
                 LocationDialog(
-                        text = "Error",
+
                         onDismissDialog = {
                             viewModel.onEvent(HomeEvent.OnDismissDialog)
 

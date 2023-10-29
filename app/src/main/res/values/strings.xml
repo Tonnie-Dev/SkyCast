@@ -39,4 +39,6 @@
     <!--Forecast Screen-->
     <string name="today_text">Today</string>
     <string name="forecast_text">Forecast</string>
+    <string name="location_services_offline">Location Services Offline</string>
+    <string name="enable_location_text">Sky Cast uses Location Services. \nTo enable location services on your device please press OK.</string>
 </resources>
