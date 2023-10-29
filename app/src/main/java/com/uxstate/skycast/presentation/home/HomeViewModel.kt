@@ -1,6 +1,5 @@
 package com.uxstate.skycast.presentation.home
 
-import android.location.LocationManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uxstate.skycast.domain.location.LocationTracker
@@ -25,7 +24,6 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val repository: WeatherRepository,
     private val tracker: LocationTracker,
-    private val locationManager: LocationManager,
     private val prefs: DataStoreOperations
 ) : ViewModel() {
 
@@ -35,7 +33,6 @@ class HomeViewModel @Inject constructor(
 
     init {
         observePrefsFlow()
-
         getLastLocation()
     }
 
@@ -43,11 +40,9 @@ class HomeViewModel @Inject constructor(
 
         viewModelScope.launch {
 
-
             prefs.appPreferences.collectLatest {
 
                 appPrefs ->
-
 
                 _state.update {
                     it.copy(
@@ -63,15 +58,13 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getLastLocation() {
-Timber.i("getLastLocation() called")
 
         viewModelScope.launch {
 
-
-            when (val locData = tracker.getCurrentLocation()) {
+            when (val result = tracker.getCurrentLocation()) {
 
                 is Resource.Success -> {
-                    locData.data?.let {
+                    result.data?.let {
 
                         geoPoint ->
                         Timber.i("Success - Data is NOT null")
@@ -100,21 +93,18 @@ Timber.i("getLastLocation() called")
                 }
 
                 is Resource.Error -> {
-                    Timber.i("Error")
-                    _state.update { it.copy(errorMessage = locData.errorMessage) }
+
+                    _state.update { it.copy(errorMessage = result.errorMessage) }
                 }
 
                 else -> Unit
             }
 
-
         }
-
 
     }
 
     private fun getCurrentWeather(geoPoint: GeoPoint = _state.value.geoPoint) {
-
 
         repository.getCurrentWeather(geoPoint)
                 .onEach {
@@ -174,23 +164,22 @@ Timber.i("getLastLocation() called")
             is HomeEvent.OnConfirmDialog -> {
 
                 _state.update { it.copy(isShowDialog = false) }
-Timber.i("Dialog Confirmed - ${_state.value.isShowDialog}")
 
             }
 
-            is HomeEvent.OnDismissDialog-> {
-
-                _state.update { it.copy(isShowDialog = false) }
-                Timber.i("Dialog Dismissed - ${_state.value.isShowDialog}")
-
-            }
-
-            is HomeEvent.OnCancelDialog-> {
+            is HomeEvent.OnDismissDialog -> {
 
                 _state.update { it.copy(isShowDialog = false) }
 
-                Timber.i("Dialog Cancelled - ${_state.value.isShowDialog}")
             }
+
+            is HomeEvent.OnCancelDialog -> {
+
+                _state.update { it.copy(isShowDialog = false) }
+
+
+            }
+
             is HomeEvent.OnRetry -> {
 
                 getLastLocation()
@@ -200,7 +189,4 @@ Timber.i("Dialog Confirmed - ${_state.value.isShowDialog}")
     }
 
 
-    fun updateCurrentLocationData() {
-        // getLastLocation()
-    }
 }

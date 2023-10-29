@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,8 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.uxstate.skycast.ui.theme.LocalSpacing
 import com.uxstate.skycast.R
+import com.uxstate.skycast.ui.theme.LocalSpacing
 
 @Composable
 fun HomeBody(
@@ -31,7 +33,10 @@ fun HomeBody(
 
     val spacing = LocalSpacing.current
 
-    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+            modifier = modifier.verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+    ) {
 
         Text(text = cityName, style = MaterialTheme.typography.headlineLarge)
 
@@ -73,6 +78,6 @@ fun HomeHeaderPreviewDark() {
             temperature = "24.2",
             weatherType = "Clear Sky",
             icon = R.drawable.ic_clear_sky,
-          modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
     )
 }

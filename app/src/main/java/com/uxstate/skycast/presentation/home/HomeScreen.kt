@@ -13,6 +13,7 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -47,6 +48,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
 
 
     val permissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
+    val isPermissionGranted = permissionState.status.isGranted
 
     val startLocationSettings =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
@@ -62,6 +64,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
     )
 
 
+    LaunchedEffect(key1 = isPermissionGranted, block = {viewModel.refreshWeather()})
 
     Box(
             modifier = Modifier
@@ -72,13 +75,6 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
     ) {
 
 
-
-
-
-
-
-
-        if (permissionState.status.isGranted) {
 
             if (isShowLocationDialog) {
 
@@ -144,14 +140,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
                     viewModel.onEvent(HomeEvent.OnRetry)
                 }
             }
-        } else {
 
-            // TODO:Review for permissions
-            EmptyWeatherBox() {
-
-                viewModel.onEvent(HomeEvent.OnRetry)
-            }
-        }
 
         PullRefreshIndicator(
                 refreshing = state.isLoading,
@@ -161,9 +150,12 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
                 )
         )
 
+        }
+
+
     }
 
 
-}
+
 
 
