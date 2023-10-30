@@ -115,7 +115,7 @@ class HomeViewModel @Inject constructor(
 
     }
 
-    private fun getCurrentWeather(geoPoint: GeoPoint = _state.value.geoPoint) {
+    private fun getCurrentWeather(geoPoint: GeoPoint) {
 
         repository.getCurrentWeather(geoPoint)
                 .onEach {
@@ -163,7 +163,12 @@ class HomeViewModel @Inject constructor(
 
 
     fun refreshWeather() {
-        getCurrentWeather()
+
+        _state.value.geoPoint?.let {
+            getCurrentWeather(it)
+
+        }?: kotlin.run { _state.update { it.copy(isLocationNull = true) } }
+
 
     }
 
@@ -172,24 +177,6 @@ class HomeViewModel @Inject constructor(
 
         when (event) {
 
-            is HomeEvent.OnConfirmDialog -> {
-
-                _state.update { it.copy(isShowDialog = false) }
-
-            }
-
-            is HomeEvent.OnDismissDialog -> {
-
-                _state.update { it.copy(isShowDialog = false) }
-
-            }
-
-            is HomeEvent.OnCancelDialog -> {
-
-                _state.update { it.copy(isShowDialog = false) }
-
-
-            }
 
             is HomeEvent.OnRetry -> {
 

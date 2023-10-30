@@ -6,6 +6,8 @@ import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -48,7 +50,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
 
     val isLoading = state.isLoading
     val isLocationEnabled by viewModel.isLocationEnabled
-    val isShowLocationDialog = !isLocationEnabled && state.isShowDialog
+    val isShowLocationDialog = !isLocationEnabled
     val isFahrenheitUnit = state.appPreferences.tempUnit.toString() == FAHRENHEIT
 
 
@@ -59,73 +61,62 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
 
 
 
+    Column {
+
+        if (state.isLoading) {
+
+            LinearProgressBar()
+        }
+        if (isShowLocationDialog) {
 
 
-    if (isShowLocationDialog) {
-
-        EmptyWeatherBox() { viewModel.onEvent(HomeEvent.OnRetry) }
-        LocationDialog(
-
-                onDismissDialog = {
-                    viewModel.onEvent(HomeEvent.OnDismissDialog)
-
-                },
-                onNegativeButtonClick = { viewModel.onEvent(HomeEvent.OnCancelDialog) },
-                onPositiveButtonClick = {
+            LocationDialog(
 
 
-                    viewModel.onEvent(HomeEvent.OnConfirmDialog)
-                    val intent =
-                        Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                    startLocationSettings.launch(intent)
 
-                })
-    }
+                    onPositiveButtonClick = {
 
 
-    if (state.isLoading) {
+                        val intent =
+                            Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                        startLocationSettings.launch(intent)
 
-        LinearProgressBar()
-    }
-    // TODO: Check on this null
-    state.currentWeather?.let {
-
-
-        HomeContent(
-                isLoading = isLoading,
-                isFahrenheitUnit = isFahrenheitUnit,
-                currentWeather = it,
-                icon = WeatherType.fromWMO(it.networkWeatherDescription.first().icon).icon,
-                onForecastButtonClick = {
-                    navigator.navigate(
-                            ForecastScreenDestination
-                    )
-                },
-                navigateToSettings = {
-                    navigator.navigate(
-                            SettingsScreenDestination
-                    )
-                }, onRefreshWeather = viewModel::refreshWeather
+                    })
+        }
 
 
-        )
-        /*if (!state.isLoading){
+
+        // TODO: Check on this null
+        state.currentWeather?.let {
 
 
-        }else {
+            HomeContent(
+                    isLoading = isLoading,
+                    isFahrenheitUnit = isFahrenheitUnit,
+                    currentWeather = it,
+                    icon = WeatherType.fromWMO(it.networkWeatherDescription.first().icon).icon,
+                    onForecastButtonClick = {
+                        navigator.navigate(
+                                ForecastScreenDestination
+                        )
+                    },
+                    navigateToSettings = {
+                        navigator.navigate(
+                                SettingsScreenDestination
+                        )
+                    }, onRefreshWeather = viewModel::refreshWeather
 
-            Box (contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()){
-                CircularProgressIndicator(modifier = Modifier.size(50.dp))
 
+            )
+
+
+        } ?: run {
+
+            EmptyWeatherBox() {
+
+                viewModel.onEvent(HomeEvent.OnRetry)
             }
-        }*/
-
-    } ?: kotlin.run {
-
-        /* EmptyWeatherBox() {
-
-             viewModel.onEvent(HomeEvent.OnRetry)
-         }*/
+        }
     }
 
 
