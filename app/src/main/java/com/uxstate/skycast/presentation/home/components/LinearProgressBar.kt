@@ -28,6 +28,11 @@ fun LinearProgressBar() {
     }
 }
 
+
+@Composable
+fun ShowLinearLoadingBar() {
+    LinearProgressBar()
+}
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)
 @Composable
 fun LinearProgressBarPreviewLight() {

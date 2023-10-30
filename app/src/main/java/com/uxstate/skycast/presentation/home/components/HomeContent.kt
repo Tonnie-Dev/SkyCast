@@ -28,13 +28,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.uxstate.skycast.R
 import com.uxstate.skycast.domain.model.CurrentWeather
+import com.uxstate.skycast.domain.model.WeatherType
+import com.uxstate.skycast.presentation.destinations.ForecastScreenDestination
+import com.uxstate.skycast.presentation.destinations.SettingsScreenDestination
+import com.uxstate.skycast.presentation.home.HomeViewModel
 import com.uxstate.skycast.ui.theme.LocalSpacing
 import com.uxstate.skycast.utils.CELSIUS_SIGN
+import com.uxstate.skycast.utils.FAHRENHEIT
 import com.uxstate.skycast.utils.FAHRENHEIT_SIGN
 import com.uxstate.skycast.utils.roundOffDoubleToInt
 import com.uxstate.skycast.utils.toCelsius
@@ -136,5 +144,39 @@ fun HomeContent(
     )
 }
 
+
+}
+
+
+@Composable
+fun LoadHomeContent(viewModel:HomeViewModel, navigator:DestinationsNavigator) {
+
+
+    val state by viewModel.state.collectAsState()
+    val isLoading = state.isLoading
+    val isFahrenheitUnit = state.appPreferences.tempUnit.toString() == FAHRENHEIT
+
+
+    state.currentWeather?.let {
+
+        HomeContent(
+                isLoading = isLoading,
+                isFahrenheitUnit = isFahrenheitUnit,
+                currentWeather = it,
+                icon = WeatherType.fromWMO(it.networkWeatherDescription.first().icon).icon,
+                onForecastButtonClick = {
+                    navigator.navigate(
+                            ForecastScreenDestination
+                    )
+                },
+                navigateToSettings = {
+                    navigator.navigate(
+                            SettingsScreenDestination
+                    )
+                }, onRefreshWeather = viewModel::refreshWeather
+
+
+        )
+    }
 
 }

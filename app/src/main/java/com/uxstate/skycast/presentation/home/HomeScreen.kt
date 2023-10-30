@@ -3,10 +3,7 @@ package com.uxstate.skycast.presentation.home
 import android.Manifest
 import android.content.Intent
 import android.os.Build
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
@@ -23,10 +20,13 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.uxstate.skycast.domain.model.WeatherType
 import com.uxstate.skycast.presentation.destinations.ForecastScreenDestination
 import com.uxstate.skycast.presentation.destinations.SettingsScreenDestination
-import com.uxstate.skycast.presentation.home.components.EmptyWeatherBox
 import com.uxstate.skycast.presentation.home.components.HomeContent
 import com.uxstate.skycast.presentation.home.components.LinearProgressBar
+import com.uxstate.skycast.presentation.home.components.LoadHomeContent
 import com.uxstate.skycast.presentation.home.components.LocationDialog
+import com.uxstate.skycast.presentation.home.components.PermissionsLauncher
+import com.uxstate.skycast.presentation.home.components.ShowDialog
+import com.uxstate.skycast.presentation.home.components.ShowLinearLoadingBar
 import com.uxstate.skycast.utils.FAHRENHEIT
 
 
@@ -45,23 +45,44 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
     val permissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
     val isPermissionGranted = permissionState.status.isGranted
 
-    val startLocationSettings =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
-
-    val isLoading = state.isLoading
     val isLocationEnabled by viewModel.isLocationEnabled
-    val isShowLocationDialog = !isLocationEnabled
-    val isFahrenheitUnit = state.appPreferences.tempUnit.toString() == FAHRENHEIT
+    val isLoading = state.isLoading
 
 
-
-
-
-    LaunchedEffect(key1 = isPermissionGranted, block = { viewModel.refreshWeather() })
-
+    LaunchedEffect(key1 = isLocationEnabled, block = { viewModel.refreshWeather() })
 
 
     Column {
+
+        if (isPermissionGranted) {
+
+
+           if (isLocationEnabled) {
+
+
+               if (isLoading){
+                   ShowLinearLoadingBar()
+
+               }
+               else {
+                   LoadHomeContent(viewModel = viewModel, navigator = navigator)
+
+               }
+            }
+
+            else {
+
+                ShowDialog()
+
+            }
+        } else {
+
+            PermissionsLauncher(permissionState = permissionState)
+        }
+    }
+
+
+   /* Column {
 
         if (state.isLoading) {
 
@@ -69,10 +90,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
         }
         if (isShowLocationDialog) {
 
-
             LocationDialog(
-
-
 
                     onPositiveButtonClick = {
 
@@ -83,7 +101,6 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
 
                     })
         }
-
 
 
         // TODO: Check on this null
@@ -112,12 +129,9 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
 
         } ?: run {
 
-            EmptyWeatherBox() {
-
-                viewModel.onEvent(HomeEvent.OnRetry)
-            }
+            PermissionsLauncher(permissionState = permissionState)
         }
-    }
+    }*/
 
 
 }

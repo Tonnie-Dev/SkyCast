@@ -163,11 +163,11 @@ class HomeViewModel @Inject constructor(
 
 
     fun refreshWeather() {
-
-        _state.value.geoPoint?.let {
+        getLastLocation()
+       /* _state.value.geoPoint?.let {
             getCurrentWeather(it)
 
-        }?: kotlin.run { _state.update { it.copy(isLocationNull = true) } }
+        }?: kotlin.run { _state.update { it.copy(isLocationNull = true) } }*/
 
 
     }

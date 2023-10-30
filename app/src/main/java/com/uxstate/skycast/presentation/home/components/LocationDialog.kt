@@ -1,5 +1,9 @@
 package com.uxstate.skycast.presentation.home.components
 
+import android.content.Intent
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -55,5 +59,22 @@ fun LocationDialog(
     }
 
 
+}
+
+@Composable
+fun ShowDialog() {
+
+    val startLocationSettings =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
+    LocationDialog(
+
+            onPositiveButtonClick = {
+
+
+                val intent =
+                    Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                startLocationSettings.launch(intent)
+
+            })
 }
 
