@@ -182,6 +182,7 @@ class HomeViewModel @Inject constructor(
 
                 getLastLocation()
             }
+            else -> Unit
         }
 
     }
