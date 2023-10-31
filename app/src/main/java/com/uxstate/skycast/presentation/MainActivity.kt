@@ -71,7 +71,12 @@ class MainActivity : ComponentActivity() {
     override fun onRestart() {
         super.onRestart()
 
+homeViewModel.refreshWeather()
+    }
 
+    override fun onResume() {
+        super.onResume()
+        homeViewModel.refreshWeather()
     }
 }
 

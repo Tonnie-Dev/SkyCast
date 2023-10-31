@@ -2,8 +2,6 @@ package com.uxstate.skycast.presentation.home
 
 import com.uxstate.skycast.domain.model.CurrentWeather
 import com.uxstate.skycast.domain.model.GeoPoint
-import com.uxstate.skycast.domain.model.WeatherParams
-import com.uxstate.skycast.domain.model.Wind
 import com.uxstate.skycast.domain.prefs.AppPreferences
 import com.uxstate.skycast.domain.prefs.TempUnit
 import com.uxstate.skycast.domain.prefs.Theme
@@ -13,8 +11,9 @@ data class HomeState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val geoPoint: GeoPoint? = null,
-    val isLocationNull:Boolean = true,
-   val isShowDialog:Boolean = true,
+    val isLocationNull: Boolean = true,
+    val isShowDialog: Boolean = true,
+    val isShowBottomButtons: Boolean = false,
     val appPreferences: AppPreferences = appPreferencesInitialState
 ) {
 
