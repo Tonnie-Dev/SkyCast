@@ -1,9 +1,11 @@
 package com.uxstate.skycast.presentation.home
 
+import android.app.Activity
 import android.location.LocationManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uxstate.skycast.domain.location.LocationTracker
@@ -26,9 +28,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    locationManager: LocationManager,
     private val repository: WeatherRepository,
     private val tracker: LocationTracker,
-    private val locationManager: LocationManager,
     private val prefs: DataStoreOperations
 ) : ViewModel() {
 
@@ -161,10 +163,10 @@ class HomeViewModel @Inject constructor(
 
     fun refreshWeather() {
         getLastLocation()
-       /* _state.value.geoPoint?.let {
-            getCurrentWeather(it)
+        /* _state.value.geoPoint?.let {
+             getCurrentWeather(it)
 
-        }?: kotlin.run { _state.update { it.copy(isLocationNull = true) } }*/
+         }?: kotlin.run { _state.update { it.copy(isLocationNull = true) } }*/
 
 
     }
@@ -174,14 +176,17 @@ class HomeViewModel @Inject constructor(
 
         when (event) {
 
-            is HomeEvent.OnConfirmDialog -> {
 
+            is HomeEvent.OnContinue -> {
 
+                observePrefsFlow()
+                getLastLocation()
             }
-            is HomeEvent.OnCancelDialog -> {}
-            is HomeEvent.OnDismissDialog -> {}
-            is HomeEvent.OnContinue -> {}
-            is HomeEvent.OnExit -> {}
+            is HomeEvent.OnExit -> {
+
+               val activity = event.context as Activity
+                ActivityCompat.finishAffinity(activity)
+            }
         }
 
     }

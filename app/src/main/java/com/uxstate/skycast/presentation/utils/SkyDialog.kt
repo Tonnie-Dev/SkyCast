@@ -1,11 +1,7 @@
 package com.uxstate.skycast.presentation.utils
 
-import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.provider.Settings
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
@@ -17,15 +13,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.uxstate.skycast.R
 import com.uxstate.skycast.ui.theme.SkyCastTheme
 import com.uxstate.skycast.utils.DialogType
 
 @Composable
 fun SkyDialog(
 
+    dialogType: DialogType,
     onConfirmDialog: () -> Unit,
-    dialogType: DialogType
-
+    onCancelDialog: () -> Unit,
+    onDismissDialog: () -> Unit
 ) {
 
     var isShowDialog by remember { mutableStateOf(true) }
@@ -37,29 +35,30 @@ fun SkyDialog(
 
                 title = { Text(text = stringResource(id = dialogType.dialogTitle)) },
                 text = { Text(text = stringResource(id = dialogType.dialogText)) },
-                onDismissRequest = {
-
-                    isShowDialog = false
-                },
                 confirmButton = {
                     TextButton(onClick = {
                         onConfirmDialog()
                         isShowDialog = false
                     }) {
 
-                        Text(text = "OK")
+                        Text(text = stringResource(id = R.string.ok_text))
                     }
                 },
 
+
                 dismissButton = {
                     TextButton(onClick = {
-
+                        onCancelDialog()
                         isShowDialog = false
 
                     }) {
 
-                        Text(text = "No, thanks")
+                        Text(text = stringResource(R.string.no_thanks_text))
                     }
+                },
+                onDismissRequest = {
+                    onDismissDialog()
+                    isShowDialog = false
                 }
 
 
@@ -79,12 +78,11 @@ fun SkyDialogPreviewLight() {
 
         Column {
             SkyDialog(
-                    onConfirmDialog = { /*TODO*/ },
-
-                    dialogType = DialogType.LOCATION
+                    dialogType = DialogType.LOCATION ,
+                    onConfirmDialog = { },
+                    onCancelDialog = {},
+                    onDismissDialog = {}
             )
-
-
 
 
         }
@@ -101,12 +99,11 @@ fun SkyDialogPreviewDark() {
 
         Column {
             SkyDialog(
-                    onConfirmDialog = { /*TODO*/ },
-
-                    dialogType = DialogType.PERMISSION
+                    dialogType = DialogType.LOCATION ,
+                    onConfirmDialog = { },
+                    onCancelDialog = {},
+                    onDismissDialog = {}
             )
-
-
 
 
         }

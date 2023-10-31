@@ -46,7 +46,7 @@ fun SingleChoiceDialog(
                     onConfirmOption(selectedOptionIndex)
                 })
                 {
-                    Text(text = stringResource(id = R.string.ok))
+                    Text(text = stringResource(id = R.string.ok_text))
                 }
             },
             text = {
