@@ -39,9 +39,6 @@ class HomeViewModel @Inject constructor(
     val isLocationEnabled = mutableStateOf(locationManager.isLocationEnabled)
 
 
-
-
-
     init {
         observePrefsFlow()
         getLastLocation()
@@ -177,12 +174,14 @@ class HomeViewModel @Inject constructor(
 
         when (event) {
 
+            is HomeEvent.OnConfirmDialog -> {
 
-            is HomeEvent.OnRetry -> {
 
-                getLastLocation()
             }
-            else -> Unit
+            is HomeEvent.OnCancelDialog -> {}
+            is HomeEvent.OnDismissDialog -> {}
+            is HomeEvent.OnContinue -> {}
+            is HomeEvent.OnExit -> {}
         }
 
     }

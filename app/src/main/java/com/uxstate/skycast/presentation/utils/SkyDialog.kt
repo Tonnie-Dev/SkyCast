@@ -24,8 +24,6 @@ import com.uxstate.skycast.utils.DialogType
 fun SkyDialog(
 
     onConfirmDialog: () -> Unit,
-    onCancelDialog: () -> Unit,
-    onDismissDialog: () -> Unit,
     dialogType: DialogType
 
 ) {
@@ -40,7 +38,7 @@ fun SkyDialog(
                 title = { Text(text = stringResource(id = dialogType.dialogTitle)) },
                 text = { Text(text = stringResource(id = dialogType.dialogText)) },
                 onDismissRequest = {
-                    onDismissDialog()
+
                     isShowDialog = false
                 },
                 confirmButton = {
@@ -55,7 +53,7 @@ fun SkyDialog(
 
                 dismissButton = {
                     TextButton(onClick = {
-                        onCancelDialog()
+
                         isShowDialog = false
 
                     }) {
@@ -82,8 +80,7 @@ fun SkyDialogPreviewLight() {
         Column {
             SkyDialog(
                     onConfirmDialog = { /*TODO*/ },
-                    onCancelDialog = { /*TODO*/ },
-                    onDismissDialog = { /*TODO*/ },
+
                     dialogType = DialogType.LOCATION
             )
 
@@ -105,8 +102,7 @@ fun SkyDialogPreviewDark() {
         Column {
             SkyDialog(
                     onConfirmDialog = { /*TODO*/ },
-                    onCancelDialog = { /*TODO*/ },
-                    onDismissDialog = { /*TODO*/ },
+
                     dialogType = DialogType.PERMISSION
             )
 

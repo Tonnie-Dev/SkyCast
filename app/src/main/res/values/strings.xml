@@ -39,8 +39,8 @@
     <!--Forecast Screen-->
     <string name="today_text">Today</string>
     <string name="forecast_text">Forecast</string>
-    <string name="location_dialog_title">Location Off</string>
+    <string name="location_dialog_title">Location is Off</string>
     <string name="location_dialog_text">Sky Cast uses Location Services. \nTo enable location please press OK.</string>
-    <string name="perm_dialog_title">Permissions</string>
+    <string name="perm_dialog_title">Permission Needed</string>
     <string name="perm_dialog_text">Sky Cast needs location permission. \nTo grant permission please press OK.</string>
 </resources>
