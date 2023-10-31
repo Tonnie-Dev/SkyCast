@@ -19,11 +19,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.uxstate.skycast.R
 import com.uxstate.skycast.ui.theme.LocalSpacing
+import com.uxstate.skycast.ui.theme.SkyCastTheme
 
 @Composable
 fun SkyButton(
     modifier: Modifier = Modifier,
-    hasIcon: Boolean,
+    hasIcon: Boolean = false,
     text: String,
     onClickButton: () -> Unit,
     @DrawableRes icon: Int = 0,
@@ -59,17 +60,21 @@ fun SkyButton(
 @Composable
 fun SkyButtonPreviewLight() {
 
+    SkyCastTheme {
 
-    Column {
-        SkyButton(hasIcon = true, text = "Press Me", icon = R.drawable.bug, onClickButton = { })
-        SkyButton(hasIcon = false, text = "Press Me", icon = R.drawable.bug, onClickButton = { })
-        SkyButton(
-                hasIcon = false,
-                text = "Press Me",
-                icon = R.drawable.bug,
-                color = MaterialTheme.colorScheme.error,
-                onClickButton = { })
+        Column {
+            SkyButton(hasIcon = true, text = "Press Me", icon = R.drawable.bug, onClickButton = { })
+            SkyButton(hasIcon = false, text = "Press Me", icon = R.drawable.bug, onClickButton = { })
+            SkyButton(
+                    hasIcon = false,
+                    text = "Press Me",
+                    icon = R.drawable.bug,
+                    color = MaterialTheme.colorScheme.error,
+                    onClickButton = { })
+        }
+
     }
+
 
 
 }
@@ -79,17 +84,22 @@ fun SkyButtonPreviewLight() {
 @Composable
 fun SkyButtonPreviewDark() {
 
+    SkyCastTheme {
 
-    Column {
-        SkyButton(hasIcon = true, text = "Press Me", icon = R.drawable.bug, onClickButton = { })
-        SkyButton(hasIcon = false, text = "Press Me", icon = R.drawable.bug, onClickButton = { })
-        SkyButton(
-                hasIcon = false,
-                text = "Press Me",
-                icon = R.drawable.bug,
-                color = MaterialTheme.colorScheme.error,
-                onClickButton = { })
+        Column {
+            SkyButton(hasIcon = true, text = "Press Me", icon = R.drawable.bug, onClickButton = { })
+            SkyButton(hasIcon = false, text = "Press Me", icon = R.drawable.bug, onClickButton = { })
+            SkyButton(
+                    hasIcon = false,
+                    text = "Press Me",
+                    icon = R.drawable.bug,
+                    color = MaterialTheme.colorScheme.error,
+                    onClickButton = { })
+        }
+
+
     }
+
 
 
 }

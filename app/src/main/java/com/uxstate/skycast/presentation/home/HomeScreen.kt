@@ -1,7 +1,6 @@
 package com.uxstate.skycast.presentation.home
 
 import android.Manifest
-import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
@@ -17,17 +16,9 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.uxstate.skycast.domain.model.WeatherType
-import com.uxstate.skycast.presentation.destinations.ForecastScreenDestination
-import com.uxstate.skycast.presentation.destinations.SettingsScreenDestination
-import com.uxstate.skycast.presentation.home.components.HomeContent
-import com.uxstate.skycast.presentation.home.components.LinearProgressBar
 import com.uxstate.skycast.presentation.home.components.LoadHomeContent
-import com.uxstate.skycast.presentation.home.components.LocationDialog
 import com.uxstate.skycast.presentation.home.components.PermissionsLauncher
-import com.uxstate.skycast.presentation.home.components.ShowDialog
 import com.uxstate.skycast.presentation.home.components.ShowLinearLoadingBar
-import com.uxstate.skycast.utils.FAHRENHEIT
 
 
 @RequiresApi(Build.VERSION_CODES.P)
@@ -72,7 +63,6 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
 
             else {
 
-                ShowDialog()
 
             }
         } else {
