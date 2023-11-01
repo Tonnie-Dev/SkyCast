@@ -11,8 +11,8 @@ data class HomeState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val geoPoint: GeoPoint? = null,
-    val isLocationNull: Boolean = true,
-    val isShowDialog: Boolean = true,
+    val isLocationNull: Boolean = false,
+    val isShowDialog:Boolean = true,
     val isShowBottomButtons: Boolean = false,
     val appPreferences: AppPreferences = appPreferencesInitialState
 ) {

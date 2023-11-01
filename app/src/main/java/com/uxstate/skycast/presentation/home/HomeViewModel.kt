@@ -26,9 +26,10 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
+@RequiresApi(Build.VERSION_CODES.P)
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    locationManager: LocationManager,
+    private val locationManager: LocationManager,
     private val repository: WeatherRepository,
     private val tracker: LocationTracker,
     private val prefs: DataStoreOperations
@@ -37,8 +38,9 @@ class HomeViewModel @Inject constructor(
     private val _state = MutableStateFlow(HomeState())
     val state = _state.asStateFlow()
 
-    @RequiresApi(Build.VERSION_CODES.P)
-    val isLocationEnabled = mutableStateOf(locationManager.isLocationEnabled)
+
+    var isLocationEnabled = mutableStateOf(locationManager.isLocationEnabled)
+        private set
 
 
     init {
@@ -68,7 +70,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getLastLocation() {
-
+        resetLocationInfo()
         viewModelScope.launch {
 
             when (val result = tracker.getCurrentLocation()) {
@@ -77,26 +79,30 @@ class HomeViewModel @Inject constructor(
                     result.data?.let {
 
                         geoPoint ->
-                        Timber.i("Success - Data is NOT null")
+
                         _state.update {
                             it.copy(
                                     geoPoint = GeoPoint(
                                             latitude = geoPoint.latitude,
                                             geoPoint.longitude
-                                    ), isLocationNull = false, isShowDialog = false
+                                    ),
+                                    isLocationNull = false,
                             )
                         }
-
+                        Timber.i("OnSuccess1 - isLocationNull: ${_state.value.isLocationNull}")
                         getCurrentWeather(geoPoint)
 
                     } ?: run {
 
-                        Timber.i("Success - Data IS NULL")
+                        Timber.i("OnSuccess2 Before - isLocationNull: ${_state.value.isLocationNull}")
                         _state.update {
                             it.copy(
-                                    isLocationNull = true, isShowDialog = true
+                                    isLocationNull = true,
+                                    isShowDialog = true
                             )
                         }
+
+                        Timber.i("OnSuccess2 After - isLocationNull: ${_state.value.isLocationNull}")
 
                     }
 
@@ -182,11 +188,29 @@ class HomeViewModel @Inject constructor(
                 observePrefsFlow()
                 getLastLocation()
             }
+
             is HomeEvent.OnExit -> {
 
-               val activity = event.context as Activity
+                val activity = event.context as Activity
                 ActivityCompat.finishAffinity(activity)
             }
+
+            else -> {
+
+                _state.update { it.copy(isShowDialog = false) }
+            }
+
+
+        }
+
+    }
+
+    private fun resetLocationInfo() {
+
+        viewModelScope.launch {
+
+            _state.update { it.copy(isLocationNull = false) }
+            isLocationEnabled.value = locationManager.isLocationEnabled
         }
 
     }

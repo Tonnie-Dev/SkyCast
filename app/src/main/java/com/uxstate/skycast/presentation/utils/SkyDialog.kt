@@ -19,7 +19,6 @@ import com.uxstate.skycast.utils.DialogType
 
 @Composable
 fun SkyDialog(
-
     dialogType: DialogType,
     onConfirmDialog: () -> Unit,
     onCancelDialog: () -> Unit,
@@ -29,10 +28,8 @@ fun SkyDialog(
     var isShowDialog by remember { mutableStateOf(true) }
 
 
-    if (isShowDialog) {
 
         AlertDialog(
-
                 title = { Text(text = stringResource(id = dialogType.dialogTitle)) },
                 text = { Text(text = stringResource(id = dialogType.dialogText)) },
                 confirmButton = {
@@ -67,7 +64,7 @@ fun SkyDialog(
     }
 
 
-}
+
 
 
 @Preview(uiMode = UI_MODE_NIGHT_NO, showSystemUi = true)

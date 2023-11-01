@@ -6,7 +6,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -20,6 +19,7 @@ import com.uxstate.skycast.presentation.home.components.LoadHomeContent
 import com.uxstate.skycast.presentation.home.components.ShowExitScreen
 import com.uxstate.skycast.presentation.home.components.ShowLinearLoadingBar
 import com.uxstate.skycast.utils.DialogType.*
+import timber.log.Timber
 
 
 @RequiresApi(Build.VERSION_CODES.P)
@@ -35,46 +35,55 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
 
 
     val permissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
-    val isPermissionGranted = permissionState.status.isGranted
+    val isPermGranted = permissionState.status.isGranted
 
     val isLocationEnabled by viewModel.isLocationEnabled
+    val isLocationNull = state.isLocationNull
+
+
+    val hasLocationData = isLocationEnabled && !isLocationNull
+
     val isLoading = state.isLoading
+    val isShowDialog = state.isShowDialog
 
 
-    LaunchedEffect(key1 = isLocationEnabled, block = { viewModel.refreshWeather() })
+    //LaunchedEffect(key1 = isLocationEnabled, block = { viewModel.refreshWeather() })
 
-
+    Timber.i("HomeScreen - hasLocationData is: $hasLocationData")
+    Timber.i("HomeScreen - isLocEnabled: $isLocationEnabled, isLocationNull: $isLocationNull ")
     Column {
 
 
         when {
 
-            !isPermissionGranted -> ShowExitScreen(PERMISSION, permissionState, viewModel)
-            !isLocationEnabled -> ShowExitScreen(LOCATION, permissionState, viewModel)
+            !isPermGranted -> ShowExitScreen(isShowDialog, PERMISSION, permissionState, viewModel
+            )
+
+            !hasLocationData -> ShowExitScreen(isShowDialog, LOCATION, permissionState, viewModel)
             isLoading -> ShowLinearLoadingBar()
-            else ->LoadHomeContent(viewModel= viewModel, navigator = navigator)
+            else -> LoadHomeContent(viewModel = viewModel, navigator = navigator)
         }
-       /* if (isPermissionGranted) {
+        /* if (isPermissionGranted) {
 
 
-            if (isLocationEnabled) {
+             if (isLocationEnabled) {
 
 
-                if (isLoading) {
-                    ShowLinearLoadingBar()
+                 if (isLoading) {
+                     ShowLinearLoadingBar()
 
-                } else {
-                    LoadHomeContent(viewModel = viewModel, navigator = navigator)
+                 } else {
+                     LoadHomeContent(viewModel = viewModel, navigator = navigator)
 
-                }
-            } else {
-                enableLocation()
+                 }
+             } else {
+                 enableLocation()
 
-            }
-        } else {
+             }
+         } else {
 
-            enablePermission()
-        }*/
+             enablePermission()
+         }*/
     }
 
 
