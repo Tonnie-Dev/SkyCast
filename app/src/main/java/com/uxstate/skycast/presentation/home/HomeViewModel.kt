@@ -23,7 +23,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.P)
@@ -45,7 +44,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         observePrefsFlow()
-        getLastLocation()
+        getCurrentLocation()
     }
 
     private fun observePrefsFlow() {
@@ -69,7 +68,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun getLastLocation() {
+    private fun getCurrentLocation() {
 
         viewModelScope.launch {
 
@@ -133,13 +132,11 @@ class HomeViewModel @Inject constructor(
 
                         is Resource.Loading -> {
 
-
                             _state.update { it.copy(isLoading = result.isLoading) }
 
                         }
 
                         is Resource.Success -> {
-
 
                             result.data?.let { currentWeather ->
 
@@ -164,7 +161,7 @@ class HomeViewModel @Inject constructor(
 
 
     fun refreshWeather() {
-        getLastLocation()
+        getCurrentLocation()
 
     }
 
@@ -178,7 +175,7 @@ class HomeViewModel @Inject constructor(
 
                 if (event.isPermissionGranted){
 
-                    getLastLocation()
+                    getCurrentLocation()
                 }
 
                 _state.update { it.copy(isShowDialog = !event.isPermissionGranted) }
@@ -195,13 +192,12 @@ class HomeViewModel @Inject constructor(
 
                 _state.update { it.copy(isShowDialog = false) }
             }
-            
+
         }
 
     }
 
     private fun resetLocationInfo() {
-
         viewModelScope.launch {
 
             _state.update { it.copy(isLocationNull = false, isShowDialog = true) }
@@ -209,6 +205,5 @@ class HomeViewModel @Inject constructor(
         }
 
     }
-
 
 }
