@@ -70,8 +70,6 @@ fun HomeContent(
 
     Box(
             modifier = Modifier
-                    .statusBarsPadding()
-                    .navigationBarsPadding()
                     .fillMaxSize()
                     .pullRefresh(pullRefreshState)
     ) {

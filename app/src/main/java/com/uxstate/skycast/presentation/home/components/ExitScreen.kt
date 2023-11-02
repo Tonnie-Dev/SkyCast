@@ -55,7 +55,6 @@ fun ExitScreen(
         )
     }
 
-
     AnimatedVisibility(visible = !isShowDialog) {
 
         Box(
@@ -84,14 +83,6 @@ fun ExitScreen(
 
 
 }
-
-
-
-
-
-
-
-
 
 
 @RequiresApi(Build.VERSION_CODES.P)
@@ -209,12 +200,11 @@ fun ExitScreenPreviewDark1() {
                 onCancelDialog = {},
                 onDismissDialog = {},
                 onContinue = {},
-                onExit = { },
+                onExit = {},
                 isShowDialog = true
         )
     }
 }
-
 
 @Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable

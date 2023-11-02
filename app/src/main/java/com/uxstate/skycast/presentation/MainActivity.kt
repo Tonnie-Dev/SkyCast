@@ -1,6 +1,6 @@
 package com.uxstate.skycast.presentation
 
-//import com.uxstate.skycast.presentation.NavGraphs
+
 import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -23,11 +23,8 @@ import com.uxstate.skycast.presentation.settings.SettingsViewModel
 import com.uxstate.skycast.ui.theme.SkyCastTheme
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +35,6 @@ class MainActivity : ComponentActivity() {
                         Color.TRANSPARENT
                 ), navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
         )
-
 
         setContent {
 
@@ -66,8 +62,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-
 
 }
 
