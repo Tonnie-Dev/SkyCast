@@ -8,6 +8,7 @@ import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -45,41 +46,52 @@ fun ExitScreen(
 ) {
     val spacing = LocalSpacing.current
 
-
-
-    Timber.i("ExitScreen - isShowDialog is $isShowDialog")
     if (isShowDialog) {
-
         SkyDialog(
                 dialogType = dialogType,
                 onConfirmDialog = { onConfirmDialog() },
                 onCancelDialog = { onCancelDialog() },
                 onDismissDialog = { onDismissDialog() }
-
         )
     }
 
-    Box(
-            modifier = modifier
-                    .fillMaxSize()
-                    .padding(horizontal = spacing.spaceLarge, vertical = spacing.spaceExtraLarge),
-            contentAlignment = Alignment.BottomStart
-    ) {
 
-        Timber.i("ExitScreen - isShowDialog is $isShowDialog")
-        Row(
-                modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+    AnimatedVisibility(visible = !isShowDialog) {
+
+        Box(
+                modifier = modifier
+                        .fillMaxSize()
+                        .padding(
+                                horizontal = spacing.spaceLarge,
+                                vertical = spacing.spaceExtraLarge
+                        ),
+                contentAlignment = Alignment.BottomStart
         ) {
 
-            SkyButton(text = "Exit", onClickButton = onExit)
-            SkyButton(text = "Continue", onClickButton = onContinue)
+            Row(
+                    modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                SkyButton(text = "Exit", onClickButton = onExit)
+                SkyButton(text = "Continue", onClickButton = onContinue)
+            }
         }
+
     }
+
+
 }
+
+
+
+
+
+
+
+
 
 
 @RequiresApi(Build.VERSION_CODES.P)
@@ -91,7 +103,6 @@ fun ShowExitScreen(
     permissionState: PermissionState,
     viewModel: HomeViewModel,
 ) {
-
 
     val context = LocalContext.current
 
@@ -106,7 +117,6 @@ fun ShowExitScreen(
                 when (dialogType) {
 
                     DialogType.PERMISSION -> {
-
 
                         permissionState.launchPermissionRequest()
                         viewModel.onEvent(OnConfirmDialog)
@@ -130,9 +140,8 @@ fun ShowExitScreen(
 
                 if (permissionState.status.isGranted) {
 
-
                     viewModel.onEvent(OnContinue(isPermissionGranted = true))
-                    Timber.i("ExitScreen-if - ${permissionState.status.isGranted}")
+
                 } else {
 
                     viewModel.onEvent(OnContinue(isPermissionGranted = false))
@@ -144,9 +153,7 @@ fun ShowExitScreen(
 
             onExit = {
 
-
                 viewModel.onEvent(OnExit(context = context))
-
 
             },
     )
@@ -159,7 +166,6 @@ fun ExitScreenPreviewLight1() {
 
     SkyCastTheme {
 
-
         ExitScreen(
                 dialogType = DialogType.PERMISSION,
                 onConfirmDialog = {},
@@ -169,18 +175,14 @@ fun ExitScreenPreviewLight1() {
                 onExit = { },
                 isShowDialog = true
         )
-
-
     }
 }
-
 
 @Preview(uiMode = UI_MODE_NIGHT_NO, showSystemUi = true)
 @Composable
 fun ExitScreenPreviewLight2() {
 
     SkyCastTheme {
-
 
         ExitScreen(
                 dialogType = DialogType.PERMISSION,
@@ -220,14 +222,13 @@ fun ExitScreenPreviewDark2() {
 
     SkyCastTheme {
 
-
         ExitScreen(
                 dialogType = DialogType.PERMISSION,
                 onConfirmDialog = {},
                 onCancelDialog = {},
                 onDismissDialog = {},
                 onContinue = {},
-                onExit = { },
+                onExit = {},
                 isShowDialog = true
         )
     }
