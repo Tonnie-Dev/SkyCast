@@ -37,6 +37,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
     val permissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
     val isPermGranted = permissionState.status.isGranted
 
+    Timber.i("HomeScreen -> Permission Status $isPermGranted")
     val isLocationEnabled by viewModel.isLocationEnabled
     val isLocationNull = state.isLocationNull
 
@@ -47,10 +48,8 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
     val isShowDialog = state.isShowDialog
 
 
-    //LaunchedEffect(key1 = isLocationEnabled, block = { viewModel.refreshWeather() })
 
-    Timber.i("HomeScreen - hasLocationData is: $hasLocationData")
-    Timber.i("HomeScreen - isLocEnabled: $isLocationEnabled, isLocationNull: $isLocationNull ")
+
     Column {
 
 

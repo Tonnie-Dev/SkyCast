@@ -70,7 +70,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getLastLocation() {
-        resetLocationInfo()
+        //resetLocationInfo()
         viewModelScope.launch {
 
             when (val result = tracker.getCurrentLocation()) {
@@ -89,12 +89,12 @@ class HomeViewModel @Inject constructor(
                                     isLocationNull = false,
                             )
                         }
-                        Timber.i("OnSuccess1 - isLocationNull: ${_state.value.isLocationNull}")
+                        //Timber.i("OnSuccess1 - isLocationNull: ${_state.value.isLocationNull}")
                         getCurrentWeather(geoPoint)
 
                     } ?: run {
 
-                        Timber.i("OnSuccess2 Before - isLocationNull: ${_state.value.isLocationNull}")
+                       // Timber.i("OnSuccess2 Before - isLocationNull: ${_state.value.isLocationNull}")
                         _state.update {
                             it.copy(
                                     isLocationNull = true,
@@ -102,7 +102,7 @@ class HomeViewModel @Inject constructor(
                             )
                         }
 
-                        Timber.i("OnSuccess2 After - isLocationNull: ${_state.value.isLocationNull}")
+                       // Timber.i("OnSuccess2 After - isLocationNull: ${_state.value.isLocationNull}")
 
                     }
 
@@ -185,8 +185,21 @@ class HomeViewModel @Inject constructor(
 
             is HomeEvent.OnContinue -> {
 
+
+                resetLocationInfo()
+
+                if (event.isPermissionGranted){
+
+                    getLastLocation()
+                }
+
+                Timber.i("VM-OnCt-B: ${_state.value.isShowDialog}")
+                _state.update { it.copy(isShowDialog = !event.isPermissionGranted) }
                 observePrefsFlow()
-                getLastLocation()
+
+                Timber.i("VM-OnCt-A: ${_state.value.isShowDialog}")
+
+
             }
 
             is HomeEvent.OnExit -> {
@@ -209,7 +222,7 @@ class HomeViewModel @Inject constructor(
 
         viewModelScope.launch {
 
-            _state.update { it.copy(isLocationNull = false) }
+            _state.update { it.copy(isLocationNull = false, isShowDialog = true) }
             isLocationEnabled.value = locationManager.isLocationEnabled
         }
 

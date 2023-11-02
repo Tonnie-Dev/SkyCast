@@ -3,12 +3,13 @@ package com.uxstate.skycast.presentation.home.components
 import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.os.Build
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
+import com.google.accompanist.permissions.isGranted
 import com.uxstate.skycast.presentation.home.HomeEvent.*
 import com.uxstate.skycast.presentation.home.HomeViewModel
 import com.uxstate.skycast.presentation.utils.SkyButton
@@ -45,7 +47,7 @@ fun ExitScreen(
 
 
 
-    Timber.i("ShowExit Screen - isShowDialog is $isShowDialog")
+    Timber.i("ExitScreen - isShowDialog is $isShowDialog")
     if (isShowDialog) {
 
         SkyDialog(
@@ -64,6 +66,7 @@ fun ExitScreen(
             contentAlignment = Alignment.BottomStart
     ) {
 
+        Timber.i("ExitScreen - isShowDialog is $isShowDialog")
         Row(
                 modifier = Modifier
                         .fillMaxWidth()
@@ -79,6 +82,7 @@ fun ExitScreen(
 }
 
 
+@RequiresApi(Build.VERSION_CODES.P)
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun ShowExitScreen(
@@ -90,26 +94,27 @@ fun ShowExitScreen(
 
 
     val context = LocalContext.current
+
     val startLocationSettings =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
-
     ExitScreen(
             isShowDialog = isShowDialog,
-
-
             dialogType = dialogType,
+
             onConfirmDialog = {
 
                 when (dialogType) {
 
                     DialogType.PERMISSION -> {
 
+
                         permissionState.launchPermissionRequest()
                         viewModel.onEvent(OnConfirmDialog)
+
+                        Timber.i("Exit Screen - permission launch requested")
                     }
 
                     DialogType.LOCATION -> {
-
                         val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                         startLocationSettings.launch(intent)
                         viewModel.onEvent(OnConfirmDialog)
@@ -121,7 +126,21 @@ fun ShowExitScreen(
             onCancelDialog = { viewModel.onEvent(OnCancelDialog) },
             onDismissDialog = { viewModel.onEvent(OnCancelDialog) },
 
-            onContinue = { viewModel.onEvent(OnContinue) },
+            onContinue = {
+
+                if (permissionState.status.isGranted) {
+
+
+                    viewModel.onEvent(OnContinue(isPermissionGranted = true))
+                    Timber.i("ExitScreen-if - ${permissionState.status.isGranted}")
+                } else {
+
+                    viewModel.onEvent(OnContinue(isPermissionGranted = false))
+                    Timber.i("ExitScreen-else - ${permissionState.status.isGranted}")
+                }
+
+
+            },
 
             onExit = {
 
