@@ -17,7 +17,6 @@ data class HomeState(
     val appPreferences: AppPreferences = appPreferencesInitialState
 ) {
 
-
     //serves to initialize app preferences initial state
     companion object {
         val appPreferencesInitialState =
@@ -26,7 +25,6 @@ data class HomeState(
                     tempUnit = TempUnit.CELSIUS,
                     savedCityId = -1
             )
-        val geoPointInitialState = GeoPoint(latitude = 51.509865, longitude = -0.118092)
     }
 
 

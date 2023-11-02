@@ -1,6 +1,8 @@
 package com.uxstate.skycast.presentation.home.components
 
+import android.os.Build
 import androidx.annotation.DrawableRes
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -74,8 +76,7 @@ fun HomeContent(
                     .pullRefresh(pullRefreshState)
     ) {
     Column(
-            modifier = modifier.verticalScroll(rememberScrollState())
-            ,
+            modifier = modifier.verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -146,14 +147,13 @@ fun HomeContent(
 }
 
 
+@RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun LoadHomeContent(viewModel:HomeViewModel, navigator:DestinationsNavigator) {
-
 
     val state by viewModel.state.collectAsState()
     val isLoading = state.isLoading
     val isFahrenheitUnit = state.appPreferences.tempUnit.toString() == FAHRENHEIT
-
 
     state.currentWeather?.let {
 

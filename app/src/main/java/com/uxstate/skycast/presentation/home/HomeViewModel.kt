@@ -70,7 +70,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getLastLocation() {
-        //resetLocationInfo()
+
         viewModelScope.launch {
 
             when (val result = tracker.getCurrentLocation()) {
@@ -89,20 +89,17 @@ class HomeViewModel @Inject constructor(
                                     isLocationNull = false,
                             )
                         }
-                        //Timber.i("OnSuccess1 - isLocationNull: ${_state.value.isLocationNull}")
+
                         getCurrentWeather(geoPoint)
 
                     } ?: run {
 
-                       // Timber.i("OnSuccess2 Before - isLocationNull: ${_state.value.isLocationNull}")
                         _state.update {
                             it.copy(
                                     isLocationNull = true,
                                     isShowDialog = true
                             )
                         }
-
-                       // Timber.i("OnSuccess2 After - isLocationNull: ${_state.value.isLocationNull}")
 
                     }
 
@@ -124,7 +121,6 @@ class HomeViewModel @Inject constructor(
 
         repository.getCurrentWeather(geoPoint)
                 .onEach {
-
 
                     result ->
 
@@ -169,22 +165,14 @@ class HomeViewModel @Inject constructor(
 
     fun refreshWeather() {
         getLastLocation()
-        /* _state.value.geoPoint?.let {
-             getCurrentWeather(it)
-
-         }?: kotlin.run { _state.update { it.copy(isLocationNull = true) } }*/
-
 
     }
 
     fun onEvent(event: HomeEvent) {
 
-
         when (event) {
 
-
             is HomeEvent.OnContinue -> {
-
 
                 resetLocationInfo()
 
@@ -193,17 +181,12 @@ class HomeViewModel @Inject constructor(
                     getLastLocation()
                 }
 
-                Timber.i("VM-OnCt-B: ${_state.value.isShowDialog}")
                 _state.update { it.copy(isShowDialog = !event.isPermissionGranted) }
                 observePrefsFlow()
-
-                Timber.i("VM-OnCt-A: ${_state.value.isShowDialog}")
-
 
             }
 
             is HomeEvent.OnExit -> {
-
                 val activity = event.context as Activity
                 ActivityCompat.finishAffinity(activity)
             }
@@ -212,8 +195,7 @@ class HomeViewModel @Inject constructor(
 
                 _state.update { it.copy(isShowDialog = false) }
             }
-
-
+            
         }
 
     }
