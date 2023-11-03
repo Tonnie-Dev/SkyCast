@@ -25,7 +25,6 @@ object NetworkModule {
     private const val READ_TIMEOUT_IN_SECONDS = 15L
     private const val CONNECT_TIMEOUT_IN_SECONDS = 15L
 
-
     //Connect Timeout - Time period for client to establish connection with the target host
     // Read Timeout - Max latency time for waiting server's response
 
