@@ -44,7 +44,6 @@ class WeatherRepositoryImpl @Inject constructor(
                         localDataSource.insertCurrentWeather(it.toEntity(System.currentTimeMillis()))
 
 
-
                     }
 
                     emit(Resource.Success(fetchLocalCurrentWeather()?.toModel()))
@@ -67,12 +66,11 @@ class WeatherRepositoryImpl @Inject constructor(
                 }
             }
         }
-       emit(Resource.Loading(isLoading = false))
+        emit(Resource.Loading(isLoading = false))
 
     }
 
     override fun getForecastWeather(cityId: Int): Flow<Resource<List<ForecastWeather>>> = flow {
-
 
 
         fetchLocalForecastWeather()?.takeIf { !it.isExpired() && it.isNotEmpty() }
@@ -83,40 +81,39 @@ class WeatherRepositoryImpl @Inject constructor(
             ?: run {
 
 
-            when (val result = remoteDataSource.getRemoteForecastWeather(cityId = cityId)) {
+                when (val result = remoteDataSource.getRemoteForecastWeather(cityId = cityId)) {
 
-                is Resource.Success -> {
+                    is Resource.Success -> {
 
 
-                    localDataSource.clearForecastWeatherData()
+                        localDataSource.clearForecastWeatherData()
 
-                    result.data?.let { data ->
-                        localDataSource.insertForecastWeather(data.map { it.toEntity(System.currentTimeMillis()) })
+                        result.data?.let { data ->
+                            localDataSource.insertForecastWeather(data.map { it.toEntity(System.currentTimeMillis()) })
+                        }
+
+                        emit(Resource.Success(data = fetchLocalForecastWeather()?.map { it.toModel() }))
+
                     }
 
-                    emit(Resource.Success(data = fetchLocalForecastWeather()?.map { it.toModel() }))
+                    is Resource.Error -> {
 
+                        emit(
+                                Resource.Error(
+                                        data = fetchLocalForecastWeather()?.map { it.toModel() },
+                                        errorMessage = result.errorMessage ?: "Unknown Error"
+                                )
+                        )
+
+                    }
+
+                    else -> {
+
+                        emit(Resource.Loading())
+                    }
                 }
 
-                is Resource.Error -> {
-
-                    emit(
-                            Resource.Error(
-                                    data = fetchLocalForecastWeather()?.map { it.toModel() },
-                                    errorMessage = result.errorMessage ?: "Unknown Error"
-                            )
-                    )
-                    // result.errorMessage?.let { emit(Resource.Error(errorMessage = it)) }
-                }
-
-                else -> {
-
-                    emit(Resource.Loading())
-                }
             }
-
-        }
-
 
 
     }
@@ -139,5 +136,44 @@ class WeatherRepositoryImpl @Inject constructor(
     private fun List<ForecastEntity>.isExpired(): Boolean {
 
         return if (isEmpty()) true else System.currentTimeMillis() - this.first().lastFetchTime > EXPIRY_TIME
+    }
+
+
+    private fun fetchRemoteData(geoPoint: GeoPoint): Flow<Resource<CurrentWeather>> = flow {
+
+        emit(Resource.Loading(isLoading = true))
+        when (val result = remoteDataSource.getRemoteCurrentWeather(geoPoint)) {
+
+
+            is Resource.Success -> {
+
+                result.data?.let {
+
+                    val currentWeatherData = it.toEntity(System.currentTimeMillis())
+                    localDataSource.insertCurrentWeather(currentWeatherData)
+
+
+                }
+
+                emit(Resource.Success(data = fetchLocalCurrentWeather()?.toModel()))
+            }
+
+            is Resource.Error -> {
+
+                emit(
+                        Resource.Error(
+                                data = fetchLocalCurrentWeather().toModel(),
+                                errorMessage = result.errorMessage ?: "Unknown Error"
+                        )
+                )
+            }
+
+            else -> {
+
+                emit(Resource.Loading(isLoading = true))
+            }
+        }
+
+        emit(Resource.Loading(isLoading = false))
     }
 }

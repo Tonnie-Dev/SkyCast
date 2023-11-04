@@ -21,17 +21,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.uxstate.skycast.R
+import com.uxstate.skycast.ui.theme.LocalSpacing
 import com.uxstate.skycast.ui.theme.SkyCastTheme
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun EmptyWeatherBox( onGetLocation:()-> Unit) {
 
-
+val spacing = LocalSpacing.current
     Box(
             modifier = Modifier
                     .fillMaxSize()
-                    .padding(8.dp),
+                    .padding(spacing.spaceSmall),
             contentAlignment = Alignment.Center
     ) {
         Column(
