@@ -20,7 +20,7 @@ class WeatherRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource
 ) : WeatherRepository {
-    override fun getCurrentWeather(geoPoint: GeoPoint): Flow<Resource<CurrentWeather>> = flow {
+    override fun getCurrentWeather(geoPoint: GeoPoint, isFetchFromRemote:Boolean): Flow<Resource<CurrentWeather>> = flow {
 
 
         emit(Resource.Loading(isLoading = true))
@@ -70,7 +70,7 @@ class WeatherRepositoryImpl @Inject constructor(
 
     }
 
-    override fun getForecastWeather(cityId: Int): Flow<Resource<List<ForecastWeather>>> = flow {
+    override fun getForecastWeather(cityId: Int, isFetchFromRemote:Boolean): Flow<Resource<List<ForecastWeather>>> = flow {
 
 
         fetchLocalForecastWeather()?.takeIf { !it.isExpired() && it.isNotEmpty() }
@@ -162,7 +162,7 @@ class WeatherRepositoryImpl @Inject constructor(
 
                 emit(
                         Resource.Error(
-                                data = fetchLocalCurrentWeather().toModel(),
+                                data = fetchLocalCurrentWeather()?.toModel(),
                                 errorMessage = result.errorMessage ?: "Unknown Error"
                         )
                 )
