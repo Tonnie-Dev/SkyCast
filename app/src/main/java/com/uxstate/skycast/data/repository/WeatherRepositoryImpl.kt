@@ -20,7 +20,10 @@ class WeatherRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource
 ) : WeatherRepository {
-    override fun getCurrentWeather(geoPoint: GeoPoint, isFetchFromRemote:Boolean): Flow<Resource<CurrentWeather>> = flow {
+    override fun getCurrentWeather(
+        geoPoint: GeoPoint,
+        isFetchFromRemote: Boolean
+    ): Flow<Resource<CurrentWeather>> = flow {
 
 
         emit(Resource.Loading(isLoading = true))
@@ -39,11 +42,10 @@ class WeatherRepositoryImpl @Inject constructor(
             when (val result = remoteDataSource.getRemoteCurrentWeather(geoPoint)) {
 
                 is Resource.Success -> {
+
                     localDataSource.clearCurrentWeatherData()
                     result.data?.let {
                         localDataSource.insertCurrentWeather(it.toEntity(System.currentTimeMillis()))
-
-
                     }
 
                     emit(Resource.Success(fetchLocalCurrentWeather()?.toModel()))
@@ -70,7 +72,10 @@ class WeatherRepositoryImpl @Inject constructor(
 
     }
 
-    override fun getForecastWeather(cityId: Int, isFetchFromRemote:Boolean): Flow<Resource<List<ForecastWeather>>> = flow {
+    override fun getForecastWeather(
+        cityId: Int,
+        isFetchFromRemote: Boolean
+    ): Flow<Resource<List<ForecastWeather>>> = flow {
 
 
         fetchLocalForecastWeather()?.takeIf { !it.isExpired() && it.isNotEmpty() }
@@ -139,36 +144,76 @@ class WeatherRepositoryImpl @Inject constructor(
     }
 
 
-    private fun fetchRemoteData(geoPoint: GeoPoint): Flow<Resource<CurrentWeather>> = flow {
+    private fun fetchRemoteCurrentWeather(geoPoint: GeoPoint): Flow<Resource<CurrentWeather>> =
+        flow {
 
-        emit(Resource.Loading(isLoading = true))
-        when (val result = remoteDataSource.getRemoteCurrentWeather(geoPoint)) {
-
-
-            is Resource.Success -> {
-
-                result.data?.let {
-
-                    val currentWeatherData = it.toEntity(System.currentTimeMillis())
-                    localDataSource.insertCurrentWeather(currentWeatherData)
+            emit(Resource.Loading(isLoading = true))
+            when (val result = remoteDataSource.getRemoteCurrentWeather(geoPoint)) {
 
 
+                is Resource.Success -> {
+
+                    result.data?.let {
+
+                        val currentWeatherData = it.toEntity(System.currentTimeMillis())
+                        localDataSource.insertCurrentWeather(currentWeatherData)
+
+
+                    }
+
+                    emit(Resource.Success(data = fetchLocalCurrentWeather()?.toModel()))
                 }
 
-                emit(Resource.Success(data = fetchLocalCurrentWeather()?.toModel()))
+                is Resource.Error -> {
+
+                    emit(
+                            Resource.Error(
+                                    data = fetchLocalCurrentWeather()?.toModel(),
+                                    errorMessage = result.errorMessage ?: "Unknown Error"
+                            )
+                    )
+                }
+
+                else -> {
+
+                    emit(Resource.Loading(isLoading = true))
+                }
+            }
+
+            emit(Resource.Loading(isLoading = false))
+        }
+
+
+    private fun getRemoteForecastWeather(
+        cityId: Int,
+        isFetchFromRemote: Boolean
+    ): Flow<Resource<List<ForecastWeather>>> = flow {
+
+
+        emit(Resource.Loading(isLoading = true))
+
+        when (val result = remoteDataSource.getRemoteForecastWeather(cityId)) {
+
+            is Resource.Success -> {
+                //localDataSource.clearForecastWeatherData()
+
+                result.data?.let { data ->
+
+                    localDataSource.insertForecastWeather(data.map { it.toEntity(System.currentTimeMillis()) })
+                }
             }
 
             is Resource.Error -> {
 
                 emit(
                         Resource.Error(
-                                data = fetchLocalCurrentWeather()?.toModel(),
+                                data = fetchLocalForecastWeather()?.map { it.toModel() },
                                 errorMessage = result.errorMessage ?: "Unknown Error"
                         )
                 )
             }
 
-            else -> {
+            is Resource.Loading -> {
 
                 emit(Resource.Loading(isLoading = true))
             }
