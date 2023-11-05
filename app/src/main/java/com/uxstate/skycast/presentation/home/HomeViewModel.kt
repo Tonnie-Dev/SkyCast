@@ -118,7 +118,7 @@ class HomeViewModel @Inject constructor(
 
     private fun getCurrentWeather(geoPoint: GeoPoint) {
 
-        repository.getCurrentWeather(geoPoint)
+        repository.getCurrentWeather(geoPoint, true)
                 .onEach {
 
                     result ->

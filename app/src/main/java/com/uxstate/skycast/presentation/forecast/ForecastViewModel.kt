@@ -38,7 +38,7 @@ observePrefsFlow()
 
         cityId?.let { id ->
 
-            repository.getForecastWeather(id)
+            repository.getForecastWeather(id, true)
                     .onEach { result ->
 
                         when (result) {

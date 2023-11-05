@@ -22,13 +22,13 @@ class WeatherRepositoryImpl @Inject constructor(
 ) : WeatherRepository {
     override fun getCurrentWeather(
         geoPoint: GeoPoint,
-        isFetchFromRemote: Boolean
+        fetchFromRemote: Boolean
     ): Flow<Resource<CurrentWeather>> = flow {
 
 
         emit(Resource.Loading(isLoading = true))
         fetchLocalCurrentWeather()?.takeIf {
-            !it.isExpired()
+            !it.isExpired() && !fetchFromRemote
 
 
         }
@@ -221,4 +221,6 @@ class WeatherRepositoryImpl @Inject constructor(
 
         emit(Resource.Loading(isLoading = false))
     }
+
+
 }
