@@ -41,6 +41,7 @@ import com.uxstate.skycast.domain.model.CurrentWeather
 import com.uxstate.skycast.domain.model.WeatherType
 import com.uxstate.skycast.presentation.destinations.ForecastScreenDestination
 import com.uxstate.skycast.presentation.destinations.SettingsScreenDestination
+import com.uxstate.skycast.presentation.home.HomeEvent
 import com.uxstate.skycast.presentation.home.HomeViewModel
 import com.uxstate.skycast.ui.theme.LocalSpacing
 import com.uxstate.skycast.utils.CELSIUS_SIGN
@@ -171,7 +172,7 @@ fun LoadHomeContent(viewModel:HomeViewModel, navigator:DestinationsNavigator) {
                     navigator.navigate(
                             SettingsScreenDestination
                     )
-                }, onRefreshWeather = viewModel::refreshWeather
+                }, onRefreshWeather = { viewModel.onEvent(HomeEvent.OnRefresh) }
 
 
         )

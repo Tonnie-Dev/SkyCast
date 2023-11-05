@@ -77,6 +77,7 @@ class WeatherRepositoryImpl @Inject constructor(
         isFetchFromRemote: Boolean
     ): Flow<Resource<List<ForecastWeather>>> = flow {
 
+        emit(Resource.Loading(isLoading = true))
 
         fetchLocalForecastWeather()?.takeIf { !it.isExpired() && it.isNotEmpty() }
                 ?.let {
@@ -120,7 +121,7 @@ class WeatherRepositoryImpl @Inject constructor(
 
             }
 
-
+        emit(Resource.Loading(isLoading =false))
     }
 
     private suspend fun fetchLocalCurrentWeather(): CurrentEntity? {

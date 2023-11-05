@@ -125,7 +125,7 @@ fun ShowExitScreen(
             },
 
             onCancelDialog = { viewModel.onEvent(OnCancelDialog) },
-            onDismissDialog = { viewModel.onEvent(OnCancelDialog) },
+            onDismissDialog = { viewModel.onEvent(OnDismissDialog) },
 
             onContinue = {
 

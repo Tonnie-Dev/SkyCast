@@ -68,7 +68,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun getCurrentLocation() {
+    private fun getCurrentLocation(fetchFromRemote: Boolean = false) {
 
         viewModelScope.launch {
 
@@ -89,7 +89,7 @@ class HomeViewModel @Inject constructor(
                             )
                         }
 
-                        getCurrentWeather(geoPoint)
+                        getCurrentWeather(geoPoint,fetchFromRemote)
 
                     } ?: run {
 
@@ -116,9 +116,9 @@ class HomeViewModel @Inject constructor(
 
     }
 
-    private fun getCurrentWeather(geoPoint: GeoPoint) {
+    private fun getCurrentWeather(geoPoint: GeoPoint, fetchFromRemote:Boolean) {
 
-        repository.getCurrentWeather(geoPoint, true)
+        repository.getCurrentWeather(geoPoint, fetchFromRemote)
                 .onEach {
 
                     result ->
@@ -160,20 +160,26 @@ class HomeViewModel @Inject constructor(
     }
 
 
-    fun refreshWeather() {
+  /*  fun refreshWeather() {
         getCurrentLocation()
 
-    }
+    }*/
 
     fun onEvent(event: HomeEvent) {
 
         when (event) {
 
+            is HomeEvent.OnRefresh -> {
+
+                getCurrentLocation(fetchFromRemote = true)
+
+            }
+
             is HomeEvent.OnContinue -> {
 
                 resetLocationInfo()
 
-                if (event.isPermissionGranted){
+                if (event.isPermissionGranted) {
 
                     getCurrentLocation()
                 }
