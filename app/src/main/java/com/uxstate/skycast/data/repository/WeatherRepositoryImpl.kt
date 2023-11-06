@@ -43,7 +43,7 @@ class WeatherRepositoryImpl @Inject constructor(
 
                 is Resource.Success -> {
 
-                    localDataSource.clearCurrentWeatherData()
+                    //localDataSource.clearCurrentWeatherData()
                     result.data?.let {
                         localDataSource.insertCurrentWeather(it.toEntity(System.currentTimeMillis()))
                     }

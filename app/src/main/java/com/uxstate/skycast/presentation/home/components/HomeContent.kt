@@ -11,13 +11,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -27,11 +26,15 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -154,28 +157,41 @@ fun LoadHomeContent(viewModel:HomeViewModel, navigator:DestinationsNavigator) {
 
     val state by viewModel.state.collectAsState()
     val isLoading = state.isLoading
+    val isShowSnackbarHostState = state.isShowSnackBar
     val isFahrenheitUnit = state.appPreferences.tempUnit.toString() == FAHRENHEIT
+    val snackbarHostState = remember { SnackbarHostState() }
+    Scaffold (snackbarHost = { SnackbarHost (snackbarHostState)}){ paddingValues ->
 
-    state.currentWeather?.let {
-
-        HomeContent(
-                isLoading = isLoading,
-                isFahrenheitUnit = isFahrenheitUnit,
-                currentWeather = it,
-                icon = WeatherType.fromWMO(it.networkWeatherDescription.first().icon).icon,
-                onForecastButtonClick = {
-                    navigator.navigate(
-                            ForecastScreenDestination
-                    )
-                },
-                navigateToSettings = {
-                    navigator.navigate(
-                            SettingsScreenDestination
-                    )
-                }, onRefreshWeather = { viewModel.onEvent(HomeEvent.OnRefresh) }
+        state.currentWeather?.let {
 
 
-        )
+            LaunchedEffect(key1 = isShowSnackbarHostState, block = {
+
+
+                snackbarHostState.showSnackbar(message = "ss")
+            })
+
+            HomeContent(
+                    modifier = Modifier.padding(paddingValues),
+                    isLoading = isLoading,
+                    isFahrenheitUnit = isFahrenheitUnit,
+                    currentWeather = it,
+                    icon = WeatherType.fromWMO(it.networkWeatherDescription.first().icon).icon,
+                    onForecastButtonClick = {
+                        navigator.navigate(
+                                ForecastScreenDestination
+                        )
+                    },
+                    navigateToSettings = {
+                        navigator.navigate(
+                                SettingsScreenDestination
+                        )
+                    }, onRefreshWeather = { viewModel.onEvent(HomeEvent.OnRefresh) }
+
+
+            )
+        }
     }
+
 
 }

@@ -1,5 +1,6 @@
 package com.uxstate.skycast.presentation.home
 
+import com.uxstate.skycast.domain.connectivity.ConnectivityObserver
 import com.uxstate.skycast.domain.model.CurrentWeather
 import com.uxstate.skycast.domain.model.GeoPoint
 import com.uxstate.skycast.domain.prefs.AppPreferences
@@ -12,8 +13,10 @@ data class HomeState(
     val errorMessage: String? = null,
     val geoPoint: GeoPoint? = null,
     val isLocationNull: Boolean = false,
-    val isShowDialog:Boolean = true,
+    val isShowDialog: Boolean = true,
     val isShowBottomButtons: Boolean = false,
+    val isShowSnackBar: Boolean = false,
+    val netWorkStatus:ConnectivityObserver.Status = ConnectivityObserver.Status.UNAVAILABLE,
     val appPreferences: AppPreferences = appPreferencesInitialState
 ) {
 

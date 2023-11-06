@@ -8,12 +8,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.uxstate.skycast.domain.connectivity.ConnectivityObserver
 import com.uxstate.skycast.domain.location.LocationTracker
 import com.uxstate.skycast.domain.model.GeoPoint
 import com.uxstate.skycast.domain.prefs.AppPreferences
 import com.uxstate.skycast.domain.prefs.DataStoreOperations
 import com.uxstate.skycast.domain.repository.WeatherRepository
-
 import com.uxstate.skycast.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.P)
@@ -31,7 +32,8 @@ class HomeViewModel @Inject constructor(
     private val locationManager: LocationManager,
     private val repository: WeatherRepository,
     private val tracker: LocationTracker,
-    private val prefs: DataStoreOperations
+    private val prefs: DataStoreOperations,
+    private val connectivityObserver: ConnectivityObserver
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeState())
@@ -42,9 +44,28 @@ class HomeViewModel @Inject constructor(
         private set
 
 
+
     init {
+
+        Timber.i("Inside inti")
         observePrefsFlow()
+
+
+        viewModelScope.launch {
+
+            connectivityObserver.observe()
+                    .collectLatest {  status ->
+                        Timber.i("Status B is ${_state.value.netWorkStatus}")
+                        _state.update { it.copy(netWorkStatus = status) }
+
+                        Timber.i("Status A is ${_state.value.netWorkStatus}")
+
+                    }
+        }
+
         getCurrentLocation()
+
+
     }
 
     private fun observePrefsFlow() {
@@ -88,8 +109,14 @@ class HomeViewModel @Inject constructor(
                                     isLocationNull = false,
                             )
                         }
+                        if (_state.value.netWorkStatus == ConnectivityObserver.Status.UNAVAILABLE && fetchFromRemote) {
+                            getCurrentWeather(geoPoint, false)
+                            _state.update { it.copy(isShowSnackBar = true) }
+                        } else {
 
-                        getCurrentWeather(geoPoint,fetchFromRemote)
+                            getCurrentWeather(geoPoint, fetchFromRemote)
+                        }
+
 
                     } ?: run {
 
@@ -116,7 +143,7 @@ class HomeViewModel @Inject constructor(
 
     }
 
-    private fun getCurrentWeather(geoPoint: GeoPoint, fetchFromRemote:Boolean) {
+    private fun getCurrentWeather(geoPoint: GeoPoint, fetchFromRemote: Boolean) {
 
         repository.getCurrentWeather(geoPoint, fetchFromRemote)
                 .onEach {
@@ -160,10 +187,10 @@ class HomeViewModel @Inject constructor(
     }
 
 
-  /*  fun refreshWeather() {
-        getCurrentLocation()
+    /*  fun refreshWeather() {
+          getCurrentLocation()
 
-    }*/
+      }*/
 
     fun onEvent(event: HomeEvent) {
 
