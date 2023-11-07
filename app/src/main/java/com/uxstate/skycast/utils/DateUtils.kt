@@ -24,51 +24,12 @@ fun Long.toDateFormat(): String {
     val dateFormat = SimpleDateFormat("EEEE MMM d, hh:mm aaa")
     return dateFormat.format(date)
 }
-
-fun String.toDateFormat(): String {
-    val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
-    val outputFormat = SimpleDateFormat("EEEE MMM d, hh:mm a", Locale.ENGLISH)
-    val inputDate = inputFormat.parse(this)
-    return outputFormat.format(inputDate)
-}
-
+// TODO: Revisit this
 @RequiresApi(Build.VERSION_CODES.O)
 fun DayOfWeek.displayText(uppercase: Boolean = false): String {
     return getDisplayName(TextStyle.SHORT, Locale.ENGLISH).let { value ->
         if (uppercase) value.uppercase(Locale.ENGLISH) else value
     }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-fun MutableState<LocalDate>.getDifferences(fromDate: LocalDate): Int {
-    val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-    val from = LocalDate.parse(fromDate.toString(), dateFormatter)
-    val to = LocalDate.parse(this.value.toString(), dateFormatter)
-
-    return Period.between(from, to).days
-}
-
-fun List<ForecastWeather>.filterForecastWeatherByDay(selectedDay: Int): List<ForecastWeather> {
-    val calendar = Calendar.getInstance()
-    calendar.add(Calendar.DATE, selectedDay)
-    val checkerDay = calendar.get(Calendar.DATE)
-    val checkerMonth = calendar.get(Calendar.MONTH)
-    val checkerYear = calendar.get(Calendar.YEAR)
-
-    val filteredList = this.filter { weatherForecast ->
-        val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
-        val formattedDate = format.parse(weatherForecast.date)
-        val weatherForecastDay = formattedDate?.date
-        val weatherForecastMonth = formattedDate?.month
-        val weatherForecastYear = formattedDate?.year
-
-        // This checks if the selected day, month and year are equal. The year requires an addition of 1900 to get the correct year.
-        weatherForecastDay == checkerDay && weatherForecastMonth == checkerMonth && weatherForecastYear?.plus(
-                1900
-        ) == checkerYear
-    }
-
-    return filteredList
 }
 
 
@@ -78,9 +39,6 @@ fun List<ForecastWeather>.mapForecastWeather(selectedDay:Int):List<ForecastWeath
     val dateKeys = mappedForecastByDate.keys.toList()
     Timber.i("The length is ${dateKeys.size}")
     val index = dateKeys[selectedDay]
-
-  // check(selectedDay in 0..4){"Invalid Day Selection"}
-
     return mappedForecastByDate[index]
 }
 
@@ -96,7 +54,6 @@ fun String.extractTime(): String {
     val formattedHour = if(hour in 0..9) "0$hour" else hour
     val formattedMinute = if(minute in 0..9) "0$minute" else minute
 
-   // return "$formattedHour:$formattedMinute"
     return  localDateTime.extractAmPmTime()
 }
 

@@ -8,7 +8,6 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-
 android {
 
     namespace = "com.uxstate.skycast"
@@ -166,6 +165,5 @@ dependencies {
 
     // DesugaringLib
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-
 
 }
