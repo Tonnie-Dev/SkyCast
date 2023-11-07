@@ -23,8 +23,6 @@ import com.uxstate.skycast.ui.theme.SkyCastTheme
 @Composable
 fun DateRow(modifier: Modifier = Modifier, onSelectDate: (Int) -> Unit) {
 
-    val spacing = LocalSpacing.current
-
     var selectedIndex by rememberSaveable {
         mutableIntStateOf(0)
     }
@@ -33,7 +31,6 @@ fun DateRow(modifier: Modifier = Modifier, onSelectDate: (Int) -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier.fillMaxWidth()
     ) {
-
 
         for (i in 0..4) {
 
