@@ -89,8 +89,8 @@ android {
 
 dependencies {
 
-    implementation(libs.core.ktx)
-    implementation(libs.compose.ui)
+    implementation(AndroidX.core.ktx)
+    implementation(AndroidX.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.runtime)
     implementation(libs.lifecycle.runtime.ktx)
@@ -105,11 +105,10 @@ dependencies {
     //Material 2 for PullRefreshIndicator
     implementation(libs.material2)
     //Material 3
-    implementation(libs.material3)
-
+    implementation(AndroidX.compose.material3)
 
     // Coil
-    implementation(libs.compose.coil)
+    implementation(COIL.compose)
 
     // Dagger Hilt
     implementation(libs.hilt.android)
@@ -167,5 +166,6 @@ dependencies {
 
     // DesugaringLib
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+
 
 }

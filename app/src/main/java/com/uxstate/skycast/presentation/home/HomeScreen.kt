@@ -59,7 +59,6 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
         else -> LoadHomeContent(viewModel = viewModel, navigator = navigator)
     }
 
-
 }
 
 
