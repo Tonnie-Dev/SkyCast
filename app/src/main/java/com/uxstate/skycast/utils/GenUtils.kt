@@ -1,6 +1,7 @@
 package com.uxstate.skycast.utils
 
 import androidx.compose.ui.Modifier
+import com.uxstate.skycast.domain.model.ForecastWeather
 
 
 fun Modifier.conditional(condition: Boolean, modifier: Modifier.() -> Modifier): Modifier {
@@ -30,4 +31,13 @@ fun String.toTitleCase(delimiter:String = " "):String{
 
         smallCaseWord.replaceFirstChar (Char::titlecase)
     }
+}
+
+fun List<ForecastWeather>.mapForecastWeather(selectedDay:Int):List<ForecastWeather>? {
+
+    val mappedForecastByDate = this.groupBy { it.date.substring(0..9) }
+    val dateKeys = mappedForecastByDate.keys.toList()
+
+    val index = dateKeys[selectedDay]
+    return mappedForecastByDate[index]
 }

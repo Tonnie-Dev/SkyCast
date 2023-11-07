@@ -33,14 +33,7 @@ fun DayOfWeek.displayText(uppercase: Boolean = false): String {
 }
 
 
-fun List<ForecastWeather>.mapForecastWeather(selectedDay:Int):List<ForecastWeather>? {
 
-    val mappedForecastByDate = this.groupBy { it.date.substring(0..9) }
-    val dateKeys = mappedForecastByDate.keys.toList()
-    Timber.i("The length is ${dateKeys.size}")
-    val index = dateKeys[selectedDay]
-    return mappedForecastByDate[index]
-}
 
 fun String.extractTime(): String {
 
