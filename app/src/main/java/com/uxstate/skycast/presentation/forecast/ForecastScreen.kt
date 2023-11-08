@@ -16,6 +16,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.uxstate.skycast.presentation.forecast.tabs.PagerItem
 import com.uxstate.skycast.presentation.forecast.tabs.TabItem.*
+import com.uxstate.skycast.utils.PAGER_SIZE
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -27,40 +28,18 @@ fun ForecastScreen(
     viewModel: ForecastViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
-    val tabs = listOf(
-            DayOne(
-                    state = state,
-                    onRefreshForecast = viewModel::refreshForecastWeather
-            ),
-            DayTwo(state = state, onRefreshForecast = viewModel::refreshForecastWeather),
-            DayThree(state = state, onRefreshForecast = viewModel::refreshForecastWeather),
-            DayFour(state = state, onRefreshForecast = viewModel::refreshForecastWeather),
-            DayFive(state = state, onRefreshForecast = viewModel::refreshForecastWeather)
-    )
-val pageState = rememberPagerState(initialPage = 0, pageCount = { tabs.size })
 
-    /*  Column ( modifier = Modifier.statusBarsPadding().navigationBarsPadding()){
-          DateRow() {
-
-              viewModel.onEvent(ForecastEvent.OnDateChangeEvent(it))
-          }
-          ForecastContent(
-                  state = state,
-                  refreshWeatherForecast = viewModel::refreshForecastWeather
-          )
-      }*/
-
+    val pageState = rememberPagerState(initialPage = 0, pageCount = { PAGER_SIZE })
 
 
     Scaffold {
-
 
         paddingValues ->
 
         Column(modifier = Modifier.padding(paddingValues)) {
 
-            PagerItem(tabs = tabs, pagerState =pageState, state = state, viewModel = viewModel)
-           // TabContent(tabs = tabs, pagerState = pageState)
+            PagerItem(pagerState = pageState, state = state, viewModel = viewModel)
+
         }
     }
 

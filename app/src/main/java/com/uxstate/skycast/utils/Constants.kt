@@ -22,5 +22,8 @@ const val FAHRENHEIT_SIGN = "°\u1DA0"
 const val CELSIUS_SIGN = "°\u1D9C"
 
 //Settings Screen
+const val PAGER_SIZE = 5
+
+//Settings Screen
 const val APP_URL = "https://play.google.com/store/apps/details?id=com.androidshowtime.asteroidradar&pcampaignid=web_share"
 const val APP_CONTACT_ADDRESS = "vontonnie@gmail.com"
