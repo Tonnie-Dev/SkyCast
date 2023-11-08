@@ -48,20 +48,21 @@ fun LocalDateTime.extractAmPmTime(): String {
 
     val pattern = "hh:mm a"
     val dateTimeFormatter = DateTimeFormatter.ofPattern(pattern)
-    val formattedTime = format(dateTimeFormatter)
+    val formattedTime = this.format(dateTimeFormatter)
     val amPmSubstring = formattedTime.substring(6..7)
             .uppercase()
     return formattedTime.substring(0..5) + amPmSubstring
 }
 
-fun LocalDate.shortDayOfWeek(daysToAdd: Long = 0L): String {
+fun shortDayOfWeek(daysToAdd: Long = 0L): String {
 
-    return LocalDate.now()
-            .plusDays(daysToAdd).dayOfWeek.name.substring(0..2)
+    val day = LocalDate.now()
+            .plusDays(daysToAdd).dayOfWeek
+    return if (day == LocalDate.now().dayOfWeek) "Today" else day.name.substring(0..2)
 }
 
 
-fun LocalDate.shortDate(daysToAdd: Long = 0L): String {
+fun shortDate(daysToAdd: Long = 0L): String {
 
     val day = LocalDate.now()
             .plusDays(daysToAdd).dayOfMonth
@@ -72,7 +73,7 @@ fun LocalDate.shortDate(daysToAdd: Long = 0L): String {
         it.plus(EMPTY_STRING)
                 .plus(
                         LocalDate.now()
-                                .plusDays(daysToAdd).month.name.substring(0..2)
+                                .plusDays(daysToAdd).month.getDisplayName(TextStyle.SHORT, Locale.getDefault())
                 )
     }
 

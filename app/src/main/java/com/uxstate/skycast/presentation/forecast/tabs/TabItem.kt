@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import com.uxstate.skycast.presentation.forecast.ForecastState
 import com.uxstate.skycast.utils.shortDate
 import com.uxstate.skycast.utils.shortDayOfWeek
-import java.time.LocalDate
 
 sealed class TabItem(
     val dayOfWeek: String,
@@ -14,10 +13,8 @@ sealed class TabItem(
 
     data class DayOne(val state: ForecastState, val onRefreshForecast: () -> Unit, val page: Int) :
         TabItem(
-                dayOfWeek = LocalDate.now()
-                        .shortDayOfWeek(0),
-                dayOfTheMonth = LocalDate.now()
-                        .shortDate(0),
+                dayOfWeek = shortDayOfWeek(page.toLong()),
+                dayOfTheMonth = shortDate(page.toLong()),
                 content = {
                     WeatherForecast(
                             state = state,

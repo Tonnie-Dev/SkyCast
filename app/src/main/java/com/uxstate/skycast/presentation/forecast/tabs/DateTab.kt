@@ -30,7 +30,6 @@ import com.uxstate.skycast.ui.theme.SkyCastTheme
 import com.uxstate.skycast.utils.conditional
 import java.time.LocalDate
 
-
 @Composable
 fun DateTab(
     index: Int,
