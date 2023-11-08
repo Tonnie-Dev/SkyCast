@@ -1,33 +1,26 @@
 package com.uxstate.skycast.presentation.forecast.tabs
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import com.uxstate.skycast.presentation.forecast.ForecastState
+import com.uxstate.skycast.utils.shortDate
+import com.uxstate.skycast.utils.shortDayOfWeek
 import java.time.LocalDate
 
 sealed class TabItem(
     val dayOfWeek: String,
     val dayOfTheMonth: String,
-    val content:@Composable () -> Unit
+    val content: @Composable () -> Unit
 ) {
-
 
     data class DayOne(val state: ForecastState, val onRefreshForecast: () -> Unit) :
         TabItem(
-                dayOfWeek = LocalDate.now().dayOfWeek.name.substring(0..2),
-                dayOfTheMonth = LocalDate.now().dayOfMonth.toString() + " " +
-                        LocalDate.now().month.name.substring(0..2),
+                dayOfWeek = LocalDate.now()
+                        .shortDayOfWeek(0),
+                dayOfTheMonth = LocalDate.now()
+                        .shortDate(0),
                 content = {
 
-                WeatherForecast(
+                    WeatherForecast(
                             state = state,
                             onRefreshForecast = onRefreshForecast
                     )
@@ -36,13 +29,11 @@ sealed class TabItem(
     data class DayTwo(val state: ForecastState, val onRefreshForecast: () -> Unit) :
         TabItem(
                 dayOfWeek = LocalDate.now()
-                        .plusDays(1).dayOfWeek.name.substring(0..2),
+                        .shortDayOfWeek(1),
                 dayOfTheMonth = LocalDate.now()
-                        .plusDays(1).dayOfMonth.toString() + " " +
-                        LocalDate.now()
-                                .plusDays(1).month.name.substring(0..2),
+                        .shortDate(1),
                 content = {
-             WeatherForecast(
+                    WeatherForecast(
                             state = state,
                             onRefreshForecast = onRefreshForecast
                     )
@@ -54,14 +45,12 @@ sealed class TabItem(
         val onRefreshForecast: () -> Unit
     ) : TabItem(
             dayOfWeek = LocalDate.now()
-                    .plusDays(2).dayOfWeek.name.substring(0..2),
+                    .shortDayOfWeek(2),
             dayOfTheMonth = LocalDate.now()
-                    .plusDays(2).dayOfMonth.toString() + " " +
-                    LocalDate.now()
-                            .plusDays(2).month.name.substring(0..2),
+                    .shortDate(2),
             content = {
 
-            WeatherForecast(
+                WeatherForecast(
                         state = state,
                         onRefreshForecast = onRefreshForecast
                 )
@@ -73,13 +62,11 @@ sealed class TabItem(
         val onRefreshForecast: () -> Unit
     ) : TabItem(
             dayOfWeek = LocalDate.now()
-                    .plusDays(3).dayOfWeek.name.substring(0..2),
+                    .shortDayOfWeek(3),
             dayOfTheMonth = LocalDate.now()
-                    .plusDays(3).dayOfMonth.toString() + " " +
-                    LocalDate.now()
-                            .plusDays(3).month.name.substring(0..2),
+                    .shortDate(3),
             content = {
-WeatherForecast(
+                WeatherForecast(
                         state = state,
                         onRefreshForecast = onRefreshForecast
                 )
@@ -90,15 +77,10 @@ WeatherForecast(
         val onRefreshForecast: () -> Unit
     ) : TabItem(
             dayOfWeek = LocalDate.now()
-                    .plusDays(4).dayOfWeek.name.substring(0..2),
+                    .shortDayOfWeek(4),
             dayOfTheMonth = LocalDate.now()
-                    .plusDays(4).dayOfMonth.toString() + " " +
-                    LocalDate.now()
-                            .plusDays(4).month.name.substring(0..2),
+                    .shortDate(4),
             content = {
-
-
-
                 WeatherForecast(
                         state = state,
                         onRefreshForecast = onRefreshForecast

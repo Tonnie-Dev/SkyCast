@@ -22,7 +22,7 @@ fun Double.roundOffDoubleToInt():Int  {
 
 }
 
-fun String.toTitleCase(delimiter:String = " "):String{
+fun String.toTitleCase(delimiter:String = EMPTY_STRING):String{
 
     return split(delimiter).joinToString (delimiter){
          word ->
@@ -41,3 +41,5 @@ fun List<ForecastWeather>.mapForecastWeather(selectedDay:Int):List<ForecastWeath
     val index = dateKeys[selectedDay]
     return mappedForecastByDate[index]
 }
+
+

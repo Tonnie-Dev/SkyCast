@@ -3,17 +3,12 @@ package com.uxstate.skycast.utils
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.MutableState
-import com.uxstate.skycast.domain.model.ForecastWeather
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.Period
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -24,6 +19,7 @@ fun Long.toDateFormat(): String {
     val dateFormat = SimpleDateFormat("EEEE MMM d, hh:mm aaa")
     return dateFormat.format(date)
 }
+
 // TODO: Revisit this
 @RequiresApi(Build.VERSION_CODES.O)
 fun DayOfWeek.displayText(uppercase: Boolean = false): String {
@@ -33,29 +29,51 @@ fun DayOfWeek.displayText(uppercase: Boolean = false): String {
 }
 
 
-
-
 fun String.extractTime(): String {
 
     val pattern = "yyyy-MM-dd HH:mm:ss"
     val dateTimeFormatter = DateTimeFormatter.ofPattern(pattern)
-    val localDateTime =  LocalDateTime.parse(this, dateTimeFormatter)
+    val localDateTime = LocalDateTime.parse(this, dateTimeFormatter)
 
     val hour = localDateTime.hour
     val minute = localDateTime.minute
 
-    val formattedHour = if(hour in 0..9) "0$hour" else hour
-    val formattedMinute = if(minute in 0..9) "0$minute" else minute
+    val formattedHour = if (hour in 0..9) "0$hour" else hour
+    val formattedMinute = if (minute in 0..9) "0$minute" else minute
 
-    return  localDateTime.extractAmPmTime()
+    return localDateTime.extractAmPmTime()
 }
 
-fun LocalDateTime.extractAmPmTime():String {
+fun LocalDateTime.extractAmPmTime(): String {
 
     val pattern = "hh:mm a"
     val dateTimeFormatter = DateTimeFormatter.ofPattern(pattern)
     val formattedTime = format(dateTimeFormatter)
-    val amPmSubstring = formattedTime.substring(6..7).uppercase()
-    return  formattedTime.substring(0..5) + amPmSubstring
+    val amPmSubstring = formattedTime.substring(6..7)
+            .uppercase()
+    return formattedTime.substring(0..5) + amPmSubstring
 }
 
+fun LocalDate.shortDayOfWeek(daysToAdd: Long = 0L): String {
+
+    return LocalDate.now()
+            .plusDays(daysToAdd).dayOfWeek.name.substring(0..2)
+}
+
+
+fun LocalDate.shortDate(daysToAdd: Long = 0L): String {
+
+    val day = LocalDate.now()
+            .plusDays(daysToAdd).dayOfMonth
+    val prefixedDay = if (day in 1..9) "0$day" else "$day"
+
+    return prefixedDay.let {
+
+        it.plus(EMPTY_STRING)
+                .plus(
+                        LocalDate.now()
+                                .plusDays(daysToAdd).month.name.substring(0..2)
+                )
+    }
+
+}
