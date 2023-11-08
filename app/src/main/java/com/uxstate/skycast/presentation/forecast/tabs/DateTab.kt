@@ -62,7 +62,6 @@ fun DateTab(
     else
         tabDate.dayOfWeek.name.substring(0..2)
 
-
     val shortMonth = tabDate.month.name.substring(0..2)
     val dayOfMonth = tabDate.dayOfMonth.toString()
     val displayDate = dayOfMonth.plus(" ")
@@ -92,6 +91,7 @@ fun DateTab(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(spacing.spaceExtraSmall)
         ) {
+
 
             Text(
                     text = dayOfWeek,

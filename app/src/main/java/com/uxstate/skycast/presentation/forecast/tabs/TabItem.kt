@@ -12,79 +12,20 @@ sealed class TabItem(
     val content: @Composable () -> Unit
 ) {
 
-    data class DayOne(val state: ForecastState, val onRefreshForecast: () -> Unit) :
+    data class DayOne(val state: ForecastState, val onRefreshForecast: () -> Unit, val page: Int) :
         TabItem(
                 dayOfWeek = LocalDate.now()
                         .shortDayOfWeek(0),
                 dayOfTheMonth = LocalDate.now()
                         .shortDate(0),
                 content = {
-
                     WeatherForecast(
                             state = state,
+                            page = page,
                             onRefreshForecast = onRefreshForecast
                     )
                 })
 
-    data class DayTwo(val state: ForecastState, val onRefreshForecast: () -> Unit) :
-        TabItem(
-                dayOfWeek = LocalDate.now()
-                        .shortDayOfWeek(1),
-                dayOfTheMonth = LocalDate.now()
-                        .shortDate(1),
-                content = {
-                    WeatherForecast(
-                            state = state,
-                            onRefreshForecast = onRefreshForecast
-                    )
 
-                })
-
-    data class DayThree(
-        val state: ForecastState,
-        val onRefreshForecast: () -> Unit
-    ) : TabItem(
-            dayOfWeek = LocalDate.now()
-                    .shortDayOfWeek(2),
-            dayOfTheMonth = LocalDate.now()
-                    .shortDate(2),
-            content = {
-
-                WeatherForecast(
-                        state = state,
-                        onRefreshForecast = onRefreshForecast
-                )
-            })
-
-
-    data class DayFour(
-        val state: ForecastState,
-        val onRefreshForecast: () -> Unit
-    ) : TabItem(
-            dayOfWeek = LocalDate.now()
-                    .shortDayOfWeek(3),
-            dayOfTheMonth = LocalDate.now()
-                    .shortDate(3),
-            content = {
-                WeatherForecast(
-                        state = state,
-                        onRefreshForecast = onRefreshForecast
-                )
-            })
-
-    data class DayFive(
-        val state: ForecastState,
-        val onRefreshForecast: () -> Unit
-    ) : TabItem(
-            dayOfWeek = LocalDate.now()
-                    .shortDayOfWeek(4),
-            dayOfTheMonth = LocalDate.now()
-                    .shortDate(4),
-            content = {
-                WeatherForecast(
-                        state = state,
-                        onRefreshForecast = onRefreshForecast
-                )
-            })
 
 }

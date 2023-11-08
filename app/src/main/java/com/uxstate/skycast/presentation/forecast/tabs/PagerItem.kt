@@ -19,28 +19,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.uxstate.skycast.presentation.forecast.ForecastState
 import com.uxstate.skycast.presentation.forecast.ForecastViewModel
+import com.uxstate.skycast.utils.PAGER_SIZE
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PagerItem(pagerState: PagerState, state:ForecastState, viewModel:ForecastViewModel) {
-    val tabs = listOf(
-            TabItem.DayOne(
-                    state = state,
-                    onRefreshForecast = viewModel::refreshForecastWeather
-            ),
-            TabItem.DayTwo(state = state, onRefreshForecast = viewModel::refreshForecastWeather),
-            TabItem.DayThree(state = state, onRefreshForecast = viewModel::refreshForecastWeather),
-            TabItem.DayFour(state = state, onRefreshForecast = viewModel::refreshForecastWeather),
-            TabItem.DayFive(state = state, onRefreshForecast = viewModel::refreshForecastWeather)
-    )
+
+    val tabs = List(PAGER_SIZE){
+
+        TabItem.DayOne(state = state, page = it, onRefreshForecast = viewModel::refreshForecastWeather)
+
+    }
+
     val coroutineScope = rememberCoroutineScope()
 
     TabRow(selectedTabIndex = pagerState.currentPage) {
 
-
         tabs.forEachIndexed { index, tabItem ->
-
 
             Tab(
                     selected = pagerState.currentPage == index,
@@ -49,8 +45,6 @@ fun PagerItem(pagerState: PagerState, state:ForecastState, viewModel:ForecastVie
                         Text(text = tabItem.dayOfWeek)
                         Text(text = tabItem.dayOfTheMonth)
                     }
-
-
             )
         }
     }
@@ -59,7 +53,6 @@ fun PagerItem(pagerState: PagerState, state:ForecastState, viewModel:ForecastVie
             modifier = Modifier.fillMaxSize(),
             state = pagerState
     ) { page ->
-
 
        Box(
                 modifier = Modifier

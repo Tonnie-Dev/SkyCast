@@ -58,6 +58,7 @@ import java.time.format.DateTimeFormatter
 internal fun WeatherForecast(
     modifier: Modifier = Modifier,
     state:ForecastState,
+    page:Int,
     onRefreshForecast: () -> Unit
 ) {
     val spacing = LocalSpacing.current
@@ -81,7 +82,7 @@ internal fun WeatherForecast(
             Spacer(modifier = Modifier.height(spacing.spaceMedium + spacing.spaceSmall))
 
             if (state.forecastData.isNotEmpty()) {
-                state.forecastData.mapForecastWeather(1)
+                state.forecastData.mapForecastWeather(page)
                         ?.let { filteredList ->
 
 
