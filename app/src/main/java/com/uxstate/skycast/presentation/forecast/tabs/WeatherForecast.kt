@@ -40,6 +40,7 @@ import com.uxstate.skycast.R
 import com.uxstate.skycast.domain.model.WeatherType
 import com.uxstate.skycast.presentation.forecast.ForecastState
 import com.uxstate.skycast.presentation.forecast.components.TrapizForecastItem
+import com.uxstate.skycast.presentation.home.components.ShowLinearLoadingBar
 import com.uxstate.skycast.ui.theme.LocalSpacing
 import com.uxstate.skycast.utils.CELSIUS_SIGN
 import com.uxstate.skycast.utils.FAHRENHEIT
@@ -57,8 +58,8 @@ import java.time.format.DateTimeFormatter
 @Composable
 internal fun WeatherForecast(
     modifier: Modifier = Modifier,
-    state:ForecastState,
-    page:Int,
+    state: ForecastState,
+    page: Int,
     onRefreshForecast: () -> Unit
 ) {
     val spacing = LocalSpacing.current
@@ -77,9 +78,6 @@ internal fun WeatherForecast(
                 horizontalAlignment = CenterHorizontally,
 
                 ) {
-
-
-          //  Spacer(modifier = Modifier.height( spacing.spaceSmall))
 
             if (state.forecastData.isNotEmpty()) {
                 state.forecastData.mapForecastWeather(page)
@@ -141,20 +139,15 @@ internal fun WeatherForecast(
                 }
             } else {
 
-                Box(
-                        contentAlignment = Center, modifier = Modifier.fillMaxSize()
-
-                ) {
-
-                    CircularProgressIndicator()
-                }
+                ShowLinearLoadingBar()
+            
             }
         }
 
         PullRefreshIndicator(
-                refreshing = state.isLoading, state = pullRefreshState, modifier = Modifier.align(
-                Alignment.TopCenter
-        )
+                refreshing = state.isLoading,
+                state = pullRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter)
         )
     }
 }
