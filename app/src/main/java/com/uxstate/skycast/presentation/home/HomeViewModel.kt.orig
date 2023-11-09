@@ -145,8 +145,11 @@ class HomeViewModel @Inject constructor(
 
     private fun getCurrentWeather(geoPoint: GeoPoint, fetchFromRemote: Boolean) {
 
+<<<<<<< Updated upstream
         repository.getCurrentWeather(geoPoint, fetchFromRemote)
+=======
         repository.getCurrentWeather(geoPoint,true)
+>>>>>>> Stashed changes
                 .onEach {
 
                     result ->
@@ -188,10 +191,10 @@ class HomeViewModel @Inject constructor(
     }
 
 
-    fun refreshWeather() {
-        getCurrentLocation()
+    /*  fun refreshWeather() {
+          getCurrentLocation()
 
-    }
+      }*/
 
     fun onEvent(event: HomeEvent) {
 

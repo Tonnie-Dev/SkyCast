@@ -7,22 +7,12 @@ import com.uxstate.skycast.utils.shortDayOfWeek
 
 sealed class TabItem(
     val dayOfWeek: String,
-    val dayOfTheMonth: String,
-    val content: @Composable () -> Unit
+    val dayOfTheMonth: String
 ) {
 
     data class DayOne(val state: ForecastState, val onRefreshForecast: () -> Unit, val page: Int) :
         TabItem(
                 dayOfWeek = shortDayOfWeek(page.toLong()),
-                dayOfTheMonth = shortDate(page.toLong()),
-                content = {
-                    WeatherForecast(
-                            state = state,
-                            page = page,
-                            onRefreshForecast = onRefreshForecast
-                    )
-                })
-
-
+                dayOfTheMonth = shortDate(page.toLong()))
 
 }

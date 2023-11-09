@@ -37,7 +37,11 @@ class ForecastViewModel @Inject constructor(
 
         cityId?.let { id ->
 
+<<<<<<< Updated upstream
+            repository.getForecastWeather(id, true)
+=======
             repository.getForecastWeather(id,true)
+>>>>>>> Stashed changes
                     .onEach { result ->
 
                         when (result) {
