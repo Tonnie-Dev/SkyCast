@@ -1,19 +1,21 @@
 package com.uxstate.skycast.presentation.forecast.tabs
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -24,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.uxstate.skycast.presentation.forecast.ForecastState
 import com.uxstate.skycast.presentation.forecast.ForecastViewModel
+import com.uxstate.skycast.presentation.forecast.components.TrapeziumWeatherShape
 import com.uxstate.skycast.ui.theme.LocalSpacing
 import com.uxstate.skycast.utils.PAGER_SIZE
 import kotlinx.coroutines.launch
@@ -45,9 +48,14 @@ fun PagerItem(pagerState: PagerState, state: ForecastState, viewModel: ForecastV
 
     val coroutineScope = rememberCoroutineScope()
 
-    TabRow(
+    TabRow(modifier = Modifier.padding(horizontal = spacing.spaceMedium),
             selectedTabIndex = pagerState.currentPage,
-            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+            indicator = { tabPositions ->
+                TabRowDefaults.Indicator(
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage])
+                )
+            }
 
     ) {
 
@@ -56,6 +64,8 @@ fun PagerItem(pagerState: PagerState, state: ForecastState, viewModel: ForecastV
             Tab(selected = pagerState.currentPage == index,
                     onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
                     content = {
+
+                        Spacer(modifier = Modifier.height(spacing.spaceSmall))
                         Text(
                                 text = tabItem.dayOfWeek,
                                 style = MaterialTheme.typography.bodySmall,
@@ -66,14 +76,14 @@ fun PagerItem(pagerState: PagerState, state: ForecastState, viewModel: ForecastV
                         )
                         Text(
                                 text = tabItem.dayOfTheMonth,
-                                style = MaterialTheme.typography.bodySmall,
+                                style = MaterialTheme.typography.labelLarge,
                                 fontSize = 10.sp,
                                 color = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier
 
                         )
 
-                        Spacer(modifier = Modifier.height(spacing.spaceSmall))
+                       Spacer(modifier = Modifier.height(spacing.spaceSmall))
                     }
             )
         }
@@ -96,4 +106,17 @@ fun PagerItem(pagerState: PagerState, state: ForecastState, viewModel: ForecastV
         }
     }
 
+}
+
+
+@Composable
+fun FancyIndicator(color: Color, modifier: Modifier = Modifier) {
+    // Draws a rounded rectangular with border around the Tab, with a 5.dp padding from the edges
+    // Color is passed in as a parameter [color]
+   Box( modifier = modifier
+            .padding(1.dp)
+            .fillMaxSize()
+
+            .border(BorderStroke(2.dp, color),TrapeziumWeatherShape())
+    )
 }

@@ -66,7 +66,7 @@ internal fun WeatherForecast(
     val pullRefreshState =
         rememberPullRefreshState(refreshing = isForecastLoading, { onRefreshForecast() })
     val selectedTempUnit = state.appPreferences.tempUnit.toString()
-    val selectedDay = state.selectedDay
+
 
     Box(
             modifier = modifier
@@ -79,7 +79,7 @@ internal fun WeatherForecast(
                 ) {
 
 
-            Spacer(modifier = Modifier.height(spacing.spaceMedium + spacing.spaceSmall))
+          //  Spacer(modifier = Modifier.height( spacing.spaceSmall))
 
             if (state.forecastData.isNotEmpty()) {
                 state.forecastData.mapForecastWeather(page)
