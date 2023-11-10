@@ -1,9 +1,7 @@
 package com.uxstate.skycast.domain.connectivity
 
-import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -12,19 +10,18 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ConnectivityObserverImpl @Inject constructor(
-    @ApplicationContext private val context: Context
-) :
-    ConnectivityObserver {
-
-    private val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    private val connectivityManager: ConnectivityManager
+) : ConnectivityObserver {
+    /*
+        private val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager*/
 
 
     override fun observe(): Flow<ConnectivityObserver.Status> {
 
         // needs ACCESS_NETWORK_STATE Permission on Manifest
 
-        // //anonymously introducing a call back
+        //anonymously introducing a call back
         return callbackFlow {
 
             val callback = object : ConnectivityManager.NetworkCallback() {
@@ -56,12 +53,12 @@ class ConnectivityObserverImpl @Inject constructor(
 
             connectivityManager.registerDefaultNetworkCallback(callback)
 
-           //unregister callback - triggered when flow is cancelled
+            //unregister callback - triggered when flow is cancelled
             awaitClose {
 
                 connectivityManager.unregisterNetworkCallback(callback)
             }
-            //return distinct flow enum values - ignores consecutive save enum values
+            //return distinct flow enum values - ignores consecutive same enum values
         }.distinctUntilChanged()
     }
 }

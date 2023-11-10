@@ -1,10 +1,14 @@
 package com.uxstate.skycast.di
 
+import android.content.Context
+import android.net.ConnectivityManager
 import com.uxstate.skycast.domain.connectivity.ConnectivityObserver
 import com.uxstate.skycast.domain.connectivity.ConnectivityObserverImpl
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -15,4 +19,12 @@ abstract class ConnectivityModule {
     @Binds
     @Singleton
     abstract fun bindConnectivityObserver(connectivityObserverImpl: ConnectivityObserverImpl): ConnectivityObserver
+
+    companion object {
+
+        @Provides
+        @Singleton
+        fun provideConnectivityManager(@ApplicationContext context: Context) =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    }
 }
