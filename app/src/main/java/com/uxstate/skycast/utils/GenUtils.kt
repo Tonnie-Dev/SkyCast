@@ -1,5 +1,7 @@
 package com.uxstate.skycast.utils
 
+import android.content.Context
+import androidx.annotation.StringRes
 import androidx.compose.ui.Modifier
 import com.uxstate.skycast.domain.model.ForecastWeather
 
@@ -40,6 +42,11 @@ fun List<ForecastWeather>.mapForecastWeather(selectedDay:Int):List<ForecastWeath
 
     val index = dateKeys[selectedDay]
     return mappedForecastByDate[index]
+}
+
+
+fun Context.getStringById(@StringRes stringResId: Int): String {
+    return resources.getString(stringResId)
 }
 
 

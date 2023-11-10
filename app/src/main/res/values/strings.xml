@@ -44,4 +44,5 @@
     <string name="perm_dialog_title">Permission Needed</string>
     <string name="perm_dialog_text">Sky Cast needs location permission. \nTo grant permission please press OK.</string>
     <string name="no_thanks_text">No, thanks</string>
+    <string name="no_internet_text">No Internet, please Check your connection</string>
 </resources>
