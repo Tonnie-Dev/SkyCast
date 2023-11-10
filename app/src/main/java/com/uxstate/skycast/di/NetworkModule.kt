@@ -22,8 +22,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val READ_TIMEOUT_IN_SECONDS = 15L
-    private const val CONNECT_TIMEOUT_IN_SECONDS = 15L
+    private const val READ_TIMEOUT_IN_SECONDS = 10L
+    private const val CONNECT_TIMEOUT_IN_SECONDS = 10L
 
     //Connect Timeout - Time period for client to establish connection with the target host
     // Read Timeout - Max latency time for waiting server's response
