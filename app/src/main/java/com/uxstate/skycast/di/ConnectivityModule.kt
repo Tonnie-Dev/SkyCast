@@ -2,6 +2,7 @@ package com.uxstate.skycast.di
 
 import android.content.Context
 import android.net.ConnectivityManager
+import androidx.core.content.ContextCompat.getSystemService
 import com.uxstate.skycast.domain.connectivity.ConnectivityObserver
 import com.uxstate.skycast.domain.connectivity.ConnectivityObserverImpl
 import dagger.Binds
@@ -22,9 +23,15 @@ abstract class ConnectivityModule {
 
     companion object {
 
-        @Provides
+  @Provides
         @Singleton
-        fun provideConnectivityManager(@ApplicationContext context: Context) =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        fun provideConnectivityManager(@ApplicationContext context: Context):ConnectivityManager
+
+    = context. getSystemService(ConnectivityManager::class.java)
+
+
+
+
+
     }
 }
