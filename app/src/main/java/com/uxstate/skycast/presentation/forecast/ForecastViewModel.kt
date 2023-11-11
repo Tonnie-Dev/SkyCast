@@ -37,7 +37,7 @@ class ForecastViewModel @Inject constructor(
 
         cityId?.let { id ->
 
-            repository.getForecastWeather(id,true)
+            repository.getForecastWeather(id)
                     .onEach { result ->
 
                         when (result) {
