@@ -39,32 +39,14 @@ class HomeViewModel @Inject constructor(
     private val _state = MutableStateFlow(HomeState())
     val state = _state.asStateFlow()
 
-
     var isLocationEnabled = mutableStateOf(locationManager.isLocationEnabled)
         private set
 
-
-
     init {
 
-        Timber.i("Inside inti")
         observePrefsFlow()
-
-
-        viewModelScope.launch {
-
-            connectivityObserver.observe()
-                    .collectLatest {  status ->
-                        Timber.i("Status B is ${_state.value.netWorkStatus}")
-                        _state.update { it.copy(netWorkStatus = status) }
-
-                        Timber.i("Status A is ${_state.value.netWorkStatus}")
-
-                    }
-        }
-
+        observeNetworkStatus()
         getCurrentLocation()
-
 
     }
 
@@ -89,7 +71,17 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun getCurrentLocation(fetchFromRemote: Boolean = false) {
+    private fun observeNetworkStatus() {
+
+        connectivityObserver.observe()
+                .onEach { status ->
+                    _state.update { it.copy(netWorkStatus = status) }
+
+                }
+                .launchIn(viewModelScope)
+    }
+
+    private fun getCurrentLocation() {
 
         viewModelScope.launch {
 
@@ -109,12 +101,22 @@ class HomeViewModel @Inject constructor(
                                     isLocationNull = false,
                             )
                         }
-                        if (_state.value.netWorkStatus == ConnectivityObserver.Status.UNAVAILABLE && fetchFromRemote) {
-                            getCurrentWeather(geoPoint, false)
-                            _state.update { it.copy(isShowSnackBar = true) }
-                        } else {
 
-                            getCurrentWeather(geoPoint, fetchFromRemote)
+
+                        if (connectivityObserver.isInternetConnectionAvailable(_state.value.netWorkStatus)) {
+
+                            Timber.i("At if-block")
+
+                            getCurrentWeather(geoPoint)
+
+                        } else {
+                            _state.update {
+                                it.copy(
+
+                                        isShowNoConnectionWidget = true
+                                )
+                            }
+
                         }
 
 
@@ -133,7 +135,11 @@ class HomeViewModel @Inject constructor(
 
                 is Resource.Error -> {
 
-                    _state.update { it.copy(errorMessage = result.errorMessage) }
+                    _state.update {
+                        it.copy(
+                                errorMessage = result.errorMessage
+                        )
+                    }
                 }
 
                 else -> Unit
@@ -143,10 +149,10 @@ class HomeViewModel @Inject constructor(
 
     }
 
-    private fun getCurrentWeather(geoPoint: GeoPoint, fetchFromRemote: Boolean) {
+    private fun getCurrentWeather(geoPoint: GeoPoint) {
 
-        repository.getCurrentWeather(geoPoint, fetchFromRemote)
-        repository.getCurrentWeather(geoPoint,true)
+
+        repository.getCurrentWeather(geoPoint)
                 .onEach {
 
                     result ->
@@ -188,30 +194,24 @@ class HomeViewModel @Inject constructor(
     }
 
 
-    fun refreshWeather() {
-        getCurrentLocation()
-
-    }
-
     fun onEvent(event: HomeEvent) {
 
         when (event) {
 
             is HomeEvent.OnRefresh -> {
-
-                getCurrentLocation(fetchFromRemote = true)
+                resetHomeState()
+                getCurrentLocation()
 
             }
 
             is HomeEvent.OnContinue -> {
 
-                resetLocationInfo()
+                resetHomeState()
 
                 if (event.isPermissionGranted) {
 
                     getCurrentLocation()
                 }
-
                 _state.update { it.copy(isShowDialog = !event.isPermissionGranted) }
                 observePrefsFlow()
 
@@ -231,10 +231,16 @@ class HomeViewModel @Inject constructor(
 
     }
 
-    private fun resetLocationInfo() {
+    private fun resetHomeState() {
         viewModelScope.launch {
 
-            _state.update { it.copy(isLocationNull = false, isShowDialog = true) }
+            _state.update {
+                it.copy(
+                        isLocationNull = false,
+                        isShowDialog = true,
+                        isShowNoConnectionWidget = false
+                )
+            }
             isLocationEnabled.value = locationManager.isLocationEnabled
         }
 

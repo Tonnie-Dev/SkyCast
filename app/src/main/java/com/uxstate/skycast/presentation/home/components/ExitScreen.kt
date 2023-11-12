@@ -25,8 +25,8 @@ import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.uxstate.skycast.presentation.home.HomeEvent.*
 import com.uxstate.skycast.presentation.home.HomeViewModel
-import com.uxstate.skycast.presentation.utils.SkyButton
-import com.uxstate.skycast.presentation.utils.SkyDialog
+import com.uxstate.skycast.presentation.ui_utils.SkyButton
+import com.uxstate.skycast.presentation.ui_utils.SkyDialog
 import com.uxstate.skycast.ui.theme.LocalSpacing
 import com.uxstate.skycast.ui.theme.SkyCastTheme
 import com.uxstate.skycast.utils.DialogType

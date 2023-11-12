@@ -1,7 +1,8 @@
-package com.uxstate.skycast.presentation.utils
+package com.uxstate.skycast.presentation.ui_utils
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
@@ -16,6 +17,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.uxstate.skycast.R
 import com.uxstate.skycast.ui.theme.SkyCastTheme
 import com.uxstate.skycast.utils.DialogType
+
+
+
 
 @Composable
 fun SkyDialog(

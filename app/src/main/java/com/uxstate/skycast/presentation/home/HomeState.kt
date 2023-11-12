@@ -12,12 +12,12 @@ data class HomeState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val geoPoint: GeoPoint? = null,
+    val netWorkStatus:ConnectivityObserver.Status = ConnectivityObserver.Status.UNAVAILABLE,
+    val appPreferences: AppPreferences = appPreferencesInitialState,
     val isLocationNull: Boolean = false,
     val isShowDialog: Boolean = true,
-    val isShowBottomButtons: Boolean = false,
-    val isShowSnackBar: Boolean = false,
-    val netWorkStatus:ConnectivityObserver.Status = ConnectivityObserver.Status.UNAVAILABLE,
-    val appPreferences: AppPreferences = appPreferencesInitialState
+    val isShowNoConnectionWidget:Boolean = false,
+    val isShowBottomButtons: Boolean = false
 ) {
 
     //serves to initialize app preferences initial state

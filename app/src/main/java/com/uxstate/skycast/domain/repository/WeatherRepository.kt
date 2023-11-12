@@ -8,6 +8,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface WeatherRepository {
 
-  fun getCurrentWeather(geoPoint: GeoPoint, isFetchFromRemote:Boolean): Flow<Resource<CurrentWeather>>
-  fun getForecastWeather(cityId:Int,isFetchFromRemote:Boolean):Flow<Resource<List<ForecastWeather>>>
+  fun getCurrentWeather(geoPoint: GeoPoint): Flow<Resource<CurrentWeather>>
+  fun getForecastWeather(cityId:Int):Flow<Resource<List<ForecastWeather>>>
 }

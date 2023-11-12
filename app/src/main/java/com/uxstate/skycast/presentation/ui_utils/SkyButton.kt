@@ -1,4 +1,4 @@
-package com.uxstate.skycast.presentation.utils
+package com.uxstate.skycast.presentation.ui_utils
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES

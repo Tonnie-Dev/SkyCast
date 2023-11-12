@@ -8,6 +8,12 @@
     <string name="bottom_nav_home">Home</string>
     <string name="bottom_nav_forecast">Forecast</string>
 
+    <!--    home screen-->
+    <string name="internet_restored_text">Internet Connection Restored</string>
+    <string name="retry_text">Retry</string>
+
+
+
     <!-- settings screen -->
     <string name="theme">Theme</string>
     <string name="choose_theme">Choose your preferred theme</string>

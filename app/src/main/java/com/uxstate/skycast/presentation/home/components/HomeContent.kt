@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -27,19 +26,22 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.uxstate.skycast.R
+import com.uxstate.skycast.domain.connectivity.ConnectivityObserver
 import com.uxstate.skycast.domain.model.CurrentWeather
 import com.uxstate.skycast.domain.model.WeatherType
 import com.uxstate.skycast.presentation.destinations.ForecastScreenDestination
@@ -50,11 +52,13 @@ import com.uxstate.skycast.ui.theme.LocalSpacing
 import com.uxstate.skycast.utils.CELSIUS_SIGN
 import com.uxstate.skycast.utils.FAHRENHEIT
 import com.uxstate.skycast.utils.FAHRENHEIT_SIGN
+import com.uxstate.skycast.utils.getStringById
 import com.uxstate.skycast.utils.roundOffDoubleToInt
 import com.uxstate.skycast.utils.toCelsius
 import com.uxstate.skycast.utils.toDateFormat
 import com.uxstate.skycast.utils.toFahrenheit
 import com.uxstate.skycast.utils.toTitleCase
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -79,73 +83,73 @@ fun HomeContent(
                     .fillMaxSize()
                     .pullRefresh(pullRefreshState)
     ) {
-    Column(
-            modifier = modifier.verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Row(
-                modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(spacing.spaceSmall), Arrangement.End
+        Column(
+                modifier = modifier.verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            IconButton(onClick = navigateToSettings) {
 
-                Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = stringResource(id = R.string.settings),
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.minimumInteractiveComponentSize()
-                )
+            Row(
+                    modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(spacing.spaceSmall), Arrangement.End
+            ) {
+                IconButton(onClick = navigateToSettings) {
+
+                    Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = stringResource(id = R.string.settings),
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.minimumInteractiveComponentSize()
+                    )
+                }
+            }
+            HomeBody(
+                    cityName = currentWeather.cityName,
+                    lastFetchTime = currentWeather.lastFetchedTime.toDateFormat(),
+                    temperature = if (isFahrenheitUnit)
+                        "${
+                            (currentWeather.networkWeatherCondition.temp.toFahrenheit()
+                                    .roundOffDoubleToInt())
+                        }$FAHRENHEIT_SIGN"
+                    else
+                        "${
+                            currentWeather.networkWeatherCondition.temp.toCelsius()
+                                    .roundOffDoubleToInt()
+                        }$CELSIUS_SIGN",
+                    weatherType = currentWeather.networkWeatherDescription.first().description.toTitleCase(),
+                    icon = icon,
+                    modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                    top = spacing.spaceSmall,
+                                    start = spacing.spaceSmall,
+                                    end = spacing.spaceSmall
+                            )
+            )
+
+            Spacer(modifier = Modifier.height(spacing.spaceOneHundred))
+
+            WeatherDataDisplay(
+                    modifier = Modifier.paddingFromBaseline(top = spacing.spaceExtraLarge),
+                    humidity = currentWeather.networkWeatherCondition.humidity,
+                    pressure = currentWeather.networkWeatherCondition.pressure,
+                    windSpeed = currentWeather.wind.speed
+            )
+            Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
+            Button(onClick = onForecastButtonClick) {
+
+                Text(stringResource(R.string.forecast_text))
             }
         }
-        HomeBody(
-                cityName = currentWeather.cityName,
-                lastFetchTime = currentWeather.lastFetchedTime.toDateFormat(),
-                temperature = if (isFahrenheitUnit)
-                    "${
-                        (currentWeather.networkWeatherCondition.temp.toFahrenheit()
-                                .roundOffDoubleToInt())
-                    }$FAHRENHEIT_SIGN"
-                else
-                    "${
-                        currentWeather.networkWeatherCondition.temp.toCelsius()
-                                .roundOffDoubleToInt()
-                    }$CELSIUS_SIGN",
-                weatherType = currentWeather.networkWeatherDescription.first().description.toTitleCase(),
-                icon = icon,
-                modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                                top = spacing.spaceSmall,
-                                start = spacing.spaceSmall,
-                                end = spacing.spaceSmall
-                        )
+
+        PullRefreshIndicator(
+                refreshing = isLoading,
+                state = pullRefreshState,
+                modifier = Modifier.align(
+                        Alignment.TopCenter
+                )
         )
-
-        Spacer(modifier = Modifier.height(spacing.spaceOneHundred))
-
-        WeatherDataDisplay(
-                modifier = Modifier.paddingFromBaseline(top = spacing.spaceExtraLarge),
-                humidity = currentWeather.networkWeatherCondition.humidity,
-                pressure = currentWeather.networkWeatherCondition.pressure,
-                windSpeed = currentWeather.wind.speed
-        )
-        Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
-        Button(onClick = onForecastButtonClick) {
-
-            Text(stringResource(R.string.forecast_text))
-        }
     }
-
-    PullRefreshIndicator(
-            refreshing = isLoading,
-            state = pullRefreshState,
-            modifier = Modifier.align(
-                    Alignment.TopCenter
-            )
-    )
-}
 
 
 }
@@ -153,23 +157,24 @@ fun HomeContent(
 
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
-fun LoadHomeContent(viewModel:HomeViewModel, navigator:DestinationsNavigator) {
+fun LoadHomeContent(viewModel: HomeViewModel, navigator: DestinationsNavigator) {
 
     val state by viewModel.state.collectAsState()
+
+
+
     val isLoading = state.isLoading
-    val isShowSnackbarHostState = state.isShowSnackBar
     val isFahrenheitUnit = state.appPreferences.tempUnit.toString() == FAHRENHEIT
     val snackbarHostState = remember { SnackbarHostState() }
-    Scaffold (snackbarHost = { SnackbarHost (snackbarHostState)}){ paddingValues ->
+    Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { paddingValues ->
 
         state.currentWeather?.let {
 
 
-            LaunchedEffect(key1 = isShowSnackbarHostState, block = {
 
 
-                snackbarHostState.showSnackbar(message = "ss")
-            })
+
+
 
             HomeContent(
                     modifier = Modifier.padding(paddingValues),
