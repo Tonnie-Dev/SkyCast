@@ -43,7 +43,6 @@ import com.uxstate.skycast.utils.getStringById
 @Composable
 fun NoConnectionWidget(homeState: HomeState, onRetry: () -> Unit) {
 
-
     val networkStatus = homeState.netWorkStatus
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current

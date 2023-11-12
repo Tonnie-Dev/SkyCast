@@ -14,7 +14,6 @@ import com.uxstate.skycast.utils.EXPIRY_TIME
 import com.uxstate.skycast.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import timber.log.Timber
 import javax.inject.Inject
 
 class WeatherRepositoryImpl @Inject constructor(
@@ -24,28 +23,26 @@ class WeatherRepositoryImpl @Inject constructor(
     override fun getCurrentWeather(
         geoPoint: GeoPoint
     ): Flow<Resource<CurrentWeather>> = flow {
-
-
+        
         emit(Resource.Loading(isLoading = true))
+
         fetchLocalCurrentWeather()?.takeIf {
-            Timber.i("Inside Take- isExpired: ${it.isExpired()}")
 
             !it.isExpired()
 
-
         }
                 ?.let {
-                    Timber.i("Non-Null Data emitted")
+
 
                     emit(Resource.Success(it.toModel()))
-                    Timber.i("Non-Null DB-Data emitted")
+
                 } ?: run {
-            Timber.i("Performing Remote Search")
+
             when (val result = remoteDataSource.getRemoteCurrentWeather(geoPoint)) {
 
                 is Resource.Success -> {
 
-                    //localDataSource.clearCurrentWeatherData()
+                    localDataSource.clearCurrentWeatherData()
                     result.data?.let {
                         localDataSource.insertCurrentWeather(it.toEntity(System.currentTimeMillis()))
                     }

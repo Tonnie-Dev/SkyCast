@@ -91,8 +91,10 @@ class HomeViewModel @Inject constructor(
                     result.data?.let {
 
                         geoPoint ->
-
+                        Timber.i("LatLng is ${geoPoint.latitude}, ${geoPoint.longitude}")
                         _state.update {
+
+
                             it.copy(
                                     geoPoint = GeoPoint(
                                             latitude = geoPoint.latitude,
@@ -102,10 +104,9 @@ class HomeViewModel @Inject constructor(
                             )
                         }
 
-
                         if (connectivityObserver.isInternetConnectionAvailable(_state.value.netWorkStatus)) {
 
-                            Timber.i("At if-block")
+
 
                             getCurrentWeather(geoPoint)
 
