@@ -14,6 +14,7 @@ import com.uxstate.skycast.utils.EXPIRY_TIME
 import com.uxstate.skycast.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import timber.log.Timber
 import javax.inject.Inject
 
 class WeatherRepositoryImpl @Inject constructor(
@@ -21,24 +22,25 @@ class WeatherRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource
 ) : WeatherRepository {
     override fun getCurrentWeather(
-        geoPoint: GeoPoint,
-        fetchFromRemote: Boolean
+        geoPoint: GeoPoint
     ): Flow<Resource<CurrentWeather>> = flow {
 
 
         emit(Resource.Loading(isLoading = true))
         fetchLocalCurrentWeather()?.takeIf {
-            !it.isExpired() && !fetchFromRemote
+            Timber.i("Inside Take- isExpired: ${it.isExpired()}")
+
+            !it.isExpired()
 
 
         }
                 ?.let {
-
+                    Timber.i("Non-Null Data emitted")
 
                     emit(Resource.Success(it.toModel()))
-
+                    Timber.i("Non-Null DB-Data emitted")
                 } ?: run {
-
+            Timber.i("Performing Remote Search")
             when (val result = remoteDataSource.getRemoteCurrentWeather(geoPoint)) {
 
                 is Resource.Success -> {
@@ -73,8 +75,7 @@ class WeatherRepositoryImpl @Inject constructor(
     }
 
     override fun getForecastWeather(
-        cityId: Int,
-        isFetchFromRemote: Boolean
+        cityId: Int
     ): Flow<Resource<List<ForecastWeather>>> = flow {
 
         emit(Resource.Loading(isLoading = true))
@@ -121,7 +122,7 @@ class WeatherRepositoryImpl @Inject constructor(
 
             }
 
-        emit(Resource.Loading(isLoading =false))
+        emit(Resource.Loading(isLoading = false))
     }
 
     private suspend fun fetchLocalCurrentWeather(): CurrentEntity? {
