@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -23,10 +22,9 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.uxstate.skycast.presentation.home.HomeEvent.*
 import com.uxstate.skycast.presentation.home.components.LoadHomeContent
 import com.uxstate.skycast.presentation.home.components.ShowExitScreen
-import com.uxstate.skycast.presentation.home.components.ShowLinearLoadingBar
+import com.uxstate.skycast.presentation.ui_utils.ShowLinearLoadingBar
 import com.uxstate.skycast.presentation.ui_utils.NoConnectionWidget
 import com.uxstate.skycast.utils.DialogType.*
-import timber.log.Timber
 
 
 @RequiresApi(Build.VERSION_CODES.P)

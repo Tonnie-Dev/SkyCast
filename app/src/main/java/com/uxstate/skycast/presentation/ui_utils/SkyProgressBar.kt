@@ -1,4 +1,4 @@
-package com.uxstate.skycast.presentation.home.components
+package com.uxstate.skycast.presentation.ui_utils
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
@@ -16,7 +16,7 @@ import com.uxstate.skycast.ui.theme.LocalSpacing
 import com.uxstate.skycast.ui.theme.SkyCastTheme
 
 @Composable
-fun LinearProgressBar() {
+fun SkyProgressBar() {
 
     val spacing = LocalSpacing.current
     Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
@@ -31,7 +31,7 @@ fun LinearProgressBar() {
 
 @Composable
 fun ShowLinearLoadingBar() {
-    LinearProgressBar()
+    SkyProgressBar()
 }
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)
 @Composable
@@ -39,7 +39,7 @@ fun LinearProgressBarPreviewLight() {
 
     SkyCastTheme {
 
-        LinearProgressBar()
+        SkyProgressBar()
     }
 
 }
@@ -51,7 +51,7 @@ fun LinearProgressBarPreviewDark() {
 
     SkyCastTheme {
 
-        LinearProgressBar()
+        SkyProgressBar()
     }
 
 }

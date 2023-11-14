@@ -38,7 +38,6 @@ import com.uxstate.skycast.R
 import com.uxstate.skycast.domain.model.WeatherType
 import com.uxstate.skycast.presentation.forecast.ForecastState
 import com.uxstate.skycast.presentation.forecast.components.TrapizForecastItem
-import com.uxstate.skycast.presentation.home.components.ShowLinearLoadingBar
 import com.uxstate.skycast.ui.theme.LocalSpacing
 import com.uxstate.skycast.utils.CELSIUS_SIGN
 import com.uxstate.skycast.utils.FAHRENHEIT
@@ -134,10 +133,6 @@ internal fun WeatherForecast(
                         }
                     }
                 }
-            } else {
-
-                ShowLinearLoadingBar()
-
             }
         }
 
