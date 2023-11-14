@@ -49,7 +49,6 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
     val isShowDialog = state.isShowDialog
     val isShowNoConnectionWidget = state.isShowNoConnectionWidget
 
-
     Box(
             modifier = Modifier
                     .statusBarsPadding()

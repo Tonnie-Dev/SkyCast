@@ -30,6 +30,7 @@ import com.uxstate.skycast.R
 import com.uxstate.skycast.presentation.destinations.SettingsScreenDestination
 import com.uxstate.skycast.presentation.forecast.tabs.PagerItem
 import com.uxstate.skycast.presentation.forecast.tabs.TabItem.*
+import com.uxstate.skycast.presentation.ui_utils.SkyTopAppBar
 import com.uxstate.skycast.utils.PAGER_SIZE
 
 
@@ -45,26 +46,12 @@ fun ForecastScreen(
 
     val pageState = rememberPagerState(initialPage = 0, pageCount = { PAGER_SIZE })
 
-
     Scaffold(topBar = {
-        CenterAlignedTopAppBar(title = { Text(text = "Forecast") }, navigationIcon = {
-            Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back"
-            )
-        }, actions = {
-
-
-            IconButton(onClick ={navigator.navigate(SettingsScreenDestination)}) {
-
-                Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = stringResource(id = R.string.settings),
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.minimumInteractiveComponentSize()
-                )
-            }
-        })
+    SkyTopAppBar(
+            title = stringResource(id = R.string.forecast_text),
+            isShowActionIcon = true,
+            onNavigateBack = { navigator.navigateUp() },
+            onActionIconClick = { navigator.navigate(SettingsScreenDestination)})
 
     }) {
 
