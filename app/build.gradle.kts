@@ -103,11 +103,10 @@ dependencies {
 
     //Material 2 for PullRefreshIndicator
     implementation(libs.material2)
+
     //Material 3
     implementation(AndroidX.compose.material3)
 
-    // Coil
-    implementation(COIL.compose)
 
     // Dagger Hilt
     implementation(libs.hilt.android)
@@ -129,35 +128,23 @@ dependencies {
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
 
-
-    // Kotlin Extensions and Coroutines support for Room
-    implementation(libs.room.ktx)
-
     //Timber
     implementation(libs.timber)
-
 
     //Lottie Animation
     implementation(libs.lottie.compose)
 
-    // Compose Nav Destinations
+    // Compose Destinations
     implementation(libs.compose.destinations.core)
     ksp(libs.compose.destinations.ksp)
 
     //Compose Animation
     implementation(libs.compose.animation)
 
-    //Accompanist - Animation
-    implementation(libs.accompanist.nav.animation)
-
-    //Accompanist - Flow Layout
-    implementation(libs.accompanist.flowlayout)
-
     //Accompanist - Permissions
     implementation(libs.accompanist.permissions)
 
-    //Maps Compose library
-    implementation(libs.compose.maps)
+    //Google Play Services
     implementation(libs.play.services.maps)
 
     //Data Store
