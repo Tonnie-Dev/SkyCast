@@ -24,16 +24,16 @@
  
 </div>
     
-DiaryApp is a modern project written in Kotlin and powered by Jetpack Compose. It allows users to write and save diary entries with the option to include photos and expressive emojis to capture the essence of each moment. 
+SkyCast is a modern project written in Kotlin and powered by Jetpack Compose. Whether you're planning your day or embarking on a grand adventure, step into a world of weather precision and stay one step ahead of Mother Nature as you seamlessly track real-time forecasts to ensure you're prepared for whatever the sky has in store. 
 
 
-Start documenting your life's moments with the Android Diary App today!
+Download now and make every day a weather-perfect day!"
 
 
 
 # :camera_flash: **Screenshots** :camera_flash:
 
-DiaryApp follows the latest Material 3 guidelines for a visually appealing and a consistent UI.
+SkyCast follows the latest Material 3 guidelines for a visually appealing and a consistent UI.
 
 <p align="center">
 <img img width="200" height="400" src="./readme-assets/screenshots/screen_1.png"> &nbsp;&nbsp;&nbsp;&nbsp;
@@ -49,28 +49,29 @@ These are the key parameters for Diary Project.
 
 | Parameter      | Value |
 |----------------|-------|
-| compileSdk     | 33    |
-| targetSdk      | 33    |
+| compileSdk     | 34    |
+| targetSdk      | 34    |
 | minSdk         | 24    |
-| composeVersion | 1.5.0-beta01 |
-| kotlinVersion  | 1.8.10 |
+| composeVersion | 1.5.3 |
+| kotlinVersion  | 1.9.10 |
 
-You can clone the repository or download the Zip file [here](https://github.com/Tonnie-Dev/Diary).
+You can clone the repository or download the Zip file [here](https://github.com/Tonnie-Dev/SkyCast).
 
-To build and run the app, you will need the latest version of Android Studio Flamingo (or [newer](https://developer.android.com/studio/)) installed on your system.
+To build and run the app, you will need the latest version of Android Studio Giraffe (or [newer](https://developer.android.com/studio/)) installed on your system.
 # :hammer_and_wrench: Architecture :hammer_and_wrench:
 ### Modules
 
-DiaryApp is built using Multi-Module Architecture with layered features.
 
-Here's an overview of the app's architectural modular components:
-- **App Module**: This is the main module of the DiaryApp, whhich acts as the orchestrator of the different features and modules. It handles the navigation flow between the Authentication, Home, and the Write features, ensuring a cohesive and seamless user experience. The App Module integrates the dependencies from the feature modules and manages the overall lifecycle of the app.
+SkyCast is implemented as a single module app using Android Clean Architecture and follows the Model-View-ViewModel (MVVM) pattern.
 
-- **buildSrc**: The buildSrc module serves as a central location for managing project configuration and dependencies. This module allows for a streamlined and standardized setup of project configurations, build scripts, and dependencies, simplifying the build process and ensuring consistency across the app.
+It features 3️⃣ main layers:
 
-- **Data Module**:The Data module in the Android Diary App is responsible for managing data storage and retrieval using both MongoDB and Room. It handles the setup and integration of Mongo Realm, allowing seamless connectivity to the MongoDB backend. The Data module provides functionalities for inserting, fetching, updating, and deleting diary entries in the MongoDB database. Additionally, DiaryApp leverages Room Librayto provide offline access and local caching of diary entries, enhancing the app's responsiveness and offline capabilities.
+1. **Data Layer** - This layer is responsible for managing data storage and dispensing data to the app. Retrofit API service provides the remote data which is then cached into the ROOM database for offline operations. 
 
-- **Common/Core Modules**: The app includes two core modules: *UI* and *Utils*. The UI module contains common Compose functions, components, and UI-related code that are shared across different features. This module promotes code reuse and consistency in the app's user interface. The Utils module provides essential utilities such as model classes, connectivity observers, constants, strings and drawable resources. It ensures a centralized and efficient management of commonly used resources and functionalities.
+2. **Domain Layer** - This layer holds the Business Logic for the InstantScores. It holds the models and the use cases that encapsulates the very complex logic for the app. This layer houses the interface definitions for connectivity, location and data store operations.
+
+3. **UI Layer** - This is the presentation layer displays refined data to the user and facilitates interactions with the user. It contains the ViewModels holding the different states for SkyCast app.
+
 
 ### Navigation
 The app has :three: screen destinations which use Compose Destinations Library ( [*See Issue 434*](https://github.com/raamcosta/compose-destinations/issues/434#issuecomment-1566126028) ) to manage navigation.
@@ -79,25 +80,29 @@ The app has :three: screen destinations which use Compose Destinations Library (
 |-------------------------------------|-------------------------------------|-------------------------------------|
 | ![](./readme-assets/gifs/gif_1.gif) | ![](./readme-assets/gifs/gif_2.gif) | ![](./readme-assets/gifs/gif_3.gif) |
 
-- **Authentication Feature**: This feature focuses on user authentication and validation. It utilizes Google Sign-In to ensure that users can securely access their diary entries. By authenticating users, the app guarantees that only authorized individuals can interact with their personal diaries.
+- **Current Weather Screen**: Provides instant access to the latest temperature, wind speed, and conditions for your location at a glance.
 
-- **Home Feature**: The Home feature is responsible for displaying and filtering diary entries based on the date. It provides a user-friendly interface to navigate through diary entries and quickly filter diaries by specific dates. Additional selections can be accessed through the Navigation Drawer.
+- **Forecast Screen**: Has visually appealing display of the upcoming weather for 5 days that the user can swipe to and fro or just click.
 
-- **Write Feature**: The Write feature enables users to create new diary entries or modify existing ones. It offers a seamless and intuitive interface for users to capture and document their thoughts, moments, and memories. DiaryApp empowers the users to personalize content by adding emojis and accompanying images
+- **Settings Screen**: Enables the user to customize the app with ease, adjusting themes, temperature units, and other settings to match their style and needs.
 
-
-Overroll by adopting a multi-modular architecture with layered features, the Diary app achieves a separation of concerns, enabling independent development and testing of specific functionalities. This architecture promotes code reusability, scalability and easy maintainability
 
 # :building_construction: Tech Stack :building_construction:
 
-The Diary project uses many popular libraries and tools in the Android Ecosystem:
+SkyCast project uses many popular libraries and tools in the Android Ecosystem:
 
 * [Jetpack Compose](https://developer.android.com/jetpack/compose) - modern toolkit for building native Android UI.
-* [Android KTX](https://developer.android.com/kotlin/ktx) - helps to write more concise, idiomatic Kotlin code.
-
-* [Coroutines and Kotlin Flow](https://kotlinlang.org/docs/reference/coroutines-overview.html) - used to manage the local storage i.e. `writing to and reading from the database`. Coroutines help in managing background threads and reduces the need for callbacks.
+  
 * [Material Design 3](https://m3.material.io/) - an adaptable system of guidelines, components, and tools that support the best practices of user interface design.
+
+* [Material Design 2](https://m2.material.io/) - Handle PullRefreshIndicator which is not yet implemented on Material 3.
+
+* [Android KTX](https://developer.android.com/kotlin/ktx) - helps to write more concise and idiomatic Kotlin code.
+
+* [Coroutines and Kotlin Flow](https://kotlinlang.org/docs/reference/coroutines-overview.html) - Coroutines help in managing background threads and reduces the need for callbacks. In addition to the `Flow`, SkyCast uses `callbackFlow` (*converts connection callbacks to Flow API*) and  `suspendCancellableCoroutine` (*allows suspending functions to interact with the underlying coroutine cancellation mechanism*)
+
 * [Compose Destinations](https://github.com/raamcosta/compose-destinations) - used to handle all navigations and arguments passing while hiding the complex, non-type-safe and boilerplate code
+  
 * [Google Accompanist Libraries](https://github.com/google/accompanist) - these are a collection of extension libraries for Jetpack Compose. DiaryApp specifically uses Accompanist's Pager Library
 * [Dagger Hilt](https://dagger.dev/hilt/) - used for Dependency Injection.
 * [Coil](https://coil-kt.github.io/coil/) - an image loading library for Android backed by Kotlin Coroutines
