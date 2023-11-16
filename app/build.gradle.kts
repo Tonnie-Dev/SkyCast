@@ -101,11 +101,14 @@ dependencies {
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
 
-    //Material 2 for PullRefreshIndicator
-    implementation(libs.material2)
+    //Splash Screen
+    implementation(AndroidX.core.splashscreen )
 
     //Material 3
     implementation(AndroidX.compose.material3)
+
+    //Material 2 for PullRefreshIndicator
+    implementation(libs.material2)
 
 
     // Dagger Hilt
@@ -152,5 +155,7 @@ dependencies {
 
     // DesugaringLib
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+
+
 
 }
