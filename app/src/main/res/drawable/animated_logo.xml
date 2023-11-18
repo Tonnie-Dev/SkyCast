@@ -4,5 +4,5 @@
 
     <target
         android:animation="@animator/logo_animator"
-        android:name="animationGroup"/>
+        android:name="animation"/>
 </animated-vector>
