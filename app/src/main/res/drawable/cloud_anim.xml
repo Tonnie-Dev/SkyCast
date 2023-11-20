@@ -1,0 +1,27 @@
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="vector"
+            android:width="1dp"
+            android:height="1dp"
+            android:viewportWidth="24"
+            android:viewportHeight="24">
+            <path
+                android:name="path"
+                android:pathData="M 5 18 C 5 18.55 5.45 19 6 19 C 6.55 19 7 18.55 7 18 C 7 17.45 6.55 17 6 17 C 5.45 17 5 17.45 5 18 Z M 17 18 C 17 18.55 17.45 19 18 19 C 18.55 19 19 18.55 19 18 C 19 17.45 18.55 17 18 17 C 17.45 17 17 17.45 17 18 Z M 8 22 C 8 22.55 8.45 23 9 23 C 9.55 23 10 22.55 10 22 C 10 21.45 9.55 21 9 21 C 8.45 21 8 21.45 8 22 Z M 11 18 C 11 18.55 11.45 19 12 19 C 12.55 19 13 18.55 13 18 C 13 17.45 12.55 17 12 17 C 11.45 17 11 17.45 11 18 Z M 14 22 C 14 22.55 14.45 23 15 23 C 15.55 23 16 22.55 16 22 C 16 21.45 15.55 21 15 21 C 14.45 21 14 21.45 14 22 Z M 17.5 16 L 7.5 16 C 4.47 16 2 13.53 2 10.5 C 2 7.74 4.09 5.41 6.78 5.06 C 7.83 3.18 9.82 2 12 2 C 14.97 2 17.45 4.18 17.92 7.02 C 20.21 7.23 22 9.16 22 11.5 C 22 13.98 19.98 16 17.5 16 Z"/>
+        </vector>
+    </aapt:attr>
+    <target android:name="path">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="fillColor"
+                android:duration="1000"
+                android:valueFrom="#ffffff"
+                android:valueTo="#0000ff"
+                android:valueType="colorType"
+                android:interpolator="@android:anim/bounce_interpolator"/>
+        </aapt:attr>
+    </target>
+</animated-vector>

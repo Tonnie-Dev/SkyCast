@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
         installSplashScreen().apply {
             setKeepOnScreenCondition{
 //true
-               viewModel.state.value.isLoading
+               !viewModel.state.value.isLoading
             }
         }
         enableEdgeToEdge(
