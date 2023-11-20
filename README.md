@@ -24,12 +24,12 @@
  
 </div>
     
-SkyCast is a modern project written in Kotlin and powered by Jetpack Compose. Whether you're planning your day or embarking on a grand adventure, step into a world of weather precision and stay one step ahead of Mother Nature as you seamlessly track real-time forecasts to ensure you're prepared for whatever the sky has in store. 
+SkyCast is a modern project written in Kotlin and powered by Jetpack Compose. Whether you're planning your day or embarking on a grand adventure, step into a world of weather precision and stay one step ahead of Mother Nature as you seamlessly track real-time forecasts to prep you for whatever the sky has in store. 
 
 
-Download now and make every day a weather-perfect day!"
+Download now and make every day a Weather-Perfect Day!"
 
-
+<a href='https://play.google.com/store/apps/details?id=com.uxstate.skycast&pcampaignid=web_share'><img alt='Get it on Google Play' src='./readme-assets/screenshots/google_play_store%20_badge.png' width="280"/></a>
 
 # :camera_flash: **Screenshots** :camera_flash:
 
@@ -45,7 +45,7 @@ SkyCast follows the latest Material 3 guidelines for a visually appealing and a 
 
 
 # :arrow_lower_right: Deployment :arrow_lower_right:
-These are the key parameters for Diary Project.
+These are the key parameters for SkyCast Project.
 
 | Parameter      | Value |
 |----------------|-------|
@@ -57,7 +57,7 @@ These are the key parameters for Diary Project.
 
 You can clone the repository or download the Zip file [here](https://github.com/Tonnie-Dev/SkyCast).
 
-To build and run the app, you will need the latest version of Android Studio Giraffe (or [newer](https://developer.android.com/studio/)) installed on your system.
+To build and run the app, you will need the latest version of Android Studio Giraffe ([or Newer](https://developer.android.com/studio/)) installed on your system.
 # :hammer_and_wrench: Architecture :hammer_and_wrench:
 ### Modules
 
@@ -66,21 +66,21 @@ SkyCast is implemented as a single module app using Android Clean Architecture a
 
 It features 3️⃣ main layers:
 
-1. **Data Layer** - This layer is responsible for managing data storage and dispensing data to the app. Retrofit API service provides the remote data which is then cached into the ROOM database for offline operations. 
+1. **Data Layer** is responsible for managing data storage and dispensing data to the app. Retrofit API service fetches remote weather data which is then cached into the ROOM database for offline operations. 
 
-2. **Domain Layer** - This layer holds the Business Logic for the InstantScores. It holds the models and the use cases that encapsulates the very complex logic for the app. This layer houses the interface definitions for connectivity, location and data store operations.
+2. **Domain Layer** holds pure business logic for the app including use cases that encapsulates the complex logic of the app as well as interface definitions for connectivity, location and data store operations.
 
-3. **UI Layer** - This is the presentation layer displays refined data to the user and facilitates interactions with the user. It contains the ViewModels holding the different states for SkyCast app.
+3. **UI Layer** displays refined data and facilitates interactions with the user. It contains the ViewModels holding the different states for the app.
 
 
 ### Navigation
-The app has :three: screen destinations which use Compose Destinations Library ( [*See Issue 434*](https://github.com/raamcosta/compose-destinations/issues/434#issuecomment-1566126028) ) to manage navigation.
+The app has :three: screen destinations which use Compose Destinations Library to manage navigation.
 
-| :feature:auth                       | :feature:home                       | :feature:write                      |
+| Current Weather Screen              | Forecast Weather Screen             | Settings Screen                     |
 |-------------------------------------|-------------------------------------|-------------------------------------|
 | ![](./readme-assets/gifs/gif_1.gif) | ![](./readme-assets/gifs/gif_2.gif) | ![](./readme-assets/gifs/gif_3.gif) |
 
-- **Current Weather Screen**: Provides instant access to the latest temperature, wind speed, and conditions for your location at a glance.
+- **Current Weather Screen**: Provides instant access to the latest temperature, humidity, wind speed, and conditions for your location at a glance.
 
 - **Forecast Screen**: Has visually appealing display of the upcoming weather for 5 days that the user can swipe to and fro or just click.
 
@@ -95,11 +95,11 @@ SkyCast project uses many popular libraries and tools in the Android Ecosystem:
   
 * [Material Design 3](https://m3.material.io/) - an adaptable system of guidelines, components, and tools that support the best practices of user interface design.
 
-* [Material Design 2](https://m2.material.io/) - Handle PullRefreshIndicator which is not yet implemented on Material 3.
+* [Material Design 2](https://m2.material.io/) - Handle `PullRefreshIndicator` which is not yet implemented on Material 3.
 
 * [Android KTX](https://developer.android.com/kotlin/ktx) - helps to write more concise and idiomatic Kotlin code.
 
-* [Coroutines and Kotlin Flow](https://kotlinlang.org/docs/reference/coroutines-overview.html) - Coroutines help in managing background threads and reduces the need for callbacks. In addition to the `Flow`, SkyCast uses `callbackFlow` (*converts connection callbacks to Flow API*) and  `suspendCancellableCoroutine` (*allows suspending functions to interact with the underlying coroutine cancellation mechanism*)
+* [Coroutines and Kotlin Flow](https://kotlinlang.org/docs/reference/coroutines-overview.html) - In general coroutines help in managing background threads and reduces the need for callbacks. In addition to the `Flow`, SkyCast uses `callbackFlow` (*converts  ConnectivityManager.NetworkCallback() callbacks to Flow API*) and  `suspendCancellableCoroutine` (*allows suspending functions to interact with the underlying coroutine cancellation mechanism*)
 
 * [Compose Destinations](https://github.com/raamcosta/compose-destinations) - used to handle all navigations and arguments passing while hiding the complex, non-type-safe and boilerplate code
   
