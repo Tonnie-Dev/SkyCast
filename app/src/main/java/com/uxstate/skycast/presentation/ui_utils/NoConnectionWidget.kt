@@ -47,9 +47,10 @@ fun NoConnectionWidget(homeState: HomeState, onRetry: () -> Unit) {
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
+    // TODO: Put if-block inside of the LaunchedEffect
     if (networkStatus == Status.AVAILABLE) {
 
-        LaunchedEffect(key1 = true, block = {
+        LaunchedEffect(key1 = networkStatus, block = {
             val result = snackbarHostState.showSnackbar(
                     message = context.getStringById(R.string.internet_restored_text),
                     actionLabel = context.getStringById(R.string.retry_text),
@@ -57,7 +58,6 @@ fun NoConnectionWidget(homeState: HomeState, onRetry: () -> Unit) {
                     withDismissAction = true
 
             )
-
             when (result) {
 
                 SnackbarResult.ActionPerformed -> {
@@ -72,10 +72,6 @@ fun NoConnectionWidget(homeState: HomeState, onRetry: () -> Unit) {
         })
 
     }
-
-
-
-
 
 
     Box(

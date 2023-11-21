@@ -26,5 +26,5 @@ const val PAGER_SIZE = 5
 const val EMPTY_STRING = " "
 
 //Settings Screen
-const val APP_URL = "https://play.google.com/store/apps/details?id=com.androidshowtime.asteroidradar&pcampaignid=web_share"
+const val APP_URL = "https://play.google.com/store/apps/details?id=com.uxstate.skycast&pcampaignid=web_share"
 const val APP_CONTACT_ADDRESS = "vontonnie@gmail.com"
