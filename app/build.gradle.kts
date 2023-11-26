@@ -1,3 +1,7 @@
+
+
+
+
 import java.util.Properties
 
 plugins {
@@ -37,17 +41,19 @@ android {
 
         //return empty key in case something goes wrong
         val apiKey = properties.getProperty("API_KEY") ?: ""
-
+        val MY_KEY: String by project
         buildConfigField(
                 type = "String",
                 name = "API_KEY",
-                value = apiKey
+                value = MY_KEY
         )
 
         buildConfigField("String", "BASE_URL", "\"https://api.openweathermap.org/\"")
 
 
     }
+
+
 
     buildTypes {
 
