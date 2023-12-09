@@ -1,7 +1,3 @@
-
-
-
-
 import java.util.Properties
 
 plugins {
@@ -41,30 +37,57 @@ android {
 
         //return empty key in case something goes wrong
         val apiKey = properties.getProperty("API_KEY") ?: ""
-        val MY_KEY: String by project
+
         buildConfigField(
                 type = "String",
                 name = "API_KEY",
-                value = MY_KEY
+                value = apiKey
         )
 
-        buildConfigField("String", "BASE_URL", "\"https://api.openweathermap.org/\"")
-
+        buildConfigField(
+                type = "String",
+                name = "BASE_URL",
+                value = "\"https://api.openweathermap.org/\""
+        )
 
     }
 
+    signingConfigs {
 
+        create("release") {
+
+            val tmpFilePath = System.getProperty("user.home") + "/work/_temp/keystore/"
+            val allFilesFromDir = File(tmpFilePath).listFiles()
+
+            if (allFilesFromDir != null) {
+                val keystoreFile = allFilesFromDir.first()
+                keystoreFile.renameTo(File("keystore/your_keystore.jks"))
+            }
+
+            storeFile = file("keystore/your_keystore.jks")
+            storePassword = System.getenv("SIGNING_STORE_PASSWORD")
+            keyAlias = System.getenv("SIGNING_KEY_ALIAS")
+            keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+
+
+        }
+    }
 
     buildTypes {
 
 
         release {
+
             isMinifyEnabled = false
             proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
                     "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
+
+
         }
+        
         // TODO: check this block
         debug {
 
@@ -108,7 +131,7 @@ dependencies {
     debugImplementation(libs.ui.test.manifest)
 
     //Splash Screen
-    implementation(AndroidX.core.splashscreen )
+    implementation(AndroidX.core.splashscreen)
 
     //Material 3
     implementation(AndroidX.compose.material3)
@@ -161,7 +184,6 @@ dependencies {
 
     // DesugaringLib
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-
 
 
 }

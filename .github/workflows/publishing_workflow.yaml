@@ -1,4 +1,4 @@
-name: Deploy Countries Pad
+name: Deploy SkyCast
 on:
    workflow_dispatch:
 
@@ -12,7 +12,7 @@ jobs:
          
          
          # Step 1 - Read Keystore from GitHub Secrets, decrypt from base64 string and
-         # avail it to the workflow - put it in a temporary folder
+         # avail it to the workflow - place it in a temporary folder
          -  name: Decode Keystore
             env:
                ENCODED_STRING: ${{ secrets.KEYSTORE }}
@@ -33,11 +33,11 @@ jobs:
                distribution: temurin
                java-version: 18
          
-         # Step 4 - Setup Gradle to allow workflow access the gradlew file/ grant execution permission
+         # Step 4 - Setup Gradle to allow workflow access and execute Gradlew file
          -  name: Make gradlew executable
             run: chmod +x ./gradlew
          
-         # Step 5 - Setup Gradle cache to improve the speed of the workflows
+         # Step 5 - Setup Gradle Cache to improve the speed of the workflows
          -  name: Setup Gradle Cache
             uses: gradle/gradle-build-action@v2
             with:
@@ -94,7 +94,7 @@ jobs:
             uses: r0adkll/upload-google-play@v1
             with:
                serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-               packageName: com.uxstate.countriespad
+               packageName: com.uxstate.skycast
                releaseFiles: ${{ github.workspace }}/app-release.aab
                track: production
 
