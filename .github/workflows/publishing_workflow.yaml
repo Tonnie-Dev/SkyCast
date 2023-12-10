@@ -63,15 +63,15 @@ jobs:
             run: ./gradlew bundleRelease
          
 #         # Step 9 - Sign AAB
-#         -  name: Sign AAb
-#            id: sign
-#            uses: r0adkll/sign-android-release@v1
-#            with:
-#               releaseDirectory: app/build/outputs/bundle/release
-#               signingKeyBase64: ${{ secrets.KEYSTORE }}
-#               alias: ${{ secrets.SIGNING_KEY_ALIAS }}
-#               keyStorePassword: ${{ secrets.SIGNING_STORE_PASSWORD }}
-#               keyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
+         -  name: Sign AAb
+            id: sign
+            uses: r0adkll/sign-android-release@v1
+            with:
+               releaseDirectory: app/build/outputs/bundle/release
+               signingKeyBase64: ${{ secrets.KEYSTORE }}
+               alias: ${{ secrets.SIGNING_KEY_ALIAS }}
+               keyStorePassword: ${{ secrets.SIGNING_STORE_PASSWORD }}
+               keyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
          
          # Step 10 - Print out the Job Status
          -  run: echo "Build status report=${{ job.status }}."
