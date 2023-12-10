@@ -20,6 +20,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.DestinationsNavHost
+import com.uxstate.skycast.BuildConfig
 import com.uxstate.skycast.domain.prefs.Theme
 import com.uxstate.skycast.presentation.home.HomeViewModel
 import com.uxstate.skycast.presentation.settings.SettingsViewModel
@@ -41,6 +42,9 @@ class MainActivity : ComponentActivity() {
                false
             }
         }
+
+        //call BuildConfig to access its API_KEY Constant
+        val apiKey = BuildConfig.API_KEY
         enableEdgeToEdge(
                 statusBarStyle = SystemBarStyle.light(
                         Color.TRANSPARENT,

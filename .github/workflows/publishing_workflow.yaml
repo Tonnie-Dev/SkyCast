@@ -27,7 +27,7 @@ jobs:
          # and save it as apikey.properties file in the workflow workspace.
          
          -  name: Get apikey.properties from secrets
-            run: echo "${{secrets.API_KEY_PROPERTIES }}" > $GITHUB_WORKSPACE/local.properties
+            run: echo "${{ secrets.API_KEY_PROPERTIES }}" > $GITHUB_WORKSPACE/apikey.properties
          
          # Step 3 - Checkout the repository, making it available to the workflow:
          -  uses: actions/checkout@v3

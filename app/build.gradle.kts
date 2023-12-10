@@ -17,6 +17,8 @@ android {
     buildFeatures {
         buildConfig = true
     }
+
+    
     defaultConfig {
         applicationId = "com.uxstate.skycast"
         minSdk = 24
@@ -30,8 +32,26 @@ android {
             useSupportLibrary = true
         }
 
+
+        /*   val tmpKeyPath = System.getProperty("user.home") + "/work/_temp/apikey/"
+           val allFilesFromDir = File(tmpKeyPath ).listFiles()
+
+         if (allFilesFromDir != null) {
+               val apiPropertiesFile = allFilesFromDir.first()
+               apiPropertiesFile.renameTo(File("apikey/apikey.properties"))
+               val properties = Properties()
+               properties.load(apiPropertiesFile.inputStream())
+
+             val apiKey = properties.getProperty("API_KEY") ?: ""
+             buildConfigField(
+                     type = "String",
+                     name = "API_KEY",
+                     value = apiKey
+             )
+           }*/
+
         //load the values from .properties file
-        val keystoreFile = project.rootProject.file("local.properties")
+        val keystoreFile = project.rootProject.file("apikey.properties")
         val properties = Properties()
         properties.load(keystoreFile.inputStream())
 
@@ -87,7 +107,7 @@ android {
 
 
         }
-        
+
         // TODO: check this block
         debug {
 
