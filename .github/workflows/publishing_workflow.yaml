@@ -22,28 +22,34 @@ jobs:
                mkdir "${TMP_KEYSTORE_FILE_PATH}"
                
                echo $ENCODED_STRING | base64 -di > "${TMP_KEYSTORE_FILE_PATH}"/your_keystore_file.jks
+               
+         # Step 2 - retrieves the contents of API_KEY_PROPERTIES secret from GitHub Secrets
+         # and save it as apikey.properties file in the workflow workspace.
          
-         # Step 2 - Checkout the repository, making it available to the workflow:
+         -  name: Get apikey.properties from secrets
+            run: echo "${{secret.API_KEY_PROPERTIES }}" > $GITHUB_WORKSPACE/apikey.properties
+         
+         # Step 3 - Checkout the repository, making it available to the workflow:
          -  uses: actions/checkout@v3
          
-         # Step 3 - Setup Java
+         # Step 4 - Setup Java
          -  name: Setup JDK 18
             uses: actions/setup-java@v3
             with:
                distribution: temurin
                java-version: 18
          
-         # Step 4 - Setup Gradle to allow workflow access and execute Gradlew file
+         # Step 5 - Setup Gradle to allow workflow access and execute Gradlew file
          -  name: Make gradlew executable
             run: chmod +x ./gradlew
          
-         # Step 5 - Setup Gradle Cache to improve the speed of the workflows
+         # Step 6 - Setup Gradle Cache to improve the speed of the workflows
          -  name: Setup Gradle Cache
             uses: gradle/gradle-build-action@v2
             with:
                gradle-home-cache-cleanup: true
          
-         # Override the version code and version name
+         # Step 7 - Override the version code and version name
          -  name: Bump Version Code
             uses: chkfung/android-version-actions@v1.2.1
             with:
@@ -51,11 +57,11 @@ jobs:
                versionCode: ${{ github.run_number }}
                versionName: 1.0.0
          
-         # Build App Bundle
+         # Step 8 - Build Production App Bundle
          -  name: Build prodRelease
             run: ./gradlew bundleRelease
          
-         # Sign AAB
+         # Step 9 - Sign AAB
          -  name: Sign AAb
             id: sign
             uses: r0adkll/sign-android-release@v1
@@ -66,10 +72,10 @@ jobs:
                keyStorePassword: ${{ secrets.SIGNING_STORE_PASSWORD }}
                keyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
          
-         # Print out the Job Status
+         # Step 10 - Print out the Job Status
          -  run: echo "Build status report=${{ job.status }}."
          
-         # Save AAB after Build job is complete to publish it as a Github release in the next job
+         # Step 11 - Save AAB after Build job is complete to publish it as a Github release in the next job
          -  name: Upload app bundle as artifact
             uses: actions/upload-artifact@v2
             with:
@@ -83,13 +89,14 @@ jobs:
       needs: build
       runs-on: ubuntu-latest
       steps:
+         # Step 1 - Checkout
          -  uses: actions/checkout@v3
          -  name: Download app bundle from artifact
             uses: actions/download-artifact@v2
             with:
                name: app-bundle
          
-         # Uploads the AAB to play console
+         # Step 2 - Upload the AAB to play console
          -  name: Publish to Play Store
             uses: r0adkll/upload-google-play@v1
             with:
