@@ -28,7 +28,9 @@ jobs:
          
          -  name: Get apikey.properties from secrets
             run: echo "${{ secrets.API_KEY_PROPERTIES }}" > $GITHUB_WORKSPACE/apikey.properties
-         
+            
+         -  name: Copy apikey.properties to project directory
+            run: cp $GITHUB_WORKSPACE/apikey.properties /home/runner/work/SkyCast/SkyCast/
          # Step 3 - Checkout the repository, making it available to the workflow:
          -  uses: actions/checkout@v3
          
