@@ -59,7 +59,7 @@ jobs:
          
          # Step 8 - Build Production App Bundle
          -  name: Build prodRelease
-            run: ./gradlew bundleRelease
+            run: ./gradlew bundleRelease -Papikey.properties.path=$GITHUB_WORKSPACE/apikey.properties
          
          # Step 9 - Sign AAB
          -  name: Sign AAb

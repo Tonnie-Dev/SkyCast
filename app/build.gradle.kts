@@ -18,7 +18,7 @@ android {
         buildConfig = true
     }
 
-    
+
     defaultConfig {
         applicationId = "com.uxstate.skycast"
         minSdk = 24
