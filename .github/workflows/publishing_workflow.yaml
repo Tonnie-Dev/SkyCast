@@ -22,17 +22,16 @@ jobs:
                mkdir "${TMP_KEYSTORE_FILE_PATH}"
                
                echo $ENCODED_STRING | base64 -di > "${TMP_KEYSTORE_FILE_PATH}"/your_keystore_file.jks
-               
+         # Step 3 - Checkout the repository, making it available to the workflow:
+         -  uses: actions/checkout@v3
          # Step 2 - retrieves the contents of API_KEY_PROPERTIES secret from GitHub Secrets
          # and save it as apikey.properties file in the workflow workspace.
          
          -  name: Get apikey.properties from secrets
             run: echo "${{ secrets.API_KEY_PROPERTIES }}" > $GITHUB_WORKSPACE/apikey.properties
             
-         -  name: Copy apikey.properties to project directory
-            run: cp $GITHUB_WORKSPACE/apikey.properties /home/runner/work/SkyCast/SkyCast/
-         # Step 3 - Checkout the repository, making it available to the workflow:
-         -  uses: actions/checkout@v3
+         
+      
          
          # Step 4 - Setup Java
          -  name: Setup JDK 18
@@ -61,7 +60,7 @@ jobs:
          
          # Step 8 - Build Production App Bundle
          -  name: Build prodRelease
-            run: ./gradlew bundleRelease -Papikey.properties.path=$GITHUB_WORKSPACE/apikey.properties
+            run: ./gradlew bundleRelease
          
          # Step 9 - Sign AAB
          -  name: Sign AAb
