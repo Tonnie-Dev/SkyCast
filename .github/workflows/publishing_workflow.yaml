@@ -59,11 +59,11 @@ jobs:
       # Step 7 - Update VersionCode and VersionName
          -  name: Update VersionCode and VersionName
             run: |
-             sed -i 's/\(versionCode[[:space:]]*=[[:space:]]*\)[0-9]*/\1NEW_VERSION_CODE/' gradlePath
-             sed -i 's/\(versionName[[:space:]]*=[[:space:]]*"[^"]*"[[:space:]]*\)[^"]*/\1"NEW_VERSION_NAME"/' gradlePath
-             env:
-             NEW_VERSION_CODE: ${{ github.run_number }}
-             NEW_VERSION_NAME: v${{ github.run_number }}
+               sed -i 's/\(versionCode[[:space:]]*=[[:space:]]*\)[0-9]*/\1NEW_VERSION_CODE/' build.gradle.kts
+               sed -i 's/\(versionName[[:space:]]*=[[:space:]]*"[^"]*"[[:space:]]*\)[^"]*/\1"NEW_VERSION_NAME"/' build.gradle.kts
+            env:
+               NEW_VERSION_CODE: ${{ github.run_number }}
+               NEW_VERSION_NAME: v${{ github.run_number }}
             
             
          # Step 8 - Build Production App Bundle
