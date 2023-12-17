@@ -64,7 +64,7 @@ jobs:
              env:
              NEW_VERSION_CODE: ${{ github.run_number }}
              NEW_VERSION_NAME: v${{ github.run_number }}
-            working-directory: app/build.gradle.kts
+            
             
          # Step 8 - Build Production App Bundle
          -  name: Build prodRelease
