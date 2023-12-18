@@ -15,15 +15,15 @@ jobs:
          
          # Step 2 - Read Keystore from GitHub Secrets, decrypt from base64 string and
          # avail it to the workflow - place it in a temporary folder
-         -  name: Decode Keystore
-            env:
-               ENCODED_STRING: ${{ secrets.KEYSTORE }}
-            run: >
-               TMP_KEYSTORE_FILE_PATH="${RUNNER_TEMP}"/keystore
-               
-               mkdir "${TMP_KEYSTORE_FILE_PATH}"
-               
-               echo $ENCODED_STRING | base64 -di > "${TMP_KEYSTORE_FILE_PATH}"/your_keystore_file.jks
+#         -  name: Decode Keystore
+#            env:
+#               ENCODED_STRING: ${{ secrets.KEYSTORE }}
+#            run: >
+#               TMP_KEYSTORE_FILE_PATH="${RUNNER_TEMP}"/keystore
+#
+#               mkdir "${TMP_KEYSTORE_FILE_PATH}"
+#
+#               echo $ENCODED_STRING | base64 -di > "${TMP_KEYSTORE_FILE_PATH}"/your_keystore_file.jks
          
          # Step 3 - retrieves the contents of API_KEY_PROPERTIES secret from GitHub Secrets
          # and save it as apikey.properties file in the workflow workspace.
@@ -49,13 +49,13 @@ jobs:
             with:
                gradle-home-cache-cleanup: true
          
-#         # Step 7 - Override the version code and version name
-#         -  name: Bump Version Code
-#            uses: chkfung/android-version-actions@v1.2.1
-#            with:
-#               gradlePath: app/build.gradle.kts
-#               versionCode: ${{ github.run_number }}
-#               versionName: 1.0.0
+         # Step 7 - Override the version code and version name
+         -  name: Bump Version Code
+            uses: chkfung/android-version-actions@v1.2.1
+            with:
+               gradlePath: app/build.gradle.kts
+               versionCode: ${{ github.run_number }}
+               versionName: 1.0.0
       # Step 7 - Update VersionCode and VersionName
          -  name: Update VersionCode and VersionName
             run: |
@@ -81,17 +81,17 @@ jobs:
                keyStorePassword: ${{ secrets.SIGNING_STORE_PASSWORD }}
                keyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
          
-         # Step 10 - Print out the Job Status
-         -  run: echo "Build status report=${{ job.status }}."
+       
          
-         # Step 11 - Save AAB after Build job is complete to publish it as a Github release in the next job
+         # Step 10 - Save AAB after Build job is complete to publish it as a Github release in the next job
          -  name: Upload app bundle as artifact
             uses: actions/upload-artifact@v2
             with:
                name: app-bundle
                path: app/build/outputs/bundle/release/app-release.aab
-   
-   
+         
+         # Step 11 - Print out the Job Status
+         -  run: echo Build status report=${{ job.status }}
    
    # Job 2 - Deploy to Playstore
    deploy:
