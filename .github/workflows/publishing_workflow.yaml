@@ -99,7 +99,7 @@ jobs:
       runs-on: ubuntu-latest
       steps:
          # Step 1 - Checkout
-         -  uses: actions/checkout@v3
+         #-  uses: actions/checkout@v3
          
          # Step 2 -  Download app bundle
          -  name: Download app bundle from artifact
