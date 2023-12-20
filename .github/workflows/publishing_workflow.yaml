@@ -70,7 +70,7 @@ jobs:
          -  name: Build prodRelease
             run: ./gradlew bundleRelease
          
-#         # Step 9 - Sign AAB
+         # Step 9 - Sign AAB
          -  name: Sign AAb
             id: sign
             uses: r0adkll/sign-android-release@v1
@@ -100,12 +100,14 @@ jobs:
       steps:
          # Step 1 - Checkout
          -  uses: actions/checkout@v3
+         
+         # Step 2 -  Download app bundle
          -  name: Download app bundle from artifact
             uses: actions/download-artifact@v2
             with:
                name: app-bundle
          
-         # Step 2 - Upload the AAB to play console
+         # Step 3 - Upload the AAB to play console
          -  name: Publish to Play Store
             uses: r0adkll/upload-google-play@v1
             with:

@@ -73,6 +73,7 @@ android {
 
     }
 
+/*
     signingConfigs {
 
         create("release") {
@@ -93,6 +94,7 @@ android {
 
         }
     }
+*/
 
     buildTypes {
 
