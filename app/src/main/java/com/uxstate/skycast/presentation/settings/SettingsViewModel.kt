@@ -39,11 +39,7 @@ class SettingsViewModel @Inject constructor(private val prefs: DataStoreOperatio
 
                 _state.update {
                     it.copy(
-                            appPreferences = AppPreferences(
-                                    tempUnit = appPrefs.tempUnit,
-                                    theme = appPrefs.theme,
-                                    savedCityId = appPrefs.savedCityId
-                            )
+                            appPreferences =  appPrefs
                     )
                 }
             }
