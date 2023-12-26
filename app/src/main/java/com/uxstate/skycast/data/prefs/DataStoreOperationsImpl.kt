@@ -6,7 +6,6 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-
 import com.uxstate.skycast.domain.prefs.AppPreferences
 import com.uxstate.skycast.domain.prefs.DataStoreOperations
 import com.uxstate.skycast.domain.prefs.TempUnit
@@ -16,11 +15,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
-import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
 
-class DataStoreOperationsImpl @Inject constructor (@ApplicationContext private val context: Context) : DataStoreOperations {
+class DataStoreOperationsImpl @Inject constructor(@ApplicationContext private val context: Context) :
+    DataStoreOperations {
 
     private val Context.dataStore by preferencesDataStore(name = PREFS_NAME)
     override val appPreferences: Flow<AppPreferences> =
@@ -28,54 +27,54 @@ class DataStoreOperationsImpl @Inject constructor (@ApplicationContext private v
 
                 .catch {
 
-                     e ->
+                    e ->
 
-                    if (e is IOException){
+                    if (e is IOException) {
                         emit(emptyPreferences())
                     } else throw e
-                } .map {
+                }
+                .map {
 
                     prefs ->
 
-                    val theme = Theme.valueOf(prefs[ SELECTED_THEME] ?: Theme.SYSTEM.name)
-                    val unit = TempUnit.valueOf(prefs[ SELECTED_TEMP_UNIT] ?: TempUnit.CELSIUS.name)
+                    val theme = Theme.valueOf(prefs[SELECTED_THEME] ?: Theme.SYSTEM.name)
+                    val unit = TempUnit.valueOf(prefs[SELECTED_TEMP_UNIT] ?: TempUnit.CELSIUS.name)
                     val cityId = prefs[CITY_ID] ?: 0
 
                     AppPreferences(theme = theme, tempUnit = unit, savedCityId = cityId)
                 }
 
     override suspend fun updateTheme(theme: Theme) {
-      context.dataStore.edit {
-          prefs ->
+        context.dataStore.edit { prefs ->
 
-          prefs[SELECTED_THEME] = theme.name
+            prefs[SELECTED_THEME] = theme.name
 
-          Timber.i("Theme Change - ${prefs[SELECTED_THEME]}")
-      }
+
+        }
     }
 
     override suspend fun updateTempUnit(unit: TempUnit) {
- context.dataStore.edit {
+        context.dataStore.edit {
 
 
-     prefs ->
+            prefs ->
 
-     prefs[SELECTED_TEMP_UNIT] = unit.name
-     Timber.i("TempmChange - ${prefs[SELECTED_THEME]}")
- }
+            prefs[SELECTED_TEMP_UNIT] = unit.name
+
+        }
     }
 
     override suspend fun updateCityId(cityId: Int) {
-       context.dataStore.edit {
+        context.dataStore.edit {
 
-           prefs ->
+            prefs ->
 
-           prefs[CITY_ID] = cityId
-       }
+            prefs[CITY_ID] = cityId
+        }
     }
 
     //PrefsKeysObject
-   private companion object {
+    private companion object {
 
         val SELECTED_THEME = stringPreferencesKey("selected_theme")
         val SELECTED_TEMP_UNIT = stringPreferencesKey("selected_unit")

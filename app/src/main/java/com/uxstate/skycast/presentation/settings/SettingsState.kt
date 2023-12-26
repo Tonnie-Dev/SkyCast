@@ -18,12 +18,6 @@ data class SettingsState(
                 tempUnit = TempUnit.CELSIUS,
                 savedCityId = -1
         )
-        val initialSettingsState = SettingsState(
-                appPreferences = AppPreferences(
-                        theme = Theme.SYSTEM,
-                        tempUnit = TempUnit.CELSIUS,
-                        savedCityId = -1
-                ), isShowThemeDialog = false, isShowTempUnitDialog = false
-        )
+
     }
 }

@@ -61,25 +61,25 @@ class SettingsViewModel @Inject constructor(private val prefs: DataStoreOperatio
 
     override fun onThemeChange(theme: Theme) {
         viewModelScope.launch {
-            Timber.i("On Theme Change - ${theme.name}")
+
             prefs.updateTheme(theme)
             observePrefsFlow()
         }
 
         _state.update { it.copy(isShowThemeDialog = false) }
-        Timber.i("Theme Status - ${_state.value.appPreferences.theme.name}")
+
     }
 
     override fun onTempUnitChange(tempUnit: TempUnit) {
         viewModelScope.launch {
 
-            Timber.i("On Temp Change - ${tempUnit.name}")
+
             prefs.updateTempUnit(tempUnit)
             observePrefsFlow()
         }
 
         _state.update { it.copy(isShowTempUnitDialog = false) }
-        Timber.i("Temp Status - ${_state.value.appPreferences.tempUnit.name}")
+
     }
 
     override fun onDismissThemeSelectionDialog() {
