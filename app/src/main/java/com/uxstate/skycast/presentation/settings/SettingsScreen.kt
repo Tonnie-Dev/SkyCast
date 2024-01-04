@@ -1,7 +1,6 @@
 package com.uxstate.skycast.presentation.settings
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -17,9 +16,8 @@ import com.uxstate.skycast.domain.prefs.Theme
 import com.uxstate.skycast.presentation.settings.components.SettingsContent
 import com.uxstate.skycast.presentation.settings.components.SingleChoiceDialog
 import com.uxstate.skycast.presentation.ui_utils.SkyTopAppBar
-import com.uxstate.skycast.ui.theme.LocalSpacing
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Destination
 @Composable
 fun SettingsScreen(
@@ -52,10 +50,9 @@ fun SettingsScreen(
 
         SingleChoiceDialog(
                 title = stringResource(id = R.string.theme),
-                options = Theme.values()
-                        .toList()
+                options = Theme.entries
                         .map { stringResource(id = it.themeName) },
-                initialSelectedOptionIndex = Theme.values()
+                initialSelectedOptionIndex = Theme.entries
                         .indexOf(currentTheme),
                 onConfirmOption = { viewModel.onThemeChange(Theme.values()[it]) }
         ) {

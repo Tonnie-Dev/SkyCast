@@ -33,22 +33,6 @@ android {
         }
 
 
-        /*   val tmpKeyPath = System.getProperty("user.home") + "/work/_temp/apikey/"
-           val allFilesFromDir = File(tmpKeyPath ).listFiles()
-
-         if (allFilesFromDir != null) {
-               val apiPropertiesFile = allFilesFromDir.first()
-               apiPropertiesFile.renameTo(File("apikey/apikey.properties"))
-               val properties = Properties()
-               properties.load(apiPropertiesFile.inputStream())
-
-             val apiKey = properties.getProperty("API_KEY") ?: ""
-             buildConfigField(
-                     type = "String",
-                     name = "API_KEY",
-                     value = apiKey
-             )
-           }*/
 
         //load the values from .properties file
         val keystoreFile = project.rootProject.file("apikey.properties")
@@ -73,28 +57,6 @@ android {
 
     }
 
-/*
-    signingConfigs {
-
-        create("release") {
-
-            val tmpFilePath = System.getProperty("user.home") + "/work/_temp/keystore/"
-            val allFilesFromDir = File(tmpFilePath).listFiles()
-
-            if (allFilesFromDir != null) {
-                val keystoreFile = allFilesFromDir.first()
-                keystoreFile.renameTo(File("keystore/your_keystore.jks"))
-            }
-
-            storeFile = file("keystore/your_keystore.jks")
-            storePassword = System.getenv("SIGNING_STORE_PASSWORD")
-            keyAlias = System.getenv("SIGNING_KEY_ALIAS")
-            keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
-
-
-        }
-    }
-*/
 
     buildTypes {
 

@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
@@ -36,7 +37,9 @@ fun SkyTopAppBar(
                                 .minimumInteractiveComponentSize()
                                 .clickable { onNavigateBack() },
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(id = R.string.back_text)
+                        contentDescription = stringResource(id = R.string.back_text),
+                        tint = LocalContentColor.current
+
                 )
             },
 
