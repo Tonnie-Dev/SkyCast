@@ -31,9 +31,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
-
-
+        
         //load the values from .properties file
         val keystoreFile = project.rootProject.file("apikey.properties")
         val properties = Properties()
