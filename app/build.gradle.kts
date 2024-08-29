@@ -31,7 +31,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        
+
         //load the values from .properties file
         val keystoreFile = project.rootProject.file("apikey.properties")
         val properties = Properties()
@@ -77,14 +77,22 @@ android {
 
         }
     }
+
     compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+  /*  compileOptions {
         sourceCompatibility = JavaVersion.VERSION_18
         targetCompatibility = JavaVersion.VERSION_18
         isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "18"
-    }
+    }*/
     buildFeatures {
         compose = true
     }
