@@ -1,11 +1,13 @@
 import java.util.Properties
 
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("kotlin-parcelize")
-    id("com.google.devtools.ksp")
-    id("dagger.hilt.android.plugin")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.hilt.plugin)
+    alias(libs.plugins.ksp.plugin)
+    alias(libs.plugins.parcelize.plugin)
+    alias(libs.plugins.ktlint)
 }
 
 android {

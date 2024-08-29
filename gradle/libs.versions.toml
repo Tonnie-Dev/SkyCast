@@ -2,22 +2,29 @@
 
 [plugins]
 
-com-android-application = { id = "com.android.application", version = "8.1.1" }
+android-application = { id = "com.android.application", version.ref = "agp" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
-com-android-library = { id = "com.android.library", version = "8.1.1" }
+hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+ksp-plugin = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+parcelize-plugin = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 
-org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version = "1.9.10" }
-
-com-google-dagger-hilt-android = { id = "com.google.dagger.hilt.android", version = "2.48" }
-
-com-google-devtools-ksp = { id = "com.google.devtools.ksp", version = "1.9.10-1.0.13" }
-
-org-jetbrains-kotlin-plugin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version = "1.9.10" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 
 [versions]
 
+agp = "8.5.0"
+kotlin = "2.0.0"
+ksp = "2.0.0-1.0.23"
+hilt = "2.52"
+ktlint = "12.1.1"
+
+
 google-dagger = "2.48"
-kotlin = "1.9.10"
+
+
+## kotlin = "1.9.10"
 data-store="1.1.0-alpha05"
 androidx-room = "2.5.2"
 
@@ -100,8 +107,8 @@ compose-destinations-core = "io.github.raamcosta.compose-destinations:animations
 
 compose-destinations-ksp = "io.github.raamcosta.compose-destinations:ksp:1.9.53"
 
-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "google-dagger" }
-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "google-dagger" }
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidx-hilt-navigation-compose" }
 
 ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "androidx-compose-ui" }
