@@ -1,3 +1,4 @@
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType.*
 import java.util.Properties
 
 plugins {
@@ -15,11 +16,9 @@ android {
     namespace = "com.uxstate.skycast"
     compileSdk = 34
 
-
     buildFeatures {
         buildConfig = true
     }
-
 
     defaultConfig {
         applicationId = "com.uxstate.skycast"
@@ -34,49 +33,41 @@ android {
             useSupportLibrary = true
         }
 
-        //load the values from .properties file
+        // load the values from .properties file
         val keystoreFile = project.rootProject.file("apikey.properties")
         val properties = Properties()
         properties.load(keystoreFile.inputStream())
 
-        //return empty key in case something goes wrong
+        // return empty key in case something goes wrong
         val apiKey = properties.getProperty("API_KEY") ?: ""
-       
 
         buildConfigField(
-                type = "String",
-                name = "API_KEY",
-                value = apiKey
+            type = "String",
+            name = "API_KEY",
+            value = apiKey,
         )
 
         buildConfigField(
-                type = "String",
-                name = "BASE_URL",
-                value = "\"https://api.openweathermap.org/\""
+            type = "String",
+            name = "BASE_URL",
+            value = "\"https://api.openweathermap.org/\"",
         )
-
     }
 
-
     buildTypes {
-
 
         release {
 
             isMinifyEnabled = false
             proguardFiles(
-                    getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
             )
-            //signingConfig = signingConfigs.getByName("debug")
-
-
+            // signingConfig = signingConfigs.getByName("debug")
         }
 
         // TODO: check this block
         debug {
-
-
         }
     }
 
@@ -108,6 +99,20 @@ android {
     }
 }
 
+ktlint {
+    version.set("1.3.1") // Specify the KtLint version to use
+    android.set(true)
+    ignoreFailures.set(true)
+    reporters {
+
+        reporter(HTML) // Output KtLint results in HTML format
+    }
+}
+
+tasks.named("build") {
+    dependsOn("ktlintFormat")
+}
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -125,7 +130,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
 
     // Coil
     implementation(libs.coil.compose)
@@ -159,42 +163,33 @@ dependencies {
     // Timber Logging
     implementation(libs.timber)
 
-
-
-    //Splash Screen
+    // Splash Screen
     implementation(AndroidX.core.splashscreen)
 
-
-
-    //Material 2 for PullRefreshIndicator
+    // Material 2 for PullRefreshIndicator
     implementation(libs.material2)
 
+    // implementation(libs.converter.moshi)
+    // implementation(libs.okhttp)
+    // implementation(libs.logging.interceptor)
+    // implementation(libs.converter.scalars)
 
+    // Moshi Library Dependencies - Core Moshi JSON Library and Moshi")s Kotlin support and converter factory
+    // implementation(libs.moshi)
+    // implementation(libs.moshi.kotlin)
 
-   // implementation(libs.converter.moshi)
-    //implementation(libs.okhttp)
-    //implementation(libs.logging.interceptor)
-    //implementation(libs.converter.scalars)
-
-    //Moshi Library Dependencies - Core Moshi JSON Library and Moshi")s Kotlin support and converter factory
-    //implementation(libs.moshi)
-    //implementation(libs.moshi.kotlin)
-
-   
-    //Compose Animation
+    // Compose Animation
     implementation(libs.compose.animation)
 
-    //Accompanist - Permissions
+    // Accompanist - Permissions
     implementation(libs.accompanist.permissions)
 
-    //Google Play Services
+    // Google Play Services
     implementation(libs.play.services.maps)
 
-    //Data Store
+    // Data Store
     implementation(libs.data.store)
 
     // DesugaringLib
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-
-
 }
