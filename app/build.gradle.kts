@@ -109,29 +109,26 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
+    implementation(libs.material.icons.extended)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation(AndroidX.core.ktx)
-    implementation(AndroidX.compose.ui)
-    implementation(libs.compose.ui.tooling.preview)
-    implementation(libs.compose.runtime)
-    implementation(libs.lifecycle.runtime.ktx)
-    implementation(libs.compose.activity)
-    testImplementation(libs.junit.core)
-    androidTestImplementation(libs.junit.androidx)
-    androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(libs.junit4.ui.test)
-    debugImplementation(libs.compose.ui.tooling)
-    debugImplementation(libs.ui.test.manifest)
 
-    //Splash Screen
-    implementation(AndroidX.core.splashscreen)
-
-    //Material 3
-    implementation(AndroidX.compose.material3)
-
-    //Material 2 for PullRefreshIndicator
-    implementation(libs.material2)
-
+    // Coil
+    implementation(libs.coil.compose)
 
     // Dagger Hilt
     implementation(libs.hilt.android)
@@ -139,30 +136,51 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
 
     // Retrofit
-    implementation(libs.retrofit)
-    implementation(libs.converter.moshi)
-    implementation(libs.okhttp)
-    implementation(libs.logging.interceptor)
-    implementation(libs.converter.scalars)
+    implementation(Square.retrofit2)
+    implementation(Square.okHttp3)
+    implementation(Square.okHttp3.loggingInterceptor)
 
-    //Moshi Library Dependencies - Core Moshi JSON Library and Moshi")s Kotlin support and converter factory
-    implementation(libs.moshi)
-    implementation(libs.moshi.kotlin)
+    // Moshi Library Dependencies - Core Moshi JSON Library and Moshi"s Kotlin support and converter factory
+    implementation(Square.moshi)
+    implementation(Square.moshi.kotlinReflect)
+    implementation(Square.retrofit2.converter.moshi)
 
     // Room components
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
 
-    //Timber
-    implementation(libs.timber)
-
-    //Lottie Animation
+    // Lottie Animation
     implementation(libs.lottie.compose)
 
-    // Compose Destinations
-    implementation(libs.compose.destinations.core)
-    ksp(libs.compose.destinations.ksp)
+    // Compose Nav Destinations
+    implementation(libs.compose.destinations.core.one)
+    ksp(libs.compose.destinations.ksp.one)
 
+    // Timber Logging
+    implementation(libs.timber)
+
+
+
+    //Splash Screen
+    implementation(AndroidX.core.splashscreen)
+
+
+
+    //Material 2 for PullRefreshIndicator
+    implementation(libs.material2)
+
+
+
+   // implementation(libs.converter.moshi)
+    //implementation(libs.okhttp)
+    //implementation(libs.logging.interceptor)
+    //implementation(libs.converter.scalars)
+
+    //Moshi Library Dependencies - Core Moshi JSON Library and Moshi")s Kotlin support and converter factory
+    //implementation(libs.moshi)
+    //implementation(libs.moshi.kotlin)
+
+   
     //Compose Animation
     implementation(libs.compose.animation)
 

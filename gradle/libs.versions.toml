@@ -21,23 +21,20 @@ hilt = "2.52"
 ktlint = "12.1.1"
 
 coreKtx = "1.13.1"
-data-store="1.1.0-alpha05"
+data-store="1.1.1"
 
-composeBom = "2024.06.00"
+composeBom = "2024.08.00"
 activityCompose = "1.9.1"
 
 androidx-hilt-navigation-compose = "1.2.0"
 
-material3 = "1.3.0-beta05"
-material2-compose = "1.6.0-alpha07"
+material3 = "1.3.0-rc01"
+material2-compose = "1.6.8"
 
-google-android-maps-compose = "2.5.3"
-google-accompanist = "0.31.2-alpha"
 google-accompanist-permissions = "0.33.2-alpha"
-google-android-play-services-location = "21.0.1"
-desugar_jdk_libs = "1.1.6"
-androidx-compose-animation = "1.4.3"
-androidx-multidex = "2.0.1"
+google-android-play-services-location = "21.3.0"
+desugar_jdk_libs = "2.1.1"
+androidx-compose-animation = "1.6.8"
 
 coil-kt = "2.7.0"
 lottie = "6.4.1"
@@ -88,20 +85,11 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
-
-
-
-
-accompanist-nav-animation = { group = "com.google.accompanist", name = "accompanist-navigation-animation", version.ref = "google-accompanist" }
-compose-maps = { group = "com.google.maps.android", name = "maps-compose", version.ref = "google-android-maps-compose" }
 material2 = { group = "androidx.compose.material", name = "material", version.ref = "material2-compose" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-location", version.ref = "google-android-play-services-location" }
 compose-animation = { group = "androidx.compose.animation", name = "animation", version.ref = "androidx-compose-animation" }
 
-
-
 data-store = { group = "androidx.datastore", name= "datastore-preferences", version.ref = "data-store"}
-
 
 accompanist-permissions = {group = "com.google.accompanist", name = "accompanist-permissions", version.ref ="google-accompanist-permissions"}
 desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
