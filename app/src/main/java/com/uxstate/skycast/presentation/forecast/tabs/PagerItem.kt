@@ -92,7 +92,7 @@ fun PagerItem(pagerState: PagerState, state: ForecastState, viewModel: ForecastV
     HorizontalPager(
             modifier = Modifier.fillMaxSize(),
             state = pagerState,
-            beyondBoundsPageCount = 3
+            beyondViewportPageCount = 3
     ) { page ->
 
         Column(
