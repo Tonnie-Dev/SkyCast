@@ -57,7 +57,7 @@ internal fun WeatherForecast(
     modifier: Modifier = Modifier,
     state: ForecastState,
     page: Int,
-    onRefreshForecast: () -> Unit
+    onRefreshForecast: () -> Unit,
 ) {
     val spacing = LocalSpacing.current
     val isForecastLoading = state.isLoading
@@ -65,70 +65,75 @@ internal fun WeatherForecast(
         rememberPullRefreshState(refreshing = isForecastLoading, { onRefreshForecast() })
     val selectedTempUnit = state.appPreferences.tempUnit.toString()
 
-
     Box(
-            modifier = modifier
-                    .pullRefresh(pullRefreshState)
-                    .fillMaxWidth()
+        modifier =
+            modifier
+                .pullRefresh(pullRefreshState)
+                .fillMaxWidth(),
     ) {
         Column(
-                horizontalAlignment = CenterHorizontally,
-
-                ) {
-
+            horizontalAlignment = CenterHorizontally,
+        ) {
             if (state.forecastData.isNotEmpty()) {
-                state.forecastData.mapForecastWeather(page)
-                        ?.let { filteredList ->
+                state.forecastData
+                    .mapForecastWeather(page)
+                    ?.let { filteredList ->
 
+                        LazyColumn(
+                            contentPadding = PaddingValues(16.dp),
+                        ) {
+                            itemsIndexed(filteredList) { index, item ->
+                                if (index != 0) {
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                }
 
-                            LazyColumn(
-                                    contentPadding = PaddingValues(16.dp)
-                            ) {
-
-                                itemsIndexed(filteredList) { index, item ->
-                                    if (index != 0) {
-                                        Spacer(modifier = Modifier.height(16.dp))
-                                    }
-
-                                    item.forecastWeatherDescription.forEach { description ->
-                                        TrapizForecastItem(
-                                                dateTime = item.date,
-                                                weatherDesc = description.description.toTitleCase(),
-                                                temp =
-                                                if (selectedTempUnit == FAHRENHEIT) "${
-                                                    (item.forecastWeatherParams.temp.toFahrenheit()
-                                                            .roundOffDoubleToInt())
-                                                }${FAHRENHEIT_SIGN}" else "${
-                                                    item.forecastWeatherParams.temp.toCelsius()
+                                item.forecastWeatherDescription.forEach { description ->
+                                    TrapizForecastItem(
+                                        dateTime = item.date,
+                                        weatherDesc = description.description.toTitleCase(),
+                                        temp =
+                                            if (selectedTempUnit == FAHRENHEIT) {
+                                                "${
+                                                    (
+                                                        item.forecastWeatherParams.temp
+                                                            .toFahrenheit()
                                                             .roundOffDoubleToInt()
-                                                }${CELSIUS_SIGN}",
-                                                icon = WeatherType.fromWMO(description.icon).icon
-                                        )
-                                        Spacer(modifier = Modifier.height(spacing.spaceSmall))
-                                    }
+                                                    )
+                                                }${FAHRENHEIT_SIGN}"
+                                            } else {
+                                                "${
+                                                    item.forecastWeatherParams.temp.toCelsius()
+                                                        .roundOffDoubleToInt()
+                                                }${CELSIUS_SIGN}"
+                                            },
+                                        icon = WeatherType.fromWMO(description.icon).icon,
+                                    )
+                                    Spacer(modifier = Modifier.height(spacing.spaceSmall))
                                 }
                             }
-                        } ?: run {
+                        }
+                    } ?: run {
                     Box(
-                            modifier = modifier
-                                    .fillMaxSize()
-                                    .padding(8.dp),
-                            contentAlignment = Alignment.Center
+                        modifier =
+                            modifier
+                                .fillMaxSize()
+                                .padding(8.dp),
+                        contentAlignment = Alignment.Center,
                     ) {
                         Column(
-                                horizontalAlignment = CenterHorizontally,
+                            horizontalAlignment = CenterHorizontally,
                         ) {
                             Image(
-                                    painter = painterResource(id = R.drawable.ic_no_weather_info),
-                                    contentDescription = null,
-                                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+                                painter = painterResource(id = R.drawable.ic_no_weather_info),
+                                contentDescription = null,
+                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
                             )
 
                             Text(
-                                    text = stringResource(id = R.string.future_weather_msg),
-                                    textAlign = TextAlign.Center,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    style = MaterialTheme.typography.bodyMedium
+                                text = stringResource(id = R.string.future_weather_msg),
+                                textAlign = TextAlign.Center,
+                                color = MaterialTheme.colorScheme.primary,
+                                style = MaterialTheme.typography.bodyMedium,
                             )
                         }
                     }
@@ -137,59 +142,59 @@ internal fun WeatherForecast(
         }
 
         PullRefreshIndicator(
-                refreshing = state.isLoading,
-                state = pullRefreshState,
-                modifier = Modifier.align(Alignment.TopCenter)
+            refreshing = state.isLoading,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter),
         )
     }
 }
 
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-private fun Day(date: LocalDate, isSelected: Boolean, onClick: (date: LocalDate) -> Unit) {
-
+private fun Day(
+    date: LocalDate,
+    isSelected: Boolean,
+    onClick: (date: LocalDate) -> Unit,
+) {
     val spacing = LocalSpacing.current
 
     Box(
-            modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .clickable { onClick(date) }, contentAlignment = Alignment.Center
-    )
-    {
-
-
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .clickable { onClick(date) },
+        contentAlignment = Alignment.Center,
+    ) {
         Column(
-                modifier = Modifier.padding(vertical = spacing.spaceSmall),
-                horizontalAlignment = CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(spacing.spaceSmall),
+            modifier = Modifier.padding(vertical = spacing.spaceSmall),
+            horizontalAlignment = CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(spacing.spaceSmall),
         ) {
             Text(
-                    text = date.dayOfWeek.displayText(),
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Light,
+                text = date.dayOfWeek.displayText(),
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Light,
             )
             Text(
-                    text = dateFormatter.format(date),
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Bold,
+                text = dateFormatter.format(date),
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold,
             )
         }
         if (isSelected) {
             Box(
-                    modifier = Modifier
-                            .fillMaxWidth()
-                            .height(spacing.spaceSmall)
-                            .background(color = MaterialTheme.colorScheme.primary)
-                            .align(Alignment.BottomCenter),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(spacing.spaceSmall)
+                        .background(color = MaterialTheme.colorScheme.primary)
+                        .align(Alignment.BottomCenter),
             )
         }
-
     }
-
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

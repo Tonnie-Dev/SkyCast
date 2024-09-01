@@ -28,151 +28,118 @@ import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.P)
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-    private val locationManager: LocationManager,
-    private val repository: WeatherRepository,
-    private val tracker: LocationTracker,
-    private val prefs: DataStoreOperations,
-    private val connectivityObserver: ConnectivityObserver
-) : ViewModel() {
+class HomeViewModel
+    @Inject
+    constructor(
+        private val locationManager: LocationManager,
+        private val repository: WeatherRepository,
+        private val tracker: LocationTracker,
+        private val prefs: DataStoreOperations,
+        private val connectivityObserver: ConnectivityObserver,
+    ) : ViewModel() {
+        private val _state = MutableStateFlow(HomeState())
+        val state = _state.asStateFlow()
 
-    private val _state = MutableStateFlow(HomeState())
-    val state = _state.asStateFlow()
+        var isLocationEnabled = mutableStateOf(locationManager.isLocationEnabled)
+            private set
 
-    var isLocationEnabled = mutableStateOf(locationManager.isLocationEnabled)
-        private set
+        init {
 
-    init {
-
-        observePrefsFlow()
-        observeNetworkStatus()
-        getCurrentLocation()
-
-    }
-
-    private fun observePrefsFlow() {
-
-        viewModelScope.launch {
-
-            prefs.appPreferences.collectLatest {
-
-                appPrefs ->
-
-                _state.update {
-                    it.copy(
-                            appPreferences = AppPreferences(
-                                    tempUnit = appPrefs.tempUnit,
-                                    theme = appPrefs.theme,
-                                    savedCityId = appPrefs.savedCityId
-                            )
-                    )
-                }
-            }
+            observePrefsFlow()
+            observeNetworkStatus()
+            getCurrentLocation()
         }
-    }
 
-    private fun observeNetworkStatus() {
-
-        connectivityObserver.observe()
-                .onEach { status ->
-                    _state.update { it.copy(netWorkStatus = status) }
-
-                }
-                .launchIn(viewModelScope)
-    }
-
-    private fun getCurrentLocation() {
-
-        viewModelScope.launch {
-
-            when (val result = tracker.getCurrentLocation()) {
-
-                is Resource.Success -> {
-                    result.data?.let {
-
-                        geoPoint ->
-                        Timber.i("LatLng is ${geoPoint.latitude}, ${geoPoint.longitude}")
-                        _state.update {
-
-
-                            it.copy(
-                                    geoPoint = GeoPoint(
-                                            latitude = geoPoint.latitude,
-                                            geoPoint.longitude
-                                    ),
-                                    isLocationNull = false,
-                            )
-                        }
-
-                        if (connectivityObserver.isInternetConnectionAvailable(_state.value.netWorkStatus)) {
-
-
-
-                            getCurrentWeather(geoPoint)
-
-                        } else {
-                            _state.update {
-                                it.copy(
-
-                                        isShowNoConnectionWidget = true
-                                )
-                            }
-
-                        }
-
-
-                    } ?: run {
-
-                        _state.update {
-                            it.copy(
-                                    isLocationNull = true,
-                                    isShowDialog = true
-                            )
-                        }
-
-                    }
-
-                }
-
-                is Resource.Error -> {
+        private fun observePrefsFlow() {
+            viewModelScope.launch {
+                prefs.appPreferences.collectLatest { appPrefs ->
 
                     _state.update {
                         it.copy(
-                                errorMessage = result.errorMessage
+                            appPreferences =
+                                AppPreferences(
+                                    tempUnit = appPrefs.tempUnit,
+                                    theme = appPrefs.theme,
+                                    savedCityId = appPrefs.savedCityId,
+                                ),
                         )
                     }
                 }
-
-                else -> Unit
             }
-
         }
 
-    }
+        private fun observeNetworkStatus() {
+            connectivityObserver
+                .observe()
+                .onEach { status ->
+                    _state.update { it.copy(netWorkStatus = status) }
+                }.launchIn(viewModelScope)
+        }
 
-    private fun getCurrentWeather(geoPoint: GeoPoint) {
+        private fun getCurrentLocation() {
+            viewModelScope.launch {
+                when (val result = tracker.getCurrentLocation()) {
+                    is Resource.Success -> {
+                        result.data?.let { geoPoint ->
+                            Timber.i("LatLng is ${geoPoint.latitude}, ${geoPoint.longitude}")
+                            _state.update {
+                                it.copy(
+                                    geoPoint =
+                                        GeoPoint(
+                                            latitude = geoPoint.latitude,
+                                            geoPoint.longitude,
+                                        ),
+                                    isLocationNull = false,
+                                )
+                            }
 
+                            if (connectivityObserver.isInternetConnectionAvailable(_state.value.netWorkStatus)) {
+                                getCurrentWeather(geoPoint)
+                            } else {
+                                _state.update {
+                                    it.copy(
+                                        isShowNoConnectionWidget = true,
+                                    )
+                                }
+                            }
+                        } ?: run {
+                            _state.update {
+                                it.copy(
+                                    isLocationNull = true,
+                                    isShowDialog = true,
+                                )
+                            }
+                        }
+                    }
 
-        repository.getCurrentWeather(geoPoint)
-                .onEach {
+                    is Resource.Error -> {
+                        _state.update {
+                            it.copy(
+                                errorMessage = result.errorMessage,
+                            )
+                        }
+                    }
 
-                    result ->
+                    else -> Unit
+                }
+            }
+        }
+
+        private fun getCurrentWeather(geoPoint: GeoPoint) {
+            repository
+                .getCurrentWeather(geoPoint)
+                .onEach { result ->
 
                     when (result) {
-
                         is Resource.Error -> {
-
                             _state.update { it.copy(errorMessage = result.errorMessage) }
                         }
 
                         is Resource.Loading -> {
-
                             _state.update { it.copy(isLoading = result.isLoading) }
-
                         }
 
                         is Resource.Success -> {
-
                             result.data?.let { currentWeather ->
 
                                 saveCityId(currentWeather.cityId)
@@ -180,71 +147,53 @@ class HomeViewModel @Inject constructor(
                             }
                         }
                     }
-
-                }
-                .launchIn(viewModelScope)
-
-    }
-
-
-    private fun saveCityId(cityId: Int) {
-
-        viewModelScope.launch {
-            prefs.updateCityId(cityId = cityId)
+                }.launchIn(viewModelScope)
         }
-    }
 
-
-    fun onEvent(event: HomeEvent) {
-
-        when (event) {
-
-            is HomeEvent.OnRefresh -> {
-                resetHomeState()
-                getCurrentLocation()
-
+        private fun saveCityId(cityId: Int) {
+            viewModelScope.launch {
+                prefs.updateCityId(cityId = cityId)
             }
+        }
 
-            is HomeEvent.OnContinue -> {
-
-                resetHomeState()
-
-                if (event.isPermissionGranted) {
-
+        fun onEvent(event: HomeEvent) {
+            when (event) {
+                is HomeEvent.OnRefresh -> {
+                    resetHomeState()
                     getCurrentLocation()
                 }
-                _state.update { it.copy(isShowDialog = !event.isPermissionGranted) }
-                observePrefsFlow()
 
+                is HomeEvent.OnContinue -> {
+                    resetHomeState()
+
+                    if (event.isPermissionGranted) {
+                        getCurrentLocation()
+                    }
+                    _state.update { it.copy(isShowDialog = !event.isPermissionGranted) }
+                    observePrefsFlow()
+                }
+
+                is HomeEvent.OnExit -> {
+                    val activity = event.context as Activity
+                    ActivityCompat.finishAffinity(activity)
+                }
+
+                else -> {
+                    _state.update { it.copy(isShowDialog = false) }
+                }
             }
-
-            is HomeEvent.OnExit -> {
-                val activity = event.context as Activity
-                ActivityCompat.finishAffinity(activity)
-            }
-
-            else -> {
-
-                _state.update { it.copy(isShowDialog = false) }
-            }
-
         }
 
-    }
-
-    private fun resetHomeState() {
-        viewModelScope.launch {
-
-            _state.update {
-                it.copy(
+        private fun resetHomeState() {
+            viewModelScope.launch {
+                _state.update {
+                    it.copy(
                         isLocationNull = false,
                         isShowDialog = true,
-                        isShowNoConnectionWidget = false
-                )
+                        isShowNoConnectionWidget = false,
+                    )
+                }
+                isLocationEnabled.value = locationManager.isLocationEnabled
             }
-            isLocationEnabled.value = locationManager.isLocationEnabled
         }
-
     }
-
-}

@@ -35,124 +35,111 @@ fun DateTab(
     index: Int,
     isSelected: Boolean = false,
     modifier: Modifier = Modifier,
-    onClickDateTab: (index:Int) -> Unit
+    onClickDateTab: (index: Int) -> Unit,
 ) {
-
     val spacing = LocalSpacing.current
     val today = LocalDate.now()
 
-    val tabDate = rememberSaveable {
-
-        when (index) {
-
-            0 -> today
-            1 -> today.plusDays(1)
-            2 -> today.plusDays(2)
-            3 -> today.plusDays(3)
-            4 -> today.plusDays(4)
-            else -> today
+    val tabDate =
+        rememberSaveable {
+            when (index) {
+                0 -> today
+                1 -> today.plusDays(1)
+                2 -> today.plusDays(2)
+                3 -> today.plusDays(3)
+                4 -> today.plusDays(4)
+                else -> today
+            }
         }
-
-    }
 
     val isToday = (tabDate.dayOfMonth == today.dayOfMonth)
 
-    val dayOfWeek = if (isToday) stringResource(id = R.string.today_text)
-    else
-        tabDate.dayOfWeek.name.substring(0..2)
+    val dayOfWeek =
+        if (isToday) {
+            stringResource(id = R.string.today_text)
+        } else {
+            tabDate.dayOfWeek.name.substring(0..2)
+        }
 
     val shortMonth = tabDate.month.name.substring(0..2)
     val dayOfMonth = tabDate.dayOfMonth.toString()
-    val displayDate = dayOfMonth.plus(" ")
+    val displayDate =
+        dayOfMonth
+            .plus(" ")
             .plus(shortMonth)
 
-
-    Surface(modifier = modifier.clickable{onClickDateTab(index)}.animateContentSize()) {
+    Surface(modifier = modifier.clickable { onClickDateTab(index) }.animateContentSize()) {
         Column(
-                modifier = Modifier.width(IntrinsicSize.Max)
-                        .conditional(isSelected) {
-                            Modifier.padding(
-                                    bottom = spacing.spaceExtraSmall,
-                                    top = spacing.spaceSmall,
-                                    end = spacing.spaceMedium,
-                                    start = spacing.spaceMedium
-                            )
-                        }
-                        .conditional(!isSelected) {
-
-                            Modifier.padding(
-                                    bottom = spacing.spaceSmall + spacing.spaceExtraSmall,
-                                    top = spacing.spaceSmall,
-                                    end = spacing.spaceMedium,
-                                    start = spacing.spaceMedium
-                            )
-                        },
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(spacing.spaceExtraSmall)
+            modifier =
+                Modifier
+                    .width(IntrinsicSize.Max)
+                    .conditional(isSelected) {
+                        Modifier.padding(
+                            bottom = spacing.spaceExtraSmall,
+                            top = spacing.spaceSmall,
+                            end = spacing.spaceMedium,
+                            start = spacing.spaceMedium,
+                        )
+                    }.conditional(!isSelected) {
+                        Modifier.padding(
+                            bottom = spacing.spaceSmall + spacing.spaceExtraSmall,
+                            top = spacing.spaceSmall,
+                            end = spacing.spaceMedium,
+                            start = spacing.spaceMedium,
+                        )
+                    },
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(spacing.spaceExtraSmall),
         ) {
-
-
             Text(
-                    text = dayOfWeek,
-                    style = MaterialTheme.typography.bodySmall,
-                    fontWeight = FontWeight.Light,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier
-
+                text = dayOfWeek,
+                style = MaterialTheme.typography.bodySmall,
+                fontWeight = FontWeight.Light,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier,
             )
             Text(
-                    text = displayDate,
-                    style = MaterialTheme.typography.bodySmall,
-                    fontSize = 10.sp,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier
-
+                text = displayDate,
+                style = MaterialTheme.typography.bodySmall,
+                fontSize = 10.sp,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier,
             )
 
-
-          if( isSelected) {
+            if (isSelected) {
                 Surface(
-                        shape = RectangleShape,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier
-                                .height(spacing.spaceExtraSmall)
-                                .fillMaxWidth()
-
+                    shape = RectangleShape,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier =
+                        Modifier
+                            .height(spacing.spaceExtraSmall)
+                            .fillMaxWidth(),
                 ) {}
             }
-
         }
     }
-
-
 }
-
 
 @Preview(uiMode = UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
 fun DateTabPreviewLight() {
-
     SkyCastTheme {
-        Row() {
+        Row {
             DateTab(index = 0, isSelected = true, onClickDateTab = {})
             DateTab(index = 1, isSelected = false, onClickDateTab = {})
             DateTab(index = 2, isSelected = false, onClickDateTab = {})
-
         }
     }
 }
 
-
 @Preview(uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun DateTabPreviewDark() {
-
     SkyCastTheme {
-        Row() {
+        Row {
             DateTab(index = 0, isSelected = true, onClickDateTab = {})
             DateTab(index = 1, isSelected = false, onClickDateTab = {})
             DateTab(index = 2, isSelected = false, onClickDateTab = {})
         }
-
     }
 }

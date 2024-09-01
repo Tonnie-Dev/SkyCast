@@ -1,6 +1,5 @@
 package com.uxstate.skycast.data.remote.dto.current
 
-
 import com.squareup.moshi.Json
 
 data class CurrentWeatherDto(
@@ -29,5 +28,5 @@ data class CurrentWeatherDto(
     @Json(name = "weather")
     val weather: List<CurrentWeatherDescDto>,
     @Json(name = "wind")
-    val wind: CurrentWindDto
+    val wind: CurrentWindDto,
 )

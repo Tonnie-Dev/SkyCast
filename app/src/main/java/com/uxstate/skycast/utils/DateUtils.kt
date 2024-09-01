@@ -22,15 +22,12 @@ fun Long.toDateFormat(): String {
 
 // TODO: Revisit this
 @RequiresApi(Build.VERSION_CODES.O)
-fun DayOfWeek.displayText(uppercase: Boolean = false): String {
-    return getDisplayName(TextStyle.SHORT, Locale.ENGLISH).let { value ->
+fun DayOfWeek.displayText(uppercase: Boolean = false): String =
+    getDisplayName(TextStyle.SHORT, Locale.ENGLISH).let { value ->
         if (uppercase) value.uppercase(Locale.ENGLISH) else value
     }
-}
-
 
 fun String.extractTime(): String {
-
     val pattern = "yyyy-MM-dd HH:mm:ss"
     val dateTimeFormatter = DateTimeFormatter.ofPattern(pattern)
     val localDateTime = LocalDateTime.parse(this, dateTimeFormatter)
@@ -45,36 +42,42 @@ fun String.extractTime(): String {
 }
 
 fun LocalDateTime.extractAmPmTime(): String {
-
     val pattern = "hh:mm a"
     val dateTimeFormatter = DateTimeFormatter.ofPattern(pattern)
     val formattedTime = this.format(dateTimeFormatter)
-    val amPmSubstring = formattedTime.substring(6..7)
+    val amPmSubstring =
+        formattedTime
+            .substring(6..7)
             .uppercase()
     return formattedTime.substring(0..5) + amPmSubstring
 }
 
 fun shortDayOfWeek(daysToAdd: Long = 0L): String {
-
-    val day = LocalDate.now()
-            .plusDays(daysToAdd).dayOfWeek
+    val day =
+        LocalDate
+            .now()
+            .plusDays(daysToAdd)
+            .dayOfWeek
     return if (day == LocalDate.now().dayOfWeek) "Today" else day.name.substring(0..2)
 }
 
-
 fun shortDate(daysToAdd: Long = 0L): String {
-
-    val day = LocalDate.now()
-            .plusDays(daysToAdd).dayOfMonth
+    val day =
+        LocalDate
+            .now()
+            .plusDays(daysToAdd)
+            .dayOfMonth
     val prefixedDay = if (day in 1..9) "0$day" else "$day"
 
     return prefixedDay.let {
-
-        it.plus(EMPTY_STRING)
-                .plus(
-                        LocalDate.now()
-                                .plusDays(daysToAdd).month.getDisplayName(TextStyle.SHORT, Locale.getDefault())
-                )
+        it
+            .plus(EMPTY_STRING)
+            .plus(
+                LocalDate
+                    .now()
+                    .plusDays(daysToAdd)
+                    .month
+                    .getDisplayName(TextStyle.SHORT, Locale.getDefault()),
+            )
     }
-
 }

@@ -25,8 +25,8 @@ import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.uxstate.skycast.presentation.home.HomeEvent.*
 import com.uxstate.skycast.presentation.home.HomeViewModel
-import com.uxstate.skycast.presentation.ui_utils.SkyButton
-import com.uxstate.skycast.presentation.ui_utils.SkyDialog
+import com.uxstate.skycast.presentation.uiutils.SkyButton
+import com.uxstate.skycast.presentation.uiutils.SkyDialog
 import com.uxstate.skycast.ui.theme.LocalSpacing
 import com.uxstate.skycast.ui.theme.SkyCastTheme
 import com.uxstate.skycast.utils.DialogType
@@ -41,49 +41,44 @@ fun ExitScreen(
     onCancelDialog: () -> Unit,
     onDismissDialog: () -> Unit,
     onContinue: () -> Unit,
-    onExit: () -> Unit
-
+    onExit: () -> Unit,
 ) {
     val spacing = LocalSpacing.current
 
     if (isShowDialog) {
         SkyDialog(
-                dialogType = dialogType,
-                onConfirmDialog = { onConfirmDialog() },
-                onCancelDialog = { onCancelDialog() },
-                onDismissDialog = { onDismissDialog() }
+            dialogType = dialogType,
+            onConfirmDialog = { onConfirmDialog() },
+            onCancelDialog = { onCancelDialog() },
+            onDismissDialog = { onDismissDialog() },
         )
     }
 
     AnimatedVisibility(visible = !isShowDialog) {
-
         Box(
-                modifier = modifier
-                        .fillMaxSize()
-                        .padding(
-                                horizontal = spacing.spaceLarge,
-                                vertical = spacing.spaceExtraLarge
-                        ),
-                contentAlignment = Alignment.BottomStart
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .padding(
+                        horizontal = spacing.spaceLarge,
+                        vertical = spacing.spaceExtraLarge,
+                    ),
+            contentAlignment = Alignment.BottomStart,
         ) {
-
             Row(
-                    modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 SkyButton(text = "Exit", onClickButton = onExit)
                 SkyButton(text = "Continue", onClickButton = onContinue)
             }
         }
-
     }
-
-
 }
-
 
 @RequiresApi(Build.VERSION_CODES.P)
 @OptIn(ExperimentalPermissionsApi::class)
@@ -94,77 +89,57 @@ fun ShowExitScreen(
     permissionState: PermissionState,
     viewModel: HomeViewModel,
 ) {
-
     val context = LocalContext.current
 
     val startLocationSettings =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
     ExitScreen(
-            isShowDialog = isShowDialog,
-            dialogType = dialogType,
+        isShowDialog = isShowDialog,
+        dialogType = dialogType,
+        onConfirmDialog = {
+            when (dialogType) {
+                DialogType.PERMISSION -> {
+                    permissionState.launchPermissionRequest()
+                    viewModel.onEvent(OnConfirmDialog)
 
-            onConfirmDialog = {
-
-                when (dialogType) {
-
-                    DialogType.PERMISSION -> {
-
-                        permissionState.launchPermissionRequest()
-                        viewModel.onEvent(OnConfirmDialog)
-
-                        Timber.i("Exit Screen - permission launch requested")
-                    }
-
-                    DialogType.LOCATION -> {
-                        val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                        startLocationSettings.launch(intent)
-                        viewModel.onEvent(OnConfirmDialog)
-                    }
-
-                }
-            },
-
-            onCancelDialog = { viewModel.onEvent(OnCancelDialog) },
-            onDismissDialog = { viewModel.onEvent(OnDismissDialog) },
-
-            onContinue = {
-
-                if (permissionState.status.isGranted) {
-
-                    viewModel.onEvent(OnContinue(isPermissionGranted = true))
-
-                } else {
-
-                    viewModel.onEvent(OnContinue(isPermissionGranted = false))
-                    Timber.i("ExitScreen-else - ${permissionState.status.isGranted}")
+                    Timber.i("Exit Screen - permission launch requested")
                 }
 
-
-            },
-
-            onExit = {
-
-                viewModel.onEvent(OnExit(context = context))
-
-            },
+                DialogType.LOCATION -> {
+                    val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                    startLocationSettings.launch(intent)
+                    viewModel.onEvent(OnConfirmDialog)
+                }
+            }
+        },
+        onCancelDialog = { viewModel.onEvent(OnCancelDialog) },
+        onDismissDialog = { viewModel.onEvent(OnDismissDialog) },
+        onContinue = {
+            if (permissionState.status.isGranted) {
+                viewModel.onEvent(OnContinue(isPermissionGranted = true))
+            } else {
+                viewModel.onEvent(OnContinue(isPermissionGranted = false))
+                Timber.i("ExitScreen-else - ${permissionState.status.isGranted}")
+            }
+        },
+        onExit = {
+            viewModel.onEvent(OnExit(context = context))
+        },
     )
-
 }
 
 @Preview(uiMode = UI_MODE_NIGHT_NO, showSystemUi = true)
 @Composable
 fun ExitScreenPreviewLight1() {
-
     SkyCastTheme {
-
         ExitScreen(
-                dialogType = DialogType.PERMISSION,
-                onConfirmDialog = {},
-                onCancelDialog = {},
-                onDismissDialog = {},
-                onContinue = {},
-                onExit = { },
-                isShowDialog = true
+            dialogType = DialogType.PERMISSION,
+            onConfirmDialog = {},
+            onCancelDialog = {},
+            onDismissDialog = {},
+            onContinue = {},
+            onExit = { },
+            isShowDialog = true,
         )
     }
 }
@@ -172,17 +147,15 @@ fun ExitScreenPreviewLight1() {
 @Preview(uiMode = UI_MODE_NIGHT_NO, showSystemUi = true)
 @Composable
 fun ExitScreenPreviewLight2() {
-
     SkyCastTheme {
-
         ExitScreen(
-                dialogType = DialogType.PERMISSION,
-                onConfirmDialog = {},
-                onCancelDialog = {},
-                onDismissDialog = {},
-                onContinue = {},
-                onExit = { },
-                isShowDialog = true
+            dialogType = DialogType.PERMISSION,
+            onConfirmDialog = {},
+            onCancelDialog = {},
+            onDismissDialog = {},
+            onContinue = {},
+            onExit = { },
+            isShowDialog = true,
         )
     }
 }
@@ -190,18 +163,15 @@ fun ExitScreenPreviewLight2() {
 @Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
 fun ExitScreenPreviewDark1() {
-
     SkyCastTheme {
-
-
         ExitScreen(
-                dialogType = DialogType.PERMISSION,
-                onConfirmDialog = {},
-                onCancelDialog = {},
-                onDismissDialog = {},
-                onContinue = {},
-                onExit = {},
-                isShowDialog = true
+            dialogType = DialogType.PERMISSION,
+            onConfirmDialog = {},
+            onCancelDialog = {},
+            onDismissDialog = {},
+            onContinue = {},
+            onExit = {},
+            isShowDialog = true,
         )
     }
 }
@@ -209,17 +179,15 @@ fun ExitScreenPreviewDark1() {
 @Preview(uiMode = UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
 fun ExitScreenPreviewDark2() {
-
     SkyCastTheme {
-
         ExitScreen(
-                dialogType = DialogType.PERMISSION,
-                onConfirmDialog = {},
-                onCancelDialog = {},
-                onDismissDialog = {},
-                onContinue = {},
-                onExit = {},
-                isShowDialog = true
+            dialogType = DialogType.PERMISSION,
+            onConfirmDialog = {},
+            onCancelDialog = {},
+            onDismissDialog = {},
+            onContinue = {},
+            onExit = {},
+            isShowDialog = true,
         )
     }
 }

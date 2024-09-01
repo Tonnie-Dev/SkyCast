@@ -15,20 +15,18 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
-
     @Singleton
     @Provides
-    fun provideWeatherDatabase(appContext: Application, moshi: Moshi): WeatherDatabase {
-
-        return Room.databaseBuilder(
+    fun provideWeatherDatabase(
+        appContext: Application,
+        moshi: Moshi,
+    ): WeatherDatabase =
+        Room
+            .databaseBuilder(
                 context = appContext,
                 klass = WeatherDatabase::class.java,
-                name = WeatherDatabase.DATABASE_NAME
-        )
-                .addTypeConverter(Converters(JsonParserImpl(moshi)))
-                .fallbackToDestructiveMigration()
-                .build()
-    }
-
-
+                name = WeatherDatabase.DATABASE_NAME,
+            ).addTypeConverter(Converters(JsonParserImpl(moshi)))
+            .fallbackToDestructiveMigration()
+            .build()
 }

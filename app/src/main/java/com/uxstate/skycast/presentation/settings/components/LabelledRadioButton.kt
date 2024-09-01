@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,33 +20,26 @@ fun LabelledRadioButton(
     text: String,
     isSelected: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-
     val spacing = LocalSpacing.current
 
-
     Row(
-            modifier = modifier
-                    .fillMaxWidth()
-                    .clickable { onClick() },
-            verticalAlignment = Alignment.CenterVertically
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clickable { onClick() },
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         RadioButton(selected = isSelected, onClick = onClick)
         Text(text = text)
     }
 }
 
-
-
-
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)
 @Composable
 fun LabelledRadioButtonPreviewLight() {
-
     SkyCastTheme {
-
-
         Column {
             LabelledRadioButton(text = "Tonnie", isSelected = true, onClick = { /*TODO*/ })
             LabelledRadioButton(text = "Uncle", isSelected = false, onClick = { /*TODO*/ })
@@ -55,19 +47,13 @@ fun LabelledRadioButtonPreviewLight() {
     }
 }
 
-
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun LabelledRadioButtonPreviewDark() {
-
     SkyCastTheme {
-
-
         Column {
-
-
-                LabelledRadioButton(text = "Tonnie", isSelected = true, onClick = { /*TODO*/ })
-                LabelledRadioButton(text = "Uncle", isSelected = false, onClick = { /*TODO*/ })
-            }
+            LabelledRadioButton(text = "Tonnie", isSelected = true, onClick = { /*TODO*/ })
+            LabelledRadioButton(text = "Uncle", isSelected = false, onClick = { /*TODO*/ })
         }
     }
+}

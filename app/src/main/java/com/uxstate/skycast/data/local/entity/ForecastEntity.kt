@@ -14,5 +14,5 @@ data class ForecastEntity(
     val lastFetchTime: Long,
     val forecastWeatherDescription: List<WeatherDescription>,
     @Embedded val wind: Wind,
-    @Embedded val forecastWeatherParams: WeatherParams
+    @Embedded val forecastWeatherParams: WeatherParams,
 )

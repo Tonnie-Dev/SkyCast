@@ -33,90 +33,90 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PagerItem(pagerState: PagerState, state: ForecastState, viewModel: ForecastViewModel) {
-
+fun PagerItem(
+    pagerState: PagerState,
+    state: ForecastState,
+    viewModel: ForecastViewModel,
+) {
     val spacing = LocalSpacing.current
-    val tabs = List(PAGER_SIZE) {
-
-        TabItem.DayOne(
+    val tabs =
+        List(PAGER_SIZE) {
+            TabItem.DayOne(
                 state = state,
                 page = it,
-                onRefreshForecast = viewModel::refreshForecastWeather
-        )
-
-    }
+                onRefreshForecast = viewModel::refreshForecastWeather,
+            )
+        }
 
     val coroutineScope = rememberCoroutineScope()
 
-    TabRow(modifier = Modifier.padding(horizontal = spacing.spaceMedium),
-            selectedTabIndex = pagerState.currentPage,
-            indicator = { tabPositions ->
-                TabRowDefaults.Indicator(
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage])
-                )
-            }
-
+    TabRow(
+        modifier = Modifier.padding(horizontal = spacing.spaceMedium),
+        selectedTabIndex = pagerState.currentPage,
+        indicator = { tabPositions ->
+            TabRowDefaults.Indicator(
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
+            )
+        },
     ) {
-
         tabs.forEachIndexed { index, tabItem ->
 
-            Tab(selected = pagerState.currentPage == index,
-                    onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
-                    content = {
+            Tab(
+                selected = pagerState.currentPage == index,
+                onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
+                content = {
+                    Spacer(modifier = Modifier.height(spacing.spaceSmall))
+                    Text(
+                        text = tabItem.dayOfWeek,
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier,
+                    )
+                    Text(
+                        text = tabItem.dayOfTheMonth,
+                        style = MaterialTheme.typography.labelLarge,
+                        fontSize = 10.sp,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier,
+                    )
 
-                        Spacer(modifier = Modifier.height(spacing.spaceSmall))
-                        Text(
-                                text = tabItem.dayOfWeek,
-                                style = MaterialTheme.typography.bodySmall,
-                                fontWeight = FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier
-
-                        )
-                        Text(
-                                text = tabItem.dayOfTheMonth,
-                                style = MaterialTheme.typography.labelLarge,
-                                fontSize = 10.sp,
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier
-
-                        )
-
-                       Spacer(modifier = Modifier.height(spacing.spaceSmall))
-                    }
+                    Spacer(modifier = Modifier.height(spacing.spaceSmall))
+                },
             )
         }
     }
 
     HorizontalPager(
-            modifier = Modifier.fillMaxSize(),
-            state = pagerState,
-            beyondViewportPageCount = 3
+        modifier = Modifier.fillMaxSize(),
+        state = pagerState,
+        beyondViewportPageCount = 3,
     ) { page ->
 
         Column(
-                modifier = Modifier
-                        .fillMaxSize()
+            modifier =
+                Modifier
+                    .fillMaxSize(),
         ) {
             WeatherForecast(state = state, page = page) {
-
             }
-
         }
     }
-
 }
 
-
 @Composable
-fun FancyIndicator(color: Color, modifier: Modifier = Modifier) {
+fun FancyIndicator(
+    color: Color,
+    modifier: Modifier = Modifier,
+) {
     // Draws a rounded rectangular with border around the Tab, with a 5.dp padding from the edges
     // Color is passed in as a parameter [color]
-   Box( modifier = modifier
-            .padding(1.dp)
-            .fillMaxSize()
-
-            .border(BorderStroke(2.dp, color),TrapeziumWeatherShape())
+    Box(
+        modifier =
+            modifier
+                .padding(1.dp)
+                .fillMaxSize()
+                .border(BorderStroke(2.dp, color), TrapeziumWeatherShape()),
     )
 }

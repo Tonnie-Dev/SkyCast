@@ -22,30 +22,34 @@ import com.uxstate.skycast.ui.theme.LocalSpacing
 import com.uxstate.skycast.ui.theme.SkyCastTheme
 
 @Composable
-fun WeatherDataDisplay(modifier: Modifier, humidity: Double, pressure: Double, windSpeed: Double) {
-
+fun WeatherDataDisplay(
+    modifier: Modifier,
+    humidity: Double,
+    pressure: Double,
+    windSpeed: Double,
+) {
     val spacing = LocalSpacing.current
     Row(
-            modifier = modifier,
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(spacing.spaceMedium)
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(spacing.spaceMedium),
     ) {
         WeatherDataElement(
-                icon = R.drawable.ic_humidity,
-                text = R.string.weather_humidity,
-                value = "${humidity}%"
+            icon = R.drawable.ic_humidity,
+            text = R.string.weather_humidity,
+            value = "$humidity%",
         )
 
         WeatherDataElement(
-                icon = R.drawable.ic_pressure,
-                text = R.string.weather_pressure,
-                value = "${pressure}hPa"
+            icon = R.drawable.ic_pressure,
+            text = R.string.weather_pressure,
+            value = "${pressure}hPa",
         )
 
         WeatherDataElement(
-                icon = R.drawable.ic_speed,
-                text = R.string.weather_wind_speed,
-                value = "${windSpeed}km/h"
+            icon = R.drawable.ic_speed,
+            text = R.string.weather_wind_speed,
+            value = "${windSpeed}km/h",
         )
     }
 }
@@ -55,36 +59,38 @@ fun WeatherDataElement(
     modifier: Modifier = Modifier,
     @DrawableRes icon: Int,
     @StringRes text: Int,
-    value: String
+    value: String,
 ) {
     val spacing = LocalSpacing.current
 
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Image(
-                painter = painterResource(id = icon),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(
-                        MaterialTheme.colorScheme.primary
-                )
+            painter = painterResource(id = icon),
+            contentDescription = null,
+            colorFilter =
+                ColorFilter.tint(
+                    MaterialTheme.colorScheme.primary,
+                ),
         )
 
         Text(
-                text = stringResource(id = text),
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.paddingFromBaseline(
-                        top = spacing.spaceSmall,
-                        bottom = spacing.spaceSmall
-                )
-
+            text = stringResource(id = text),
+            style = MaterialTheme.typography.bodyLarge,
+            modifier =
+                Modifier.paddingFromBaseline(
+                    top = spacing.spaceSmall,
+                    bottom = spacing.spaceSmall,
+                ),
         )
 
         Text(
-                text = value,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.paddingFromBaseline(
-                        top = spacing.spaceSmall,
-                        bottom = spacing.spaceSmall
-                )
+            text = value,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier =
+                Modifier.paddingFromBaseline(
+                    top = spacing.spaceSmall,
+                    bottom = spacing.spaceSmall,
+                ),
         )
     }
 }
@@ -92,22 +98,18 @@ fun WeatherDataElement(
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun WeatherDataElementPreviewDark() {
-
     SkyCastTheme {
-
         WeatherDataElement(
-                icon = R.drawable.ic_speed,
-                text = R.string.weather_humidity,
-                value = "33.0%"
+            icon = R.drawable.ic_speed,
+            text = R.string.weather_humidity,
+            value = "33.0%",
         )
     }
 }
 
-
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun WeatherDisplayPreviewDark() {
-
     SkyCastTheme {
         WeatherDataDisplay(modifier = Modifier, humidity = 23.5, pressure = 13.9, windSpeed = 76.4)
     }

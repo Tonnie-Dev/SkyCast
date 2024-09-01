@@ -16,22 +16,15 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class ConnectivityModule {
-
     @Binds
     @Singleton
     abstract fun bindConnectivityObserver(connectivityObserverImpl: ConnectivityObserverImpl): ConnectivityObserver
 
     companion object {
-
-  @Provides
+        @Provides
         @Singleton
-        fun provideConnectivityManager(@ApplicationContext context: Context):ConnectivityManager
-
-    = context. getSystemService(ConnectivityManager::class.java)
-
-
-
-
-
+        fun provideConnectivityManager(
+            @ApplicationContext context: Context,
+        ): ConnectivityManager = context.getSystemService(ConnectivityManager::class.java)
     }
 }

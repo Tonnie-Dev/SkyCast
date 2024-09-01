@@ -7,7 +7,7 @@ import com.uxstate.skycast.utils.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface WeatherRepository {
+    fun getCurrentWeather(geoPoint: GeoPoint): Flow<Resource<CurrentWeather>>
 
-  fun getCurrentWeather(geoPoint: GeoPoint): Flow<Resource<CurrentWeather>>
-  fun getForecastWeather(cityId:Int):Flow<Resource<List<ForecastWeather>>>
+    fun getForecastWeather(cityId: Int): Flow<Resource<List<ForecastWeather>>>
 }

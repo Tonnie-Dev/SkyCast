@@ -26,162 +26,135 @@ fun SettingsItem(
     modifier: Modifier = Modifier,
     @StringRes title: Int,
     @StringRes subTitle: Int,
-    @DrawableRes icon:Int,
-    onClickSetting: () -> Unit
+    @DrawableRes icon: Int,
+    onClickSetting: () -> Unit,
 ) {
-
     val spacing = LocalSpacing.current
 
-
     Row(
-            modifier = modifier
-                    .clickable(onClick = onClickSetting)
-                    .padding(spacing.spaceSmall)
-                    .fillMaxWidth()
+        modifier =
+            modifier
+                .clickable(onClick = onClickSetting)
+                .padding(spacing.spaceSmall)
+                .fillMaxWidth(),
     ) {
-
         Icon(
-                painter = painterResource(id = icon),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(spacing.spaceMedium)
+            painter = painterResource(id = icon),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(spacing.spaceMedium),
         )
 
         Column(modifier = Modifier.padding(spacing.spaceMedium)) {
-
-
             Text(
-                    text = stringResource(id = title),
-                    style = MaterialTheme.typography.bodyLarge
+                text = stringResource(id = title),
+                style = MaterialTheme.typography.bodyLarge,
             )
 
-
             Text(
-                    text = stringResource(id = subTitle),
-                    style = MaterialTheme.typography.bodyMedium
+                text = stringResource(id = subTitle),
+                style = MaterialTheme.typography.bodyMedium,
             )
         }
+    }
+}
 
-    }}
-
-
-
-
-
-
-
-
-@Preview(uiMode = UI_MODE_NIGHT_NO,  showBackground = true)
+@Preview(uiMode = UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
 fun SettingsItemPreviewLight() {
-
     SkyCastTheme {
-
         Column {
             SettingsItem(
-                    title = R.string.theme,
-                    subTitle = R.string.light,
-                    icon = R.drawable.palette,
-                    onClickSetting = {}
-            )
-
-
-            SettingsItem(
-                    title = R.string.theme,
-                    subTitle = R.string.unit_fahrenheit,
-                    icon = R.drawable.thermo,
-                    onClickSetting = {}
+                title = R.string.theme,
+                subTitle = R.string.light,
+                icon = R.drawable.palette,
+                onClickSetting = {},
             )
 
             SettingsItem(
-                    title = R.string.share_application,
-                    subTitle = R.string.invite_friends,
-                    icon = R.drawable.share,
-                    onClickSetting = {}
+                title = R.string.theme,
+                subTitle = R.string.unit_fahrenheit,
+                icon = R.drawable.thermo,
+                onClickSetting = {},
             )
 
             SettingsItem(
-                    title = R.string.report_issue,
-                    subTitle = R.string.help_us,
-                    icon = R.drawable.bug,
-                    onClickSetting = {}
+                title = R.string.share_application,
+                subTitle = R.string.invite_friends,
+                icon = R.drawable.share,
+                onClickSetting = {},
             )
 
             SettingsItem(
-                    title = R.string.rate_us,
-                    subTitle = R.string.give_feedback,
-                    icon = R.drawable.rate_us,
-                    onClickSetting = {}
+                title = R.string.report_issue,
+                subTitle = R.string.help_us,
+                icon = R.drawable.bug,
+                onClickSetting = {},
             )
 
             SettingsItem(
-                    title = R.string.version,
-                    subTitle = R.string.app_version,
-                    icon = R.drawable.version,
-                    onClickSetting = {}
+                title = R.string.rate_us,
+                subTitle = R.string.give_feedback,
+                icon = R.drawable.rate_us,
+                onClickSetting = {},
+            )
+
+            SettingsItem(
+                title = R.string.version,
+                subTitle = R.string.app_version,
+                icon = R.drawable.version,
+                onClickSetting = {},
             )
         }
     }
-
 }
 
-
-
-@Preview(uiMode = UI_MODE_NIGHT_YES,  showBackground = true)
+@Preview(uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun SettingsItemPreviewDark() {
-
     SkyCastTheme {
-
         Column {
             SettingsItem(
-                    title = R.string.theme,
-                    subTitle = R.string.light,
-                    icon = R.drawable.palette,
-                    onClickSetting = {}
-            )
-
-
-            SettingsItem(
-                    title = R.string.theme,
-                    subTitle = R.string.unit_fahrenheit,
-                    icon = R.drawable.thermo,
-                    onClickSetting = {}
+                title = R.string.theme,
+                subTitle = R.string.light,
+                icon = R.drawable.palette,
+                onClickSetting = {},
             )
 
             SettingsItem(
-                    title = R.string.share_application,
-                    subTitle = R.string.invite_friends,
-                    icon = R.drawable.share,
-                    onClickSetting = {}
+                title = R.string.theme,
+                subTitle = R.string.unit_fahrenheit,
+                icon = R.drawable.thermo,
+                onClickSetting = {},
             )
 
             SettingsItem(
-                    title = R.string.report_issue,
-                    subTitle = R.string.help_us,
-                    icon = R.drawable.bug,
-                    onClickSetting = {}
+                title = R.string.share_application,
+                subTitle = R.string.invite_friends,
+                icon = R.drawable.share,
+                onClickSetting = {},
             )
 
             SettingsItem(
-                    title = R.string.rate_us,
-                    subTitle = R.string.give_feedback,
-                    icon = R.drawable.rate_us,
-                    onClickSetting = {}
+                title = R.string.report_issue,
+                subTitle = R.string.help_us,
+                icon = R.drawable.bug,
+                onClickSetting = {},
             )
 
             SettingsItem(
-                    title = R.string.version,
-                    subTitle = R.string.app_version,
-                    icon = R.drawable.version,
-                    onClickSetting = {}
+                title = R.string.rate_us,
+                subTitle = R.string.give_feedback,
+                icon = R.drawable.rate_us,
+                onClickSetting = {},
+            )
+
+            SettingsItem(
+                title = R.string.version,
+                subTitle = R.string.app_version,
+                icon = R.drawable.version,
+                onClickSetting = {},
             )
         }
     }
-
 }
-
-
-
-
-

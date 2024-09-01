@@ -1,6 +1,5 @@
 package com.uxstate.skycast.data.remote.dto.current
 
-
 import com.squareup.moshi.Json
 
 data class Sys(
@@ -13,5 +12,5 @@ data class Sys(
     @Json(name = "sunset")
     val sunset: Int,
     @Json(name = "type")
-    val type: Int
+    val type: Int,
 )

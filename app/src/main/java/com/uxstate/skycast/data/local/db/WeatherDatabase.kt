@@ -11,18 +11,15 @@ import com.uxstate.skycast.data.local.entity.CurrentEntity
 import com.uxstate.skycast.data.local.entity.ForecastEntity
 
 @Database(
-        entities = [CurrentEntity::class, ForecastEntity::class],
-        version = DATABASE_VERSION,
-        exportSchema = IS_EXPORT_SCHEMA
+    entities = [CurrentEntity::class, ForecastEntity::class],
+    version = DATABASE_VERSION,
+    exportSchema = IS_EXPORT_SCHEMA,
 )
-
 @TypeConverters(Converters::class)
 abstract class WeatherDatabase : RoomDatabase() {
-
     abstract val dao: WeatherDao
 
     companion object {
-
         const val DATABASE_NAME = "weather_database"
         const val IS_EXPORT_SCHEMA = false
         const val DATABASE_VERSION = 1

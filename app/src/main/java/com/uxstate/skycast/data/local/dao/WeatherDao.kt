@@ -9,12 +9,11 @@ import com.uxstate.skycast.data.local.entity.ForecastEntity
 
 @Dao
 interface WeatherDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCurrentData(currentData: CurrentEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCurrentData(currentData:CurrentEntity)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertForecastData(forecastData:List<ForecastEntity>)
+    suspend fun insertForecastData(forecastData: List<ForecastEntity>)
 
     @Query("DELETE FROM current_weather_table")
     suspend fun clearCurrentWeatherData()
@@ -23,9 +22,8 @@ interface WeatherDao {
     suspend fun clearForecastWeatherData()
 
     @Query("SELECT * FROM current_weather_table")
-    suspend fun getCurrentWeather():CurrentEntity?
+    suspend fun getCurrentWeather(): CurrentEntity?
 
     @Query("SELECT* FROM forecast_weather_table")
-    suspend fun getForecastWeather():List<ForecastEntity>?
-
+    suspend fun getForecastWeather(): List<ForecastEntity>?
 }

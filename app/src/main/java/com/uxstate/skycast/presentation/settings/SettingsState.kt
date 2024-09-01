@@ -7,17 +7,14 @@ import com.uxstate.skycast.domain.prefs.Theme
 data class SettingsState(
     val appPreferences: AppPreferences = initialAppPreferences,
     val isShowThemeDialog: Boolean = false,
-    val isShowTempUnitDialog: Boolean = false
+    val isShowTempUnitDialog: Boolean = false,
 ) {
-
-
     companion object {
-
-        val initialAppPreferences = AppPreferences(
+        val initialAppPreferences =
+            AppPreferences(
                 theme = Theme.SYSTEM,
                 tempUnit = TempUnit.CELSIUS,
-                savedCityId = -1
-        )
-
+                savedCityId = -1,
+            )
     }
 }

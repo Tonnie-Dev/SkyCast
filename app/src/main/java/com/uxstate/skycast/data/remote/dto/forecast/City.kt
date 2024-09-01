@@ -1,6 +1,5 @@
 package com.uxstate.skycast.data.remote.dto.forecast
 
-
 import com.squareup.moshi.Json
 
 data class City(
@@ -19,5 +18,5 @@ data class City(
     @Json(name = "sunset")
     val sunset: Int,
     @Json(name = "timezone")
-    val timezone: Int
+    val timezone: Int,
 )

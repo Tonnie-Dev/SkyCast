@@ -18,7 +18,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.uxstate.skycast.R
 import com.uxstate.skycast.ui.theme.LocalSpacing
@@ -26,29 +25,29 @@ import com.uxstate.skycast.ui.theme.SkyCastTheme
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun EmptyWeatherBox( onGetLocation:()-> Unit) {
-
-val spacing = LocalSpacing.current
+fun EmptyWeatherBox(onGetLocation: () -> Unit) {
+    val spacing = LocalSpacing.current
     Box(
-            modifier = Modifier
-                    .fillMaxSize()
-                    .padding(spacing.spaceSmall),
-            contentAlignment = Alignment.Center
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(spacing.spaceSmall),
+        contentAlignment = Alignment.Center,
     ) {
         Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
-                    painter = painterResource(id = R.drawable.ic_no_weather_info),
-                    contentDescription = null,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+                painter = painterResource(id = R.drawable.ic_no_weather_info),
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
             )
 
             Text(
-                    text = stringResource(id = R.string.location_permission_msg),
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.bodyMedium
+                text = stringResource(id = R.string.location_permission_msg),
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.bodyMedium,
             )
 
             Button(onClick = { onGetLocation() }) {
@@ -61,20 +60,15 @@ val spacing = LocalSpacing.current
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)
 @Composable
 fun EmptyWeatherBoxPreviewLight() {
-
     SkyCastTheme {
-
-        EmptyWeatherBox(){}
+        EmptyWeatherBox {}
     }
 }
-
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun EmptyWeatherBoxPreviewDark() {
-
     SkyCastTheme {
-
-        EmptyWeatherBox(){}
+        EmptyWeatherBox {}
     }
 }

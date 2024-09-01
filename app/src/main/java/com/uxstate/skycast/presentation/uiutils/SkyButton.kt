@@ -1,4 +1,4 @@
-package com.uxstate.skycast.presentation.ui_utils
+package com.uxstate.skycast.presentation.uiutils
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
@@ -28,78 +28,62 @@ fun SkyButton(
     text: String,
     onClickButton: () -> Unit,
     @DrawableRes icon: Int = 0,
-    color: Color = MaterialTheme.colorScheme.primary
+    color: Color = MaterialTheme.colorScheme.primary,
 ) {
-
     val spacing = LocalSpacing.current
     Button(
-            onClick = onClickButton,
-            modifier = modifier,
-            colors = ButtonDefaults.buttonColors(containerColor = color)
+        onClick = onClickButton,
+        modifier = modifier,
+        colors = ButtonDefaults.buttonColors(containerColor = color),
     ) {
-
         Row {
             if (hasIcon && icon != 0) {
                 Icon(
-                        painter = painterResource(id = icon),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimary
+                    painter = painterResource(id = icon),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimary,
                 )
 
                 Spacer(modifier = Modifier.width(spacing.spaceSmall))
             }
 
             Text(text = text)
-
         }
     }
-
 }
 
 @Preview(uiMode = UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
 fun SkyButtonPreviewLight() {
-
     SkyCastTheme {
-
         Column {
             SkyButton(hasIcon = true, text = "Press Me", icon = R.drawable.bug, onClickButton = { })
             SkyButton(hasIcon = false, text = "Press Me", icon = R.drawable.bug, onClickButton = { })
             SkyButton(
-                    hasIcon = false,
-                    text = "Press Me",
-                    icon = R.drawable.bug,
-                    color = MaterialTheme.colorScheme.error,
-                    onClickButton = { })
+                hasIcon = false,
+                text = "Press Me",
+                icon = R.drawable.bug,
+                color = MaterialTheme.colorScheme.error,
+                onClickButton = { },
+            )
         }
-
     }
-
-
-
 }
-
 
 @Preview(uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun SkyButtonPreviewDark() {
-
     SkyCastTheme {
-
         Column {
             SkyButton(hasIcon = true, text = "Press Me", icon = R.drawable.bug, onClickButton = { })
             SkyButton(hasIcon = false, text = "Press Me", icon = R.drawable.bug, onClickButton = { })
             SkyButton(
-                    hasIcon = false,
-                    text = "Press Me",
-                    icon = R.drawable.bug,
-                    color = MaterialTheme.colorScheme.error,
-                    onClickButton = { })
+                hasIcon = false,
+                text = "Press Me",
+                icon = R.drawable.bug,
+                color = MaterialTheme.colorScheme.error,
+                onClickButton = { },
+            )
         }
-
-
     }
-
-
-
 }

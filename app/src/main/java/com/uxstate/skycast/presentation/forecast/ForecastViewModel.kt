@@ -16,110 +16,86 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
-class ForecastViewModel @Inject constructor(
-    private val repository: WeatherRepository,
-    private val prefs: DataStoreOperations
-) : ViewModel() {
+class ForecastViewModel
+    @Inject
+    constructor(
+        private val repository: WeatherRepository,
+        private val prefs: DataStoreOperations,
+    ) : ViewModel() {
+        private val _state = MutableStateFlow(ForecastState())
+        val state = _state.asStateFlow()
 
+        init {
 
-    private val _state = MutableStateFlow(ForecastState())
-    val state = _state.asStateFlow()
+            getCityId()
+            observePrefsFlow()
+        }
 
-    init {
+        private fun getForecastWeather(cityId: Int? = _state.value.cityId) {
+            cityId?.let { id ->
 
-        getCityId()
-        observePrefsFlow()
-    }
-
-    private fun getForecastWeather(cityId: Int? = _state.value.cityId) {
-
-        cityId?.let { id ->
-
-            repository.getForecastWeather(id)
+                repository
+                    .getForecastWeather(id)
                     .onEach { result ->
 
                         when (result) {
-
                             is Resource.Loading -> {
-
                                 _state.update { it.copy(isLoading = result.isLoading) }
                             }
 
                             is Resource.Error -> {
-
-
                                 _state.update { it.copy(errorMessage = result.errorMessage) }
                             }
 
                             is Resource.Success -> {
-
                                 result.data?.let { forecastWeather ->
 
                                     _state.update { it.copy(forecastData = forecastWeather) }
                                 }
                             }
-
                         }
-
-                    }
-                    .launchIn(viewModelScope)
-        }
-
-
-    }
-
-    private fun getCityId() {
-
-        viewModelScope.launch {
-            prefs.appPreferences.collectLatest { savedPrefs ->
-
-                _state.update { it.copy(cityId = savedPrefs.savedCityId) }
-                getForecastWeather(savedPrefs.savedCityId)
-            }
-
-        }
-
-    }
-
-
-    fun refreshForecastWeather() {
-
-        getForecastWeather()
-    }
-
-    fun onEvent(event: ForecastEvent) {
-
-        when (event) {
-
-            is ForecastEvent.OnDateChangeEvent -> {
-                _state.update { it.copy(selectedDay = event.date) }
+                    }.launchIn(viewModelScope)
             }
         }
-    }
 
-    private fun observePrefsFlow() {
+        private fun getCityId() {
+            viewModelScope.launch {
+                prefs.appPreferences.collectLatest { savedPrefs ->
 
-        viewModelScope.launch {
+                    _state.update { it.copy(cityId = savedPrefs.savedCityId) }
+                    getForecastWeather(savedPrefs.savedCityId)
+                }
+            }
+        }
 
+        fun refreshForecastWeather() {
+            getForecastWeather()
+        }
 
-            prefs.appPreferences.collectLatest {
+        fun onEvent(event: ForecastEvent) {
+            when (event) {
+                is ForecastEvent.OnDateChangeEvent -> {
+                    _state.update { it.copy(selectedDay = event.date) }
+                }
+            }
+        }
 
-                appPrefs ->
+        private fun observePrefsFlow() {
+            viewModelScope.launch {
+                prefs.appPreferences.collectLatest { appPrefs ->
 
-
-                _state.update {
-                    it.copy(
-                            appPreferences = AppPreferences(
+                    _state.update {
+                        it.copy(
+                            appPreferences =
+                                AppPreferences(
                                     tempUnit = appPrefs.tempUnit,
                                     theme = appPrefs.theme,
-                                    savedCityId = appPrefs.savedCityId
-                            )
-                    )
+                                    savedCityId = appPrefs.savedCityId,
+                                ),
+                        )
+                    }
                 }
             }
         }
     }
-}
-

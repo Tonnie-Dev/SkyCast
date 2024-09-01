@@ -1,4 +1,4 @@
-package com.uxstate.skycast.presentation.ui_utils
+package com.uxstate.skycast.presentation.uiutils
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
@@ -39,118 +39,99 @@ import com.uxstate.skycast.presentation.home.HomeState
 import com.uxstate.skycast.ui.theme.LocalSpacing
 import com.uxstate.skycast.utils.getStringById
 
-
 @Composable
-fun NoConnectionWidget(homeState: HomeState, onRetry: () -> Unit) {
-
+fun NoConnectionWidget(
+    homeState: HomeState,
+    onRetry: () -> Unit,
+) {
     val networkStatus = homeState.netWorkStatus
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
     LaunchedEffect(key1 = networkStatus, block = {
-
         if (networkStatus == Status.AVAILABLE) {
-
-            val result = snackbarHostState.showSnackbar(
+            val result =
+                snackbarHostState.showSnackbar(
                     message = context.getStringById(R.string.internet_restored_text),
                     actionLabel = context.getStringById(R.string.retry_text),
                     duration = SnackbarDuration.Indefinite,
-                    withDismissAction = true
-
-            )
+                    withDismissAction = true,
+                )
             when (result) {
-
                 SnackbarResult.ActionPerformed -> {
                     onRetry()
                 }
 
                 SnackbarResult.Dismissed -> {
-
                 }
             }
-
-
         }
-
-
     })
 
-
-
-
     Box(
-            modifier = Modifier
-                    .fillMaxSize()
-                    .statusBarsPadding()
-                    .navigationBarsPadding()
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .statusBarsPadding()
+                .navigationBarsPadding(),
     ) {
-
         val spacing = LocalSpacing.current
         val infiniteTransition = rememberInfiniteTransition(label = "infinite_color_anim")
 
         val animatedAlpha by infiniteTransition.animateFloat(
-                initialValue = .3f,
-                targetValue = .8f,
-                label = "",
-                animationSpec = infiniteRepeatable(
-                        animation = tween(durationMillis = 1000, easing = FastOutSlowInEasing),
-                        repeatMode = RepeatMode.Reverse // Reverse the animation to make it continuous
-                )
+            initialValue = .3f,
+            targetValue = .8f,
+            label = "",
+            animationSpec =
+                infiniteRepeatable(
+                    animation = tween(durationMillis = 1000, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse, // Reverse the animation to make it continuous
+                ),
         )
 
         val variantColor = MaterialTheme.colorScheme.onSurfaceVariant
 
         Column(
-                horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.align(
-                Alignment.Center
-        )
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier =
+                Modifier.align(
+                    Alignment.Center,
+                ),
         ) {
             Icon(
-                    painter = painterResource(id = R.drawable.broken_cloud),
-                    tint = variantColor.copy(alpha = animatedAlpha),
-                    contentDescription = stringResource(
-                            id = R.string.no_internet_text
+                painter = painterResource(id = R.drawable.broken_cloud),
+                tint = variantColor.copy(alpha = animatedAlpha),
+                contentDescription =
+                    stringResource(
+                        id = R.string.no_internet_text,
                     ),
-                    modifier = Modifier.size(spacing.spaceExtraLarge)
-
+                modifier = Modifier.size(spacing.spaceExtraLarge),
             )
 
             Text(text = stringResource(id = R.string.no_internet_text))
         }
 
         SnackbarHost(
-                hostState = snackbarHostState,
-                modifier = Modifier.align(Alignment.BottomCenter)
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter),
         ) {
-
-
             Snackbar(
-                    snackbarData = it,
-                    containerColor = Color(0xFF4CAF50),
-                    contentColor = MaterialTheme.colorScheme.onBackground
+                snackbarData = it,
+                containerColor = Color(0xFF4CAF50),
+                contentColor = MaterialTheme.colorScheme.onBackground,
             )
         }
-
     }
-
 }
-
 
 @Preview(uiMode = UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
 fun NoInternetPreviewLight() {
-
     NoConnectionWidget(HomeState(), onRetry = {})
 }
-
 
 @Preview(uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun NoInternetPreviewDark() {
-
     NoConnectionWidget(HomeState(), onRetry = {})
 }
-
-
-
-

@@ -1,6 +1,5 @@
 package com.uxstate.skycast.presentation
 
-
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -29,56 +28,50 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private val viewModel: HomeViewModel by viewModels()
 
-    private val viewModel:HomeViewModel by viewModels()
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
-
         installSplashScreen().apply {
-            setKeepOnScreenCondition{
-
-               false
+            setKeepOnScreenCondition {
+                false
             }
         }
 
-        //call BuildConfig to access its API_KEY Constant
+        // call BuildConfig to access its API_KEY Constant
         val apiKey = BuildConfig.API_KEY
         enableEdgeToEdge(
-                statusBarStyle = SystemBarStyle.light(
-                        Color.TRANSPARENT,
-                        Color.TRANSPARENT
-                ), navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
+            statusBarStyle =
+                SystemBarStyle.light(
+                    Color.TRANSPARENT,
+                    Color.TRANSPARENT,
+                ),
+            navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
         )
 
         setContent {
-
             val viewModel: SettingsViewModel = hiltViewModel()
             val state by viewModel.state.collectAsStateWithLifecycle()
 
             val prefs = state.appPreferences
 
-            val isDark = when (prefs.theme) {
-
-                Theme.SYSTEM -> isSystemInDarkTheme()
-                Theme.DARK -> true
-                Theme.LIGHT -> false
-            }
+            val isDark =
+                when (prefs.theme) {
+                    Theme.SYSTEM -> isSystemInDarkTheme()
+                    Theme.DARK -> true
+                    Theme.LIGHT -> false
+                }
 
             SkyCastTheme(darkTheme = isDark) {
-
                 Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background,
                 ) {
-
                     DestinationsNavHost(navGraph = NavGraphs.root)
                 }
             }
         }
     }
-
 }
-

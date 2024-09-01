@@ -4,7 +4,7 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-//data class with the default values
+// data class with the default values
 data class Dimens(
     val spaceDefault: Dp = 0.dp,
     val spaceHalfDp: Dp = .5.dp,
@@ -21,9 +21,7 @@ data class Dimens(
     val spaceOneHundredFifty: Dp = 150.dp,
     val spaceTwoHundred: Dp = 200.dp,
     val spaceTwoHundredFifty: Dp = 250.dp,
-    val spaceFiveHundred: Dp = 500.dp
-
+    val spaceFiveHundred: Dp = 500.dp,
 )
-
 
 val LocalSpacing = compositionLocalOf { Dimens() }

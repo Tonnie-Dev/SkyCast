@@ -7,20 +7,17 @@ import com.uxstate.skycast.domain.model.WeatherDescription
 import javax.inject.Inject
 
 @ProvidedTypeConverter
-class Converters @Inject constructor(private val jsonParser: JsonParser) {
+class Converters
+    @Inject
+    constructor(
+        private val jsonParser: JsonParser,
+    ) {
+        private val type = Types.newParameterizedType(List::class.java, WeatherDescription::class.java)
 
+        @TypeConverter
+        fun writeWeatherDescListToRoom(list: List<WeatherDescription>): String = jsonParser.toJson(obj = list, type = type) ?: "[]"
 
-    private val type = Types.newParameterizedType(List::class.java, WeatherDescription::class.java)
-
-    @TypeConverter
-    fun writeWeatherDescListToRoom(list: List<WeatherDescription>): String {
-
-        return jsonParser.toJson(obj = list, type = type) ?: "[]"
+        @TypeConverter
+        fun readWeatherDescListFromRoom(jsonString: String): List<WeatherDescription>? =
+            jsonParser.fromJson(json = jsonString, type = type) ?: emptyList()
     }
-
-    @TypeConverter
-    fun readWeatherDescListFromRoom(jsonString: String): List<WeatherDescription>? {
-
-        return jsonParser.fromJson(json = jsonString, type = type) ?: emptyList()
-    }
-}

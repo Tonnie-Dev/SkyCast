@@ -18,24 +18,22 @@ import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject
 
-class DataStoreOperationsImpl @Inject constructor(@ApplicationContext private val context: Context) :
-    DataStoreOperations {
-
-    private val Context.dataStore by preferencesDataStore(name = PREFS_NAME)
-    override val appPreferences: Flow<AppPreferences> =
-        context.dataStore.data
-
-                .catch {
-
-                    e ->
+class DataStoreOperationsImpl
+    @Inject
+    constructor(
+        @ApplicationContext private val context: Context,
+    ) : DataStoreOperations {
+        private val Context.dataStore by preferencesDataStore(name = PREFS_NAME)
+        override val appPreferences: Flow<AppPreferences> =
+            context.dataStore.data
+                .catch { e ->
 
                     if (e is IOException) {
                         emit(emptyPreferences())
-                    } else throw e
-                }
-                .map {
-
-                    prefs ->
+                    } else {
+                        throw e
+                    }
+                }.map { prefs ->
 
                     val theme = Theme.valueOf(prefs[SELECTED_THEME] ?: Theme.SYSTEM.name)
                     val unit = TempUnit.valueOf(prefs[SELECTED_TEMP_UNIT] ?: TempUnit.CELSIUS.name)
@@ -44,41 +42,31 @@ class DataStoreOperationsImpl @Inject constructor(@ApplicationContext private va
                     AppPreferences(theme = theme, tempUnit = unit, savedCityId = cityId)
                 }
 
-    override suspend fun updateTheme(theme: Theme) {
-        context.dataStore.edit { prefs ->
+        override suspend fun updateTheme(theme: Theme) {
+            context.dataStore.edit { prefs ->
 
-            prefs[SELECTED_THEME] = theme.name
+                prefs[SELECTED_THEME] = theme.name
+            }
+        }
 
+        override suspend fun updateTempUnit(unit: TempUnit) {
+            context.dataStore.edit { prefs ->
 
+                prefs[SELECTED_TEMP_UNIT] = unit.name
+            }
+        }
+
+        override suspend fun updateCityId(cityId: Int) {
+            context.dataStore.edit { prefs ->
+
+                prefs[CITY_ID] = cityId
+            }
+        }
+
+        // PrefsKeysObject
+        private companion object {
+            val SELECTED_THEME = stringPreferencesKey("selected_theme")
+            val SELECTED_TEMP_UNIT = stringPreferencesKey("selected_unit")
+            val CITY_ID = intPreferencesKey("city_id")
         }
     }
-
-    override suspend fun updateTempUnit(unit: TempUnit) {
-        context.dataStore.edit {
-
-
-            prefs ->
-
-            prefs[SELECTED_TEMP_UNIT] = unit.name
-
-        }
-    }
-
-    override suspend fun updateCityId(cityId: Int) {
-        context.dataStore.edit {
-
-            prefs ->
-
-            prefs[CITY_ID] = cityId
-        }
-    }
-
-    //PrefsKeysObject
-    private companion object {
-
-        val SELECTED_THEME = stringPreferencesKey("selected_theme")
-        val SELECTED_TEMP_UNIT = stringPreferencesKey("selected_unit")
-        val CITY_ID = intPreferencesKey("city_id")
-
-    }
-}

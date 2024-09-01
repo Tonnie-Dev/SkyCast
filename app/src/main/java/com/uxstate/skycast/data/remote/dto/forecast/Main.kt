@@ -1,6 +1,5 @@
 package com.uxstate.skycast.data.remote.dto.forecast
 
-
 import com.squareup.moshi.Json
 
 data class Main(
@@ -21,5 +20,5 @@ data class Main(
     @Json(name = "temp_max")
     val tempMax: Double,
     @Json(name = "temp_min")
-    val tempMin: Double
+    val tempMin: Double,
 )

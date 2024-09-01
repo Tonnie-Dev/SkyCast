@@ -10,10 +10,8 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-
 abstract class DatastoreModule {
-
     @Binds
     @Singleton
-   abstract fun bindDataStoreOperations(dataStoreOperationsImpl: DataStoreOperationsImpl): DataStoreOperations
+    abstract fun bindDataStoreOperations(dataStoreOperationsImpl: DataStoreOperationsImpl): DataStoreOperations
 }

@@ -22,18 +22,19 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.uxstate.skycast.presentation.home.HomeEvent.*
 import com.uxstate.skycast.presentation.home.components.LoadHomeContent
 import com.uxstate.skycast.presentation.home.components.ShowExitScreen
-import com.uxstate.skycast.presentation.ui_utils.ShowLinearLoadingBar
-import com.uxstate.skycast.presentation.ui_utils.NoConnectionWidget
+import com.uxstate.skycast.presentation.uiutils.NoConnectionWidget
+import com.uxstate.skycast.presentation.uiutils.ShowLinearLoadingBar
 import com.uxstate.skycast.utils.DialogType.*
-
 
 @RequiresApi(Build.VERSION_CODES.P)
 @RootNavGraph(start = true)
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalFoundationApi::class)
 @Destination
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: DestinationsNavigator) {
-
+fun HomeScreen(
+    viewModel: HomeViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator,
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val permissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -48,24 +49,18 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel(), navigator: Destinatio
     val isShowNoConnectionWidget = state.isShowNoConnectionWidget
 
     Box(
-            modifier = Modifier
-                    .statusBarsPadding()
-                    .navigationBarsPadding()
-                    .fillMaxSize()
+        modifier =
+            Modifier
+                .statusBarsPadding()
+                .navigationBarsPadding()
+                .fillMaxSize(),
     )
 
     when {
-
         !isPermGranted -> ShowExitScreen(isShowDialog, PERMISSION, permissionState, viewModel)
         !hasLocationData -> ShowExitScreen(isShowDialog, LOCATION, permissionState, viewModel)
         isLoading -> ShowLinearLoadingBar()
         isShowNoConnectionWidget -> NoConnectionWidget(state) { viewModel.onEvent(OnRefresh) }
         else -> LoadHomeContent(viewModel = viewModel, navigator = navigator)
     }
-
 }
-
-
-
-
-

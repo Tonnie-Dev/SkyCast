@@ -1,4 +1,4 @@
-package com.uxstate.skycast.presentation.ui_utils
+package com.uxstate.skycast.presentation.uiutils
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
@@ -17,41 +17,35 @@ import com.uxstate.skycast.ui.theme.SkyCastTheme
 
 @Composable
 fun SkyProgressBar() {
-
     val spacing = LocalSpacing.current
     Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
         LinearProgressIndicator(
-                modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(spacing.spaceOneHundred), color = MaterialTheme.colorScheme.primary
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(spacing.spaceOneHundred),
+            color = MaterialTheme.colorScheme.primary,
         )
     }
 }
-
 
 @Composable
 fun ShowLinearLoadingBar() {
     SkyProgressBar()
 }
+
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)
 @Composable
 fun LinearProgressBarPreviewLight() {
-
     SkyCastTheme {
-
         SkyProgressBar()
     }
-
 }
-
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun LinearProgressBarPreviewDark() {
-
     SkyCastTheme {
-
         SkyProgressBar()
     }
-
 }

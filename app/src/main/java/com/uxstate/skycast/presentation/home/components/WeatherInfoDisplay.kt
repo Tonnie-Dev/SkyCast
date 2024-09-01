@@ -26,56 +26,53 @@ fun HomeBody(
     lastFetchTime: String,
     temperature: String,
     weatherType: String,
-    @DrawableRes icon: Int
+    @DrawableRes icon: Int,
 ) {
-
     val spacing = LocalSpacing.current
 
     Column(
-            modifier = modifier,
-            horizontalAlignment = Alignment.CenterHorizontally
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-
         Text(text = cityName, style = MaterialTheme.typography.headlineLarge)
 
         Text(
-                text = lastFetchTime,
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(
-                        top = spacing.spaceMedium + spacing.spaceSmall,
-                        bottom = spacing.spaceSmall
-                )
+            text = lastFetchTime,
+            style = MaterialTheme.typography.titleMedium,
+            modifier =
+                Modifier.padding(
+                    top = spacing.spaceMedium + spacing.spaceSmall,
+                    bottom = spacing.spaceSmall,
+                ),
         )
 
         // TODO: research color filter
         Image(
-                painter = painterResource(id = icon),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
-                modifier = Modifier.size(spacing.spaceOneHundred)
+            painter = painterResource(id = icon),
+            contentDescription = null,
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+            modifier = Modifier.size(spacing.spaceOneHundred),
         )
         Text(text = temperature, style = MaterialTheme.typography.titleLarge)
 
-
         // TODO: Research on paddingFromBaseLine
         Text(
-                text = weatherType,
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.paddingFromBaseline(top = spacing.spaceMedium + spacing.spaceSmall)
+            text = weatherType,
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.paddingFromBaseline(top = spacing.spaceMedium + spacing.spaceSmall),
         )
     }
-
 }
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun HomeHeaderPreviewDark() {
     HomeBody(
-            cityName = "Riruta",
-            lastFetchTime = "Sunday, Oct 9, 07:13 AM",
-            temperature = "24.2",
-            weatherType = "Clear Sky",
-            icon = R.drawable.ic_clear_sky,
-            modifier = Modifier.fillMaxWidth()
+        cityName = "Riruta",
+        lastFetchTime = "Sunday, Oct 9, 07:13 AM",
+        temperature = "24.2",
+        weatherType = "Clear Sky",
+        icon = R.drawable.ic_clear_sky,
+        modifier = Modifier.fillMaxWidth(),
     )
 }

@@ -16,22 +16,21 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class LocationModule {
-
     @Binds
     @Singleton
     abstract fun bindLocationTracker(locationTrackerImpl: LocationTrackerImpl): LocationTracker
 
     companion object {
+        @Provides
+        @Singleton
+        fun provideFusedLocationProviderClient(
+            @ApplicationContext context: Context,
+        ) = LocationServices.getFusedLocationProviderClient(context)
 
         @Provides
         @Singleton
-        fun provideFusedLocationProviderClient(@ApplicationContext context: Context) =
-            LocationServices.getFusedLocationProviderClient(context)
-
-        @Provides
-        @Singleton
-
-        fun provideLocationManager(@ApplicationContext context: Context) =
-            context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        fun provideLocationManager(
+            @ApplicationContext context: Context,
+        ) = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
     }
 }
