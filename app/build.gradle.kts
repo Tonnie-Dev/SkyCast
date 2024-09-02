@@ -161,11 +161,6 @@ dependencies {
     // Timber Logging
     implementation(libs.timber)
 
-
-    // Material 2 for PullRefreshIndicator
-    implementation(libs.material2)
-
-
     // Compose Animation
     implementation(libs.compose.animation)
 
