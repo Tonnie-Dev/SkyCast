@@ -79,14 +79,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-  /*  compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_18
-        targetCompatibility = JavaVersion.VERSION_18
-        isCoreLibraryDesugaringEnabled = true
-    }
-    kotlinOptions {
-        jvmTarget = "18"
-    }*/
+
     buildFeatures {
         compose = true
     }
@@ -132,27 +125,31 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    // Coil
-    implementation(libs.coil.compose)
-
     // Dagger Hilt
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
-    implementation(libs.hilt.navigation.compose)
+    implementation(Google.dagger.hilt.android)
+    ksp(Google.dagger.hilt.compiler)
+    implementation(AndroidX.hilt.navigationCompose)
+
+
+    // Room components
+    implementation(AndroidX.room.ktx)
+    ksp(AndroidX.room.compiler)
+
+
+    // Splash Screen
+    implementation(AndroidX.core.splashscreen)
+
+    implementation(COIL.compose)
 
     // Retrofit
     implementation(Square.retrofit2)
     implementation(Square.okHttp3)
     implementation(Square.okHttp3.loggingInterceptor)
 
-    // Moshi Library Dependencies - Core Moshi JSON Library and Moshi"s Kotlin support and converter factory
+    // Moshi Library Dependencies
     implementation(Square.moshi)
     implementation(Square.moshi.kotlinReflect)
     implementation(Square.retrofit2.converter.moshi)
-
-    // Room components
-    implementation(libs.room.ktx)
-    ksp(libs.room.compiler)
 
     // Lottie Animation
     implementation(libs.lottie.compose)
@@ -164,20 +161,10 @@ dependencies {
     // Timber Logging
     implementation(libs.timber)
 
-    // Splash Screen
-    implementation(AndroidX.core.splashscreen)
 
     // Material 2 for PullRefreshIndicator
     implementation(libs.material2)
 
-    // implementation(libs.converter.moshi)
-    // implementation(libs.okhttp)
-    // implementation(libs.logging.interceptor)
-    // implementation(libs.converter.scalars)
-
-    // Moshi Library Dependencies - Core Moshi JSON Library and Moshi")s Kotlin support and converter factory
-    // implementation(libs.moshi)
-    // implementation(libs.moshi.kotlin)
 
     // Compose Animation
     implementation(libs.compose.animation)
