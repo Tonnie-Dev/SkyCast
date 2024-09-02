@@ -22,6 +22,7 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +31,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -55,109 +57,6 @@ import com.uxstate.skycast.utils.toDateFormat
 import com.uxstate.skycast.utils.toFahrenheit
 import com.uxstate.skycast.utils.toTitleCase
 
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun HomeContent(
-    modifier: Modifier = Modifier,
-    isFahrenheitUnit: Boolean,
-    currentWeather: CurrentWeather,
-    isLoading: Boolean,
-    @DrawableRes icon: Int,
-    onForecastButtonClick: () -> Unit,
-    navigateToSettings: () -> Unit,
-    onRefreshWeather: () -> Unit,
-) {
-    val spacing = LocalSpacing.current
-    val pullRefreshState =
-        rememberPullRefreshState(
-            refreshing = isLoading,
-            onRefresh = onRefreshWeather,
-        )
-
-    Box(
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .pullRefresh(pullRefreshState),
-    ) {
-        Column(
-            modifier = modifier.verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Row(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(spacing.spaceSmall),
-                Arrangement.End,
-            ) {
-                IconButton(onClick = navigateToSettings) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = stringResource(id = R.string.settings),
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.minimumInteractiveComponentSize(),
-                    )
-                }
-            }
-            HomeBody(
-                cityName = currentWeather.cityName,
-                lastFetchTime = currentWeather.lastFetchedTime.toDateFormat(),
-                temperature =
-                    if (isFahrenheitUnit) {
-                        "${
-                            (
-                                currentWeather.networkWeatherCondition.temp
-                                    .toFahrenheit()
-                                    .roundOffDoubleToInt()
-                            )
-                        }$FAHRENHEIT_SIGN"
-                    } else {
-                        "${
-                            currentWeather.networkWeatherCondition.temp.toCelsius()
-                                .roundOffDoubleToInt()
-                        }$CELSIUS_SIGN"
-                    },
-                weatherType =
-                    currentWeather.networkWeatherDescription
-                        .first()
-                        .description
-                        .toTitleCase(),
-                icon = icon,
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            top = spacing.spaceSmall,
-                            start = spacing.spaceSmall,
-                            end = spacing.spaceSmall,
-                        ),
-            )
-
-            Spacer(modifier = Modifier.height(spacing.spaceOneHundred))
-
-            WeatherDataDisplay(
-                modifier = Modifier.paddingFromBaseline(top = spacing.spaceExtraLarge),
-                humidity = currentWeather.networkWeatherCondition.humidity,
-                pressure = currentWeather.networkWeatherCondition.pressure,
-                windSpeed = currentWeather.wind.speed,
-            )
-            Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
-            Button(onClick = onForecastButtonClick) {
-                Text(stringResource(R.string.forecast_text))
-            }
-        }
-
-        PullRefreshIndicator(
-            refreshing = isLoading,
-            state = pullRefreshState,
-            modifier =
-                Modifier.align(
-                    Alignment.TopCenter,
-                ),
-        )
-    }
-}
 
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
@@ -173,24 +72,138 @@ fun LoadHomeContent(
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { paddingValues ->
 
         state.currentWeather?.let {
-            HomeContent(
-                modifier = Modifier.padding(paddingValues),
-                isLoading = isLoading,
-                isFahrenheitUnit = isFahrenheitUnit,
-                currentWeather = it,
-                icon = WeatherType.fromWMO(it.networkWeatherDescription.first().icon).icon,
-                onForecastButtonClick = {
-                    navigator.navigate(
-                        ForecastScreenDestination,
-                    )
-                },
-                navigateToSettings = {
-                    navigator.navigate(
-                        SettingsScreenDestination,
-                    )
-                },
-                onRefreshWeather = { viewModel.onEvent(HomeEvent.OnRefresh) },
+            HomeContentWithPullToFreshBox(
+                    modifier = Modifier.padding(paddingValues),
+                    isLoading = isLoading,
+                    isFahrenheitUnit = isFahrenheitUnit,
+                    currentWeather = it,
+                    icon = WeatherType.fromWMO(it.networkWeatherDescription.first().icon).icon,
+                    onForecastButtonClick = {
+                        navigator.navigate(
+                                ForecastScreenDestination,
+                        )
+                    },
+                    navigateToSettings = {
+                        navigator.navigate(
+                                SettingsScreenDestination,
+                        )
+                    },
+                    onRefreshWeather = { viewModel.onEvent(HomeEvent.OnRefresh) },
             )
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeContentWithPullToFreshBox(
+    modifier: Modifier = Modifier,
+    isFahrenheitUnit: Boolean,
+    currentWeather: CurrentWeather,
+    isLoading: Boolean,
+    @DrawableRes icon: Int,
+    onForecastButtonClick: () -> Unit,
+    navigateToSettings: () -> Unit,
+    onRefreshWeather: () -> Unit,
+) {
+    PullToRefreshBox(isRefreshing = isLoading, onRefresh = onRefreshWeather) {
+        HomeContent (
+                modifier = modifier,
+                isFahrenheitUnit = isFahrenheitUnit,
+                currentWeather = currentWeather,
+                icon = icon,
+                onForecastButtonClick = onForecastButtonClick,
+                navigateToSettings = navigateToSettings,
+        )
+    }
+}
+
+@Composable
+fun HomeContent(
+    modifier: Modifier = Modifier,
+    isFahrenheitUnit: Boolean,
+    currentWeather: CurrentWeather,
+    @DrawableRes icon: Int,
+    onForecastButtonClick: () -> Unit,
+    navigateToSettings: () -> Unit,
+
+) {
+    val spacing = LocalSpacing.current
+
+
+    Box(
+            modifier =
+            Modifier
+                    .fillMaxSize()
+
+    ) {
+        Column(
+                modifier = modifier.verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Row(
+                    modifier =
+                    Modifier
+                            .fillMaxWidth()
+                            .padding(spacing.spaceSmall),
+                    Arrangement.End,
+            ) {
+                IconButton(onClick = navigateToSettings) {
+                    Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = stringResource(id = R.string.settings),
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.minimumInteractiveComponentSize(),
+                    )
+                }
+            }
+            HomeBody(
+                    cityName = currentWeather.cityName,
+                    lastFetchTime = currentWeather.lastFetchedTime.toDateFormat(),
+                    temperature =
+                    if (isFahrenheitUnit) {
+                        "${
+                            (
+                                    currentWeather.networkWeatherCondition.temp
+                                            .toFahrenheit()
+                                            .roundOffDoubleToInt()
+                                    )
+                        }$FAHRENHEIT_SIGN"
+                    } else {
+                        "${
+                            currentWeather.networkWeatherCondition.temp.toCelsius()
+                                    .roundOffDoubleToInt()
+                        }$CELSIUS_SIGN"
+                    },
+                    weatherType =
+                    currentWeather.networkWeatherDescription
+                            .first()
+                            .description
+                            .toTitleCase(),
+                    icon = icon,
+                    modifier =
+                    Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                    top = spacing.spaceSmall,
+                                    start = spacing.spaceSmall,
+                                    end = spacing.spaceSmall,
+                            ),
+            )
+
+            Spacer(modifier = Modifier.height(spacing.spaceOneHundred))
+
+            WeatherDataDisplay(
+                    modifier = Modifier.paddingFromBaseline(top = spacing.spaceExtraLarge),
+                    humidity = currentWeather.networkWeatherCondition.humidity,
+                    pressure = currentWeather.networkWeatherCondition.pressure,
+                    windSpeed = currentWeather.wind.speed,
+            )
+            Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
+            Button(onClick = onForecastButtonClick) {
+                Text(stringResource(R.string.forecast_text))
+            }
+        }
+
     }
 }
