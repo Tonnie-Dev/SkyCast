@@ -17,12 +17,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -51,7 +51,8 @@ import com.uxstate.skycast.utils.toTitleCase
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalMaterialApi::class)
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun WeatherForecast(
     modifier: Modifier = Modifier,
@@ -61,79 +62,85 @@ internal fun WeatherForecast(
 ) {
     val spacing = LocalSpacing.current
     val isForecastLoading = state.isLoading
-    val pullRefreshState =
-        rememberPullRefreshState(refreshing = isForecastLoading, { onRefreshForecast() })
+
     val selectedTempUnit = state.appPreferences.tempUnit.toString()
 
     Box(
-        modifier =
+            modifier =
             modifier
-                .pullRefresh(pullRefreshState)
-                .fillMaxWidth(),
+
+                    .fillMaxWidth(),
     ) {
         Column(
-            horizontalAlignment = CenterHorizontally,
+                horizontalAlignment = CenterHorizontally,
         ) {
             if (state.forecastData.isNotEmpty()) {
                 state.forecastData
-                    .mapForecastWeather(page)
-                    ?.let { filteredList ->
+                        .mapForecastWeather(page)
+                        ?.let { filteredList ->
+                            PullToRefreshBox(
+                                    isRefreshing = isForecastLoading,
+                                    onRefresh = onRefreshForecast
+                            ) {
 
-                        LazyColumn(
-                            contentPadding = PaddingValues(16.dp),
-                        ) {
-                            itemsIndexed(filteredList) { index, item ->
-                                if (index != 0) {
-                                    Spacer(modifier = Modifier.height(16.dp))
-                                }
+                                LazyColumn(
+                                        contentPadding = PaddingValues(16.dp),
+                                ) {
+                                    itemsIndexed(filteredList) { index, item ->
+                                        if (index != 0) {
+                                            Spacer(modifier = Modifier.height(16.dp))
+                                        }
 
-                                item.forecastWeatherDescription.forEach { description ->
-                                    TrapizForecastItem(
-                                        dateTime = item.date,
-                                        weatherDesc = description.description.toTitleCase(),
-                                        temp =
-                                            if (selectedTempUnit == FAHRENHEIT) {
-                                                "${
-                                                    (
-                                                        item.forecastWeatherParams.temp
-                                                            .toFahrenheit()
-                                                            .roundOffDoubleToInt()
-                                                    )
-                                                }${FAHRENHEIT_SIGN}"
-                                            } else {
-                                                "${
-                                                    item.forecastWeatherParams.temp.toCelsius()
-                                                        .roundOffDoubleToInt()
-                                                }${CELSIUS_SIGN}"
-                                            },
-                                        icon = WeatherType.fromWMO(description.icon).icon,
-                                    )
-                                    Spacer(modifier = Modifier.height(spacing.spaceSmall))
+                                        item.forecastWeatherDescription.forEach { description ->
+                                            TrapizForecastItem(
+                                                    dateTime = item.date,
+                                                    weatherDesc = description.description.toTitleCase(),
+                                                    temp =
+                                                    if (selectedTempUnit == FAHRENHEIT) {
+                                                        "${
+                                                            (
+                                                                    item.forecastWeatherParams.temp
+                                                                            .toFahrenheit()
+                                                                            .roundOffDoubleToInt()
+                                                                    )
+                                                        }${FAHRENHEIT_SIGN}"
+                                                    } else {
+                                                        "${
+                                                            item.forecastWeatherParams.temp.toCelsius()
+                                                                    .roundOffDoubleToInt()
+                                                        }${CELSIUS_SIGN}"
+                                                    },
+                                                    icon = WeatherType.fromWMO(description.icon).icon,
+                                            )
+                                            Spacer(modifier = Modifier.height(spacing.spaceSmall))
+                                        }
+                                    }
                                 }
                             }
-                        }
-                    } ?: run {
+
+
+                        } ?: run {
                     Box(
-                        modifier =
+                            modifier =
                             modifier
-                                .fillMaxSize()
-                                .padding(8.dp),
-                        contentAlignment = Alignment.Center,
+                                    .fillMaxSize()
+                                    .padding(8.dp),
+                            contentAlignment = Alignment.Center,
                     ) {
                         Column(
-                            horizontalAlignment = CenterHorizontally,
+                                horizontalAlignment = CenterHorizontally,
                         ) {
                             Image(
-                                painter = painterResource(id = R.drawable.ic_no_weather_info),
-                                contentDescription = null,
-                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+                                    painter = painterResource(id = R.drawable.ic_no_weather_info),
+                                    contentDescription = null,
+                                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
                             )
 
                             Text(
-                                text = stringResource(id = R.string.future_weather_msg),
-                                textAlign = TextAlign.Center,
-                                color = MaterialTheme.colorScheme.primary,
-                                style = MaterialTheme.typography.bodyMedium,
+                                    text = stringResource(id = R.string.future_weather_msg),
+                                    textAlign = TextAlign.Center,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    style = MaterialTheme.typography.bodyMedium,
                             )
                         }
                     }
@@ -141,11 +148,11 @@ internal fun WeatherForecast(
             }
         }
 
-        PullRefreshIndicator(
-            refreshing = state.isLoading,
-            state = pullRefreshState,
-            modifier = Modifier.align(Alignment.TopCenter),
-        )
+       /* PullRefreshIndicator(
+                refreshing = state.isLoading,
+                state = pullRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter),
+        )*/
     }
 }
 
@@ -159,39 +166,39 @@ private fun Day(
     val spacing = LocalSpacing.current
 
     Box(
-        modifier =
+            modifier =
             Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .clickable { onClick(date) },
-        contentAlignment = Alignment.Center,
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .clickable { onClick(date) },
+            contentAlignment = Alignment.Center,
     ) {
         Column(
-            modifier = Modifier.padding(vertical = spacing.spaceSmall),
-            horizontalAlignment = CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(spacing.spaceSmall),
+                modifier = Modifier.padding(vertical = spacing.spaceSmall),
+                horizontalAlignment = CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(spacing.spaceSmall),
         ) {
             Text(
-                text = date.dayOfWeek.displayText(),
-                fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Light,
+                    text = date.dayOfWeek.displayText(),
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Light,
             )
             Text(
-                text = dateFormatter.format(date),
-                fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold,
+                    text = dateFormatter.format(date),
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold,
             )
         }
         if (isSelected) {
             Box(
-                modifier =
+                    modifier =
                     Modifier
-                        .fillMaxWidth()
-                        .height(spacing.spaceSmall)
-                        .background(color = MaterialTheme.colorScheme.primary)
-                        .align(Alignment.BottomCenter),
+                            .fillMaxWidth()
+                            .height(spacing.spaceSmall)
+                            .background(color = MaterialTheme.colorScheme.primary)
+                            .align(Alignment.BottomCenter),
             )
         }
     }

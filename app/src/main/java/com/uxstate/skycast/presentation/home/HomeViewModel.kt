@@ -81,7 +81,7 @@ class HomeViewModel
                 when (val result = tracker.getCurrentLocation()) {
                     is Resource.Success -> {
                         result.data?.let { geoPoint ->
-                            Timber.i("LatLng is ${geoPoint.latitude}, ${geoPoint.longitude}")
+
                             _state.update {
                                 it.copy(
                                     geoPoint =
@@ -161,6 +161,8 @@ class HomeViewModel
                 is HomeEvent.OnRefresh -> {
                     resetHomeState()
                     getCurrentLocation()
+
+                    Timber.i("OnRefresh Detected")
                 }
 
                 is HomeEvent.OnContinue -> {
