@@ -22,4 +22,4 @@
 .cxx
 local.properties
 gradle.properties
-apikey.properties
+keys/apikey.properties

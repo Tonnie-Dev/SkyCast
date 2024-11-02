@@ -34,24 +34,35 @@ android {
         }
 
         // load the values from .properties file
-        val keystoreFile = project.rootProject.file("apikey.properties")
-        val properties = Properties()
-        properties.load(keystoreFile.inputStream())
+        val keystoreFilePath = "${rootDir.absolutePath}/keys/apikey.properties"
+        println(keystoreFilePath)
 
-        // return empty key in case something goes wrong
-        val apiKey = properties.getProperty("API_KEY") ?: ""
+        val keyStoreFile = File(keystoreFilePath)
+        if (keyStoreFile.exists()) {
 
-        buildConfigField(
-            type = "String",
-            name = "API_KEY",
-            value = apiKey,
-        )
+            val properties = Properties().apply {
 
-        buildConfigField(
-            type = "String",
-            name = "BASE_URL",
-            value = "\"https://api.openweathermap.org/\"",
-        )
+                load(keyStoreFile.inputStream())
+            }
+
+            // return empty key in case something goes wrong
+            val apiKey = properties.getProperty("API_KEY")
+                    .orEmpty()
+
+            buildConfigField(
+                    type = "String",
+                    name = "API_KEY",
+                    value = apiKey,
+            )
+
+            buildConfigField(
+                    type = "String",
+                    name = "BASE_URL",
+                    value = "\"https://api.openweathermap.org/\"",
+            )
+        }
+
+
     }
 
     buildTypes {
@@ -60,8 +71,8 @@ android {
 
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro",
             )
             // signingConfig = signingConfigs.getByName("debug")
         }
