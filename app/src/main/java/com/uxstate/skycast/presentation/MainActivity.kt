@@ -32,6 +32,7 @@ class MainActivity : ComponentActivity() {
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         installSplashScreen().apply {
@@ -43,12 +44,12 @@ class MainActivity : ComponentActivity() {
         // call BuildConfig to access its API_KEY Constant
         val apiKey = BuildConfig.API_KEY
         enableEdgeToEdge(
-            statusBarStyle =
+                statusBarStyle =
                 SystemBarStyle.light(
-                    Color.TRANSPARENT,
-                    Color.TRANSPARENT,
+                        Color.TRANSPARENT,
+                        Color.TRANSPARENT,
                 ),
-            navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
+                navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
         )
 
         setContent {
@@ -66,8 +67,8 @@ class MainActivity : ComponentActivity() {
 
             SkyCastTheme(darkTheme = isDark) {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background,
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background,
                 ) {
                     DestinationsNavHost(navGraph = NavGraphs.root)
                 }
