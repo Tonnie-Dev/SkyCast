@@ -1,3 +1,4 @@
+import com.android.build.gradle.ProguardFiles.getDefaultProguardFile
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType.*
 import java.util.Properties
 
@@ -37,18 +38,11 @@ android {
         val keystoreFilePath = "${rootDir.absolutePath}/keys/apikey.properties"
         println(keystoreFilePath)
 
-        val keyStoreFile = File(keystoreFilePath)
-        if (keyStoreFile.exists()) {
+        val apiKeyFile = project.rootProject.file("/keys/apikey.properties")
+        val properties = Properties()
+        properties.load(apiKeyFile.inputStream())
 
-            val properties = Properties().apply {
-
-                load(keyStoreFile.inputStream())
-            }
-
-            // return empty key in case something goes wrong
-            val apiKey = properties.getProperty("API_KEY")
-                    .orEmpty()
-
+        val apiKey = properties.getProperty("API_KEY") ?: ""
             buildConfigField(
                     type = "String",
                     name = "API_KEY",
@@ -61,7 +55,7 @@ android {
                     value = "\"https://api.openweathermap.org/\"",
             )
         }
-    }
+
 
     buildTypes {
 
