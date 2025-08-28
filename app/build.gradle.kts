@@ -14,7 +14,7 @@ plugins {
 android {
 
     namespace = "com.uxstate.skycast"
-    compileSdk = 34
+    compileSdk = 36
 
     buildFeatures {
         buildConfig = true
@@ -23,9 +23,9 @@ android {
     defaultConfig {
         applicationId = "com.uxstate.skycast"
         minSdk = 23
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        targetSdk = 36
+        versionCode = 21
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -61,8 +61,6 @@ android {
                     value = "\"https://api.openweathermap.org/\"",
             )
         }
-
-
     }
 
     buildTypes {
@@ -83,12 +81,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
         isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
 
     buildFeatures {
@@ -116,6 +114,13 @@ ktlint {
 
 tasks.named("build") {
     dependsOn("ktlintFormat")
+}
+
+tasks.register("printVersionCodeAndName") {
+    doLast {
+        println("VERSION_CODE=${android.defaultConfig.versionCode}")
+        println("VERSION_NAME=${android.defaultConfig.versionName}")
+    }
 }
 
 dependencies {
