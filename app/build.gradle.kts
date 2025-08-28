@@ -1,5 +1,4 @@
-import com.android.build.gradle.ProguardFiles.getDefaultProguardFile
-import org.jlleitschuh.gradle.ktlint.reporter.ReporterType.*
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType.HTML
 import java.util.Properties
 
 plugins {
@@ -43,19 +42,18 @@ android {
         properties.load(apiKeyFile.inputStream())
 
         val apiKey = properties.getProperty("API_KEY") ?: ""
-            buildConfigField(
-                    type = "String",
-                    name = "API_KEY",
-                    value = apiKey,
-            )
+        buildConfigField(
+            type = "String",
+            name = "API_KEY",
+            value = apiKey,
+        )
 
-            buildConfigField(
-                    type = "String",
-                    name = "BASE_URL",
-                    value = "\"https://api.openweathermap.org/\"",
-            )
-        }
-
+        buildConfigField(
+            type = "String",
+            name = "BASE_URL",
+            value = "\"https://api.openweathermap.org/\"",
+        )
+    }
 
     buildTypes {
 
@@ -63,8 +61,8 @@ android {
 
             isMinifyEnabled = false
             proguardFiles(
-                    getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro",
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
             )
             // signingConfig = signingConfigs.getByName("debug")
         }
@@ -140,11 +138,9 @@ dependencies {
     ksp(Google.dagger.hilt.compiler)
     implementation(AndroidX.hilt.navigationCompose)
 
-
     // Room components
     implementation(AndroidX.room.ktx)
     ksp(AndroidX.room.compiler)
-
 
     // Splash Screen
     implementation(AndroidX.core.splashscreen)
