@@ -33,11 +33,8 @@ android {
             useSupportLibrary = true
         }
 
-        // load the values from .properties file
-        val keystoreFilePath = "${rootDir.absolutePath}/keys/apikey.properties"
-        println(keystoreFilePath)
 
-        val apiKeyFile = project.rootProject.file("/keys/apikey.properties")
+        val apiKeyFile = project.rootProject.file("keys/apikey.properties")
         val properties = Properties()
         properties.load(apiKeyFile.inputStream())
 
