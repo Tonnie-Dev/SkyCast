@@ -24,7 +24,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.uxstate.skycast.presentation.forecast.ForecastEvent
 import com.uxstate.skycast.presentation.forecast.ForecastState
 import com.uxstate.skycast.presentation.forecast.ForecastViewModel
 import com.uxstate.skycast.presentation.forecast.components.TrapeziumWeatherShape
@@ -101,7 +100,6 @@ fun PagerItem(
                     .fillMaxSize(),
         ) {
             WeatherForecast(state = state, page = page) {
-
                 viewModel.refreshForecastWeather()
             }
         }

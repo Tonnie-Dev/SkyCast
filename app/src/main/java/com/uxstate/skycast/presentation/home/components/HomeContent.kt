@@ -54,7 +54,6 @@ import com.uxstate.skycast.utils.toFahrenheit
 import com.uxstate.skycast.utils.toTitleCase
 import timber.log.Timber
 
-
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun LoadHomeContent(
@@ -70,22 +69,22 @@ fun LoadHomeContent(
 
         state.currentWeather?.let {
             HomeContentWithPullToFreshBox(
-                    modifier = Modifier.padding(paddingValues),
-                    isLoading = isLoading,
-                    isFahrenheitUnit = isFahrenheitUnit,
-                    currentWeather = it,
-                    icon = WeatherType.fromWMO(it.networkWeatherDescription.first().icon).icon,
-                    onForecastButtonClick = {
-                        navigator.navigate(
-                                ForecastScreenDestination,
-                        )
-                    },
-                    navigateToSettings = {
-                        navigator.navigate(
-                                SettingsScreenDestination,
-                        )
-                    },
-                    onRefreshWeather = { viewModel.onEvent(HomeEvent.OnRefresh) },
+                modifier = Modifier.padding(paddingValues),
+                isLoading = isLoading,
+                isFahrenheitUnit = isFahrenheitUnit,
+                currentWeather = it,
+                icon = WeatherType.fromWMO(it.networkWeatherDescription.first().icon).icon,
+                onForecastButtonClick = {
+                    navigator.navigate(
+                        ForecastScreenDestination,
+                    )
+                },
+                navigateToSettings = {
+                    navigator.navigate(
+                        SettingsScreenDestination,
+                    )
+                },
+                onRefreshWeather = { viewModel.onEvent(HomeEvent.OnRefresh) },
             )
         }
     }
@@ -103,16 +102,15 @@ fun HomeContentWithPullToFreshBox(
     navigateToSettings: () -> Unit,
     onRefreshWeather: () -> Unit,
 ) {
-
     Timber.i("IsLoading - $isLoading")
     PullToRefreshBox(isRefreshing = isLoading, onRefresh = onRefreshWeather) {
-        HomeContent (
-                modifier = modifier,
-                isFahrenheitUnit = isFahrenheitUnit,
-                currentWeather = currentWeather,
-                icon = icon,
-                onForecastButtonClick = onForecastButtonClick,
-                navigateToSettings = navigateToSettings,
+        HomeContent(
+            modifier = modifier,
+            isFahrenheitUnit = isFahrenheitUnit,
+            currentWeather = currentWeather,
+            icon = icon,
+            onForecastButtonClick = onForecastButtonClick,
+            navigateToSettings = navigateToSettings,
         )
     }
 }
@@ -125,84 +123,80 @@ fun HomeContent(
     @DrawableRes icon: Int,
     onForecastButtonClick: () -> Unit,
     navigateToSettings: () -> Unit,
-
 ) {
     val spacing = LocalSpacing.current
 
-
     Box(
-            modifier =
+        modifier =
             Modifier
-                    .fillMaxSize()
-
+                .fillMaxSize(),
     ) {
         Column(
-                modifier = modifier.verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier.verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Row(
-                    modifier =
+                modifier =
                     Modifier
-                            .fillMaxWidth()
-                            .padding(spacing.spaceSmall),
-                    Arrangement.End,
+                        .fillMaxWidth()
+                        .padding(spacing.spaceSmall),
+                Arrangement.End,
             ) {
                 IconButton(onClick = navigateToSettings) {
                     Icon(
-                            imageVector = Icons.Default.Settings,
-                            contentDescription = stringResource(id = R.string.settings),
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.minimumInteractiveComponentSize(),
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = stringResource(id = R.string.settings),
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.minimumInteractiveComponentSize(),
                     )
                 }
             }
             HomeBody(
-                    cityName = currentWeather.cityName,
-                    lastFetchTime = currentWeather.lastFetchedTime.toDateFormat(),
-                    temperature =
+                cityName = currentWeather.cityName,
+                lastFetchTime = currentWeather.lastFetchedTime.toDateFormat(),
+                temperature =
                     if (isFahrenheitUnit) {
                         "${
                             (
-                                    currentWeather.networkWeatherCondition.temp
-                                            .toFahrenheit()
-                                            .roundOffDoubleToInt()
-                                    )
+                                currentWeather.networkWeatherCondition.temp
+                                    .toFahrenheit()
+                                    .roundOffDoubleToInt()
+                            )
                         }$FAHRENHEIT_SIGN"
                     } else {
                         "${
                             currentWeather.networkWeatherCondition.temp.toCelsius()
-                                    .roundOffDoubleToInt()
+                                .roundOffDoubleToInt()
                         }$CELSIUS_SIGN"
                     },
-                    weatherType =
+                weatherType =
                     currentWeather.networkWeatherDescription
-                            .first()
-                            .description
-                            .toTitleCase(),
-                    icon = icon,
-                    modifier =
+                        .first()
+                        .description
+                        .toTitleCase(),
+                icon = icon,
+                modifier =
                     Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                    top = spacing.spaceSmall,
-                                    start = spacing.spaceSmall,
-                                    end = spacing.spaceSmall,
-                            ),
+                        .fillMaxWidth()
+                        .padding(
+                            top = spacing.spaceSmall,
+                            start = spacing.spaceSmall,
+                            end = spacing.spaceSmall,
+                        ),
             )
 
             Spacer(modifier = Modifier.height(spacing.spaceOneHundred))
 
             WeatherDataDisplay(
-                    modifier = Modifier.paddingFromBaseline(top = spacing.spaceExtraLarge),
-                    humidity = currentWeather.networkWeatherCondition.humidity,
-                    pressure = currentWeather.networkWeatherCondition.pressure,
-                    windSpeed = currentWeather.wind.speed,
+                modifier = Modifier.paddingFromBaseline(top = spacing.spaceExtraLarge),
+                humidity = currentWeather.networkWeatherCondition.humidity,
+                pressure = currentWeather.networkWeatherCondition.pressure,
+                windSpeed = currentWeather.wind.speed,
             )
             Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
             Button(onClick = onForecastButtonClick) {
                 Text(stringResource(R.string.forecast_text))
             }
         }
-
     }
 }
